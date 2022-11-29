@@ -1,0 +1,20 @@
+{
+  "domain": "benqprojector",
+  "name": "BenQ Projector",
+  "version": "0.0.1",
+  "config_flow": true,
+  "documentation": "https://github.com/rrooggiieerr/homeassistant-benqprojector",
+  "issue_tracker": "https://github.com/rrooggiieerr/homeassistant-benqprojector/issues",
+
+  "requirements": [
+    "benqprojector==0.0.2"
+  ],
+  "ssdp": [],
+  "zeroconf": [],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@rrooggiieerr"
+  ],
+  "iot_class": "local_polling"
+}
