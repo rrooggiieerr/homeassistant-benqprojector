@@ -77,12 +77,19 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
         """Update state of device."""
         if self._update_counter % 10 == 0:
             _LOGGER.debug("Full update")
-            self._projector.update()
+            if not self._projector.update():
+                return
         else:
             _LOGGER.debug("Partial update")
-            self._projector.update_power()
-            self._projector.update_source()
-            self._projector.update_volume()
+            if not self._projector.update_power():
+                return
+
+            elif self._projector.power_status in [
+                BenQProjector.POWERSTATUS_POWERINGON,
+                BenQProjector.POWERSTATUS_ON
+            ]:
+                self._projector.update_source()
+                self._projector.update_volume()
 
         if self._projector.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
