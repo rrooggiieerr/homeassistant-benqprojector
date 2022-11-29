@@ -65,8 +65,8 @@ class BenQProjectorSwitch(SwitchEntity):
     _attr_available = False
     # _attr_should_poll = False
 
-    _state = False
-    _name = None
+    _attr_state = False
+    _attr_name = None
 
     _connection = None
     _timestamp = 0
@@ -99,8 +99,8 @@ class BenQProjectorSwitch(SwitchEntity):
         """Return true if switch is on."""
         return self._attr_state == STATE_ON
 
-    def async_update(self) -> None:
-        _LOGGER.info("update")
+    async def async_update(self) -> None:
+        _LOGGER.debug("async_update")
         if self._projector.power_status == BenQProjector.POWERSTATUS_ON:
             self._attr_available = True
             self._attr_native_value = self._projector.send_command(self._command)
@@ -115,22 +115,18 @@ class BenQProjectorSwitch(SwitchEntity):
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the entity on."""
-        self.update()
-        if self._attr_state == STATE_OFF:
-            _LOGGER.info("Turning on %s", self._name)
-            response = self._projector.send_command(self._command, "on")
-            if response == "on":
-                self._attr_state = STATE_ON
-            else:
-                _LOGGER.error("Failed to switch on %s", self._name)
+        _LOGGER.info("Turning on %s", self._attr_name)
+        response = self._projector.send_command(self._command, "on")
+        if response == "on":
+            self._attr_state = STATE_ON
+        else:
+            _LOGGER.error("Failed to switch on %s", self._attr_name)
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the entity off."""
-        self.update()
-        if self._attr_state == STATE_ON:
-            _LOGGER.info("Turning off %s", self._name)
-            self._attr_native_value = self._projector.send_command(self._command, "off")
-            if self._attr_native_value == "off":
-                self._attr_state = STATE_OFF
-            else:
-                _LOGGER.error("Failed to switch off %s", self._name)
+        _LOGGER.info("Turning off %s", self._attr_name)
+        self._attr_native_value = self._projector.send_command(self._command, "off")
+        if self._attr_native_value == "off":
+            self._attr_state = STATE_OFF
+        else:
+            _LOGGER.error("Failed to switch off %s", self._attr_name)
