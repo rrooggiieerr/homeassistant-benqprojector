@@ -205,8 +205,8 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
             self._attr_volume_level = self._projector.volume / 20.0
             self.async_write_ha_state()
 
-    async def async_select_source(self, video_source: str) -> None:
+    async def async_select_source(self, source: str) -> None:
         """Set the input video source."""
-        if self._projector.select_video_source(video_source):
-            self._attr_source = video_source
+        if self._projector.select_video_source(source):
+            self._attr_source = source
             self.async_write_ha_state()
