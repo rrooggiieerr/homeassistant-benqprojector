@@ -10,6 +10,8 @@ BenQ projectors and flat pannels with a serial port can support one of three
 protocols. This plugin supports projectors which are of the P series but
 probably also others.
 
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/rrooggiieerr)  
+
 ## Supported projectors
 
 Known to work:
@@ -36,15 +38,26 @@ can improve the overview of supported devices.
 
 # Installation
 
-- Copy the `custom_components/benqprojector` directory of this repository into
-the `config/custom_components/` directory of you Home Assistant installation
+### HACS
+- Go to your **HACS** view in Home Assistant and then to **Integrations**
+- Open the **Custom repositories** menu
+- Add this repository URL to the **Custom repositories** and select
+**Integration** as the **Category**
+- Click **Add**
 - Restart Home Assistant
+
+### Manually
+- Copy the `custom_components/benqprojector` directory of this repository into
+the `config/custom_components/` directory of your Home Assistant installation
+- Restart Home Assistant
+
+##  Adding a new BenQ projector
 - After restarting go to **Settings** then **Devices & Services**
 - Select **+ Add Integration** and type in *BenQ Projector*
 - Select the serial port or enter the path manually
 - Enter the baud rate
 - Select **Submit**
 
-When your wiring is right a new BenQ Projector integration will now be added
-to your Integrations view. If your wiring is not right you will get a *Failed
-to connect* error message.
+When your wiring is right a new BenQ Projector integration and device will now
+be added to your Integrations view. If your wiring is not right you will get a
+*Failed to connect* error message.

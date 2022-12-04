@@ -81,7 +81,10 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
     _attr_device_class = SensorDeviceClass.DURATION
     _attr_state_class = SensorStateClass.TOTAL_INCREASING
     _attr_native_unit_of_measurement = TIME_HOURS
+    _attr_native_value = None
 
-    @property
-    def native_value(self) -> int | None:
-        return getattr(self._projector, self._attribute)
+    async def async_update(self) -> None:
+        response = getattr(self._projector, self._attribute)
+        if self._attr_native_value != response:
+            self._attr_native_value = response
+            self.async_write_ha_state()

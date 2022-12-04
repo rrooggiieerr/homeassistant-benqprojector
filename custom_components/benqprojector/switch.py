@@ -23,7 +23,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the BenQ Serial Projector switch."""
+    """Set up the BenQ Projector switch."""
     projector: BenQProjector = hass.data[DOMAIN][config_entry.entry_id]
 
     entities_config = [
@@ -48,7 +48,6 @@ async def async_setup_entry(
     entities = []
 
     for entity_config in entities_config:
-        _LOGGER.debug(entity_config)
         if projector.supports_command(entity_config[0]):
             entities.append(
                 BenQProjectorSwitch(
@@ -65,12 +64,8 @@ class BenQProjectorSwitch(SwitchEntity):
     _attr_available = False
     # _attr_should_poll = False
 
+    _attr_is_on = None
     _attr_state = False
-    _attr_name = None
-
-    _connection = None
-    _timestamp = 0
-    _unsubscribe_auto_updater = None
 
     def __init__(
         self,
@@ -94,39 +89,53 @@ class BenQProjectorSwitch(SwitchEntity):
         self._attr_name = name
         self._attr_icon = icon
 
-    @property
-    def is_on(self) -> bool:
-        """Return true if switch is on."""
-        return self._attr_state == STATE_ON
+    async def async_added_to_hass(self) -> None:
+        await self.async_update()
 
     async def async_update(self) -> None:
-        _LOGGER.debug("async_update")
-        if self._projector.power_status == BenQProjector.POWERSTATUS_ON:
-            self._attr_available = True
-            self._attr_native_value = self._projector.send_command(self._command)
-            if self._attr_native_value == "on":
-                self._attr_state = STATE_ON
-            elif self._attr_native_value == "off":
-                self._attr_state = STATE_OFF
-        else:
-            self._attr_available = False
+        if self._projector.power_status in [
+            BenQProjector.POWERSTATUS_POWERINGON,
+            BenQProjector.POWERSTATUS_ON,
+        ]:
+            response = self._projector.send_command(self._command)
+            if response is not None:
+                if not self._attr_available:
+                    self._attr_available = True
+                    self.async_write_ha_state()
 
-        self.async_write_ha_state()
+                if response == "on" and self._attr_is_on is not True:
+                    self._attr_is_on = True
+                    self._attr_state = STATE_ON
+                    self.async_write_ha_state()
+                elif response == "off" and self._attr_is_on is not False:
+                    self._attr_is_on = False
+                    self._attr_state = STATE_OFF
+                    self.async_write_ha_state()
+            elif self._attr_available != False:
+                self._attr_available = False
+                self.async_write_ha_state()
+        elif self._attr_available != False:
+            self._attr_available = False
+            self.async_write_ha_state()
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the entity on."""
-        _LOGGER.info("Turning on %s", self._attr_name)
+        _LOGGER.debug("Turning on %s", self._attr_name)
         response = self._projector.send_command(self._command, "on")
         if response == "on":
+            self._attr_is_on = True
             self._attr_state = STATE_ON
+            self.async_write_ha_state()
         else:
             _LOGGER.error("Failed to switch on %s", self._attr_name)
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the entity off."""
-        _LOGGER.info("Turning off %s", self._attr_name)
-        self._attr_native_value = self._projector.send_command(self._command, "off")
-        if self._attr_native_value == "off":
+        _LOGGER.debug("Turning off %s", self._attr_name)
+        response = self._projector.send_command(self._command, "off")
+        if response == "off":
+            self._attr_is_on = False
             self._attr_state = STATE_OFF
+            self.async_write_ha_state()
         else:
             _LOGGER.error("Failed to switch off %s", self._attr_name)

@@ -15,7 +15,13 @@ from .const import CONF_BAUD_RATE, CONF_PROJECTOR, CONF_SERIAL_PORT, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.MEDIA_PLAYER, Platform.SENSOR, Platform.SWITCH]
+PLATFORMS: list[Platform] = [
+    Platform.MEDIA_PLAYER,
+    Platform.SENSOR,
+    Platform.SWITCH,
+    Platform.SELECT,
+    Platform.NUMBER,
+]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

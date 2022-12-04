@@ -69,7 +69,7 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
             manufacturer="BenQ",
         )
         self._attr_unique_id = f"{projector._unique_id}-mediaplayer"
-        self._attr_source_list = projector.sources
+        self._attr_source_list = projector.video_sources
 
         self._projector = projector
 
@@ -84,11 +84,11 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
             if not self._projector.update_power():
                 return
 
-            elif self._projector.power_status in [
+            if self._projector.power_status in [
                 BenQProjector.POWERSTATUS_POWERINGON,
-                BenQProjector.POWERSTATUS_ON
+                BenQProjector.POWERSTATUS_ON,
             ]:
-                self._projector.update_source()
+                self._projector.update_video_source()
                 self._projector.update_volume()
 
         if self._projector.power_status in [
@@ -98,15 +98,15 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
             self._attr_state = MediaPlayerState.ON
             self._attr_available = True
         elif self._projector.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
-            self._attr_available = False
             self._attr_state = MediaPlayerState.OFF
+            self._attr_available = False
         elif self._projector.power_status == BenQProjector.POWERSTATUS_OFF:
             self._attr_state = MediaPlayerState.OFF
             self._attr_available = True
 
         self._attr_extra_state_attributes[
             "projector_position"
-        ] = self._projector.position
+        ] = self._projector.projector_position
 
         if self._projector.lamp2_time is not None:
             self._attr_extra_state_attributes["lamp1_time"] = self._projector.lamp_time
@@ -115,7 +115,7 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
             self._attr_extra_state_attributes["lamp_time"] = self._projector.lamp_time
 
         if self._projector.power_status == BenQProjector.POWERSTATUS_ON:
-            self._attr_extra_state_attributes["3d"] = self._projector.threed
+            self._attr_extra_state_attributes["3d"] = self._projector.threed_mode
             self._attr_extra_state_attributes[
                 "picture_mode"
             ] = self._projector.picture_mode
@@ -158,7 +158,7 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
 
             self._attr_is_volume_muted = self._projector.muted
 
-            self._attr_source = self._projector.source
+            self._attr_source = self._projector.video_source
 
             self.async_write_ha_state()
 
@@ -205,8 +205,8 @@ class BenQProjectorMediaPlayer(MediaPlayerEntity):
             self._attr_volume_level = self._projector.volume / 20.0
             self.async_write_ha_state()
 
-    async def async_select_source(self, source: str) -> None:
-        """Set the input source."""
-        if self._projector.select_source(source):
-            self._attr_source = source
+    async def async_select_source(self, video_source: str) -> None:
+        """Set the input video source."""
+        if self._projector.select_video_source(video_source):
+            self._attr_source = video_source
             self.async_write_ha_state()
