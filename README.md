@@ -16,6 +16,7 @@ probably also others.
 
 Known to work:
 * W1110
+* X3000i
 
 Not tested but use te same protocol according to the documentation:  
 Others in the P Series
