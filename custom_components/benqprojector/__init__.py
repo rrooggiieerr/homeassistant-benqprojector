@@ -29,7 +29,7 @@ PLATFORMS: list[Platform] = [
 
 
 class BenQProjectorCoordinator(DataUpdateCoordinator):
-    """RDTech BenQ Projector Data Update Coordinator."""
+    """BenQ Projector Data Update Coordinator."""
 
     unique_id = None
     model = None
