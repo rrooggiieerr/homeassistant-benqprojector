@@ -1,13 +1,12 @@
 {
   "domain": "benqprojector",
   "name": "BenQ Projector",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "config_flow": true,
   "documentation": "https://github.com/rrooggiieerr/homeassistant-benqprojector",
   "issue_tracker": "https://github.com/rrooggiieerr/homeassistant-benqprojector/issues",
-
   "requirements": [
-    "benqprojector==0.0.7"
+    "benqprojector==0.0.8"
   ],
   "ssdp": [],
   "zeroconf": [],

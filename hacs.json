@@ -1,4 +1,4 @@
 {
 	"name": "BenQ projector",
-	"render_readme": true
+	"homeassistant": "2022.11.0"
 }
