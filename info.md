@@ -1,6 +1,10 @@
+[![](https://img.shields.io/github/v/release/rrooggiieerr/homeassistant-benqprojector.svg?include_prereleases&style=for-the-badge)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![](https://img.shields.io/badge/MAINTAINER-%40rrooggiieerr-41BDF5?style=for-the-badge)](https://github.com/rrooggiieerr)
+
 # Home Assistant BenQ projector integration
 
-Home Assistant integration that supports sending commands to BenQ projectors
+Integration that supports sending commands to BenQ projectors
 over the serial interface. The same commands should work over a network
 connection, but I don't own such projector and have not implemented any
 network functionality. Contact me if you have a network connected BenQ
@@ -36,21 +40,6 @@ Not supported:
 
 Please let me know if your projectors is also supported by this plugin so I
 can improve the overview of supported devices.
-
-## Installation
-
-### HACS
-- Go to your **HACS** view in Home Assistant and then to **Integrations**
-- Open the **Custom repositories** menu
-- Add this repository URL to the **Custom repositories** and select
-**Integration** as the **Category**
-- Click **Add**
-- Restart Home Assistant
-
-### Manually
-- Copy the `custom_components/benqprojector` directory of this repository into
-the `config/custom_components/` directory of your Home Assistant installation
-- Restart Home Assistant
 
 ##  Adding a new BenQ projector
 - After restarting go to **Settings** then **Devices & Services**
