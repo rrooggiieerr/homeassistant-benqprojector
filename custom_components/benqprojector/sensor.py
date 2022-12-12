@@ -6,7 +6,6 @@ Created on 27 Nov 2022
 from __future__ import annotations
 
 import logging
-from datetime import timedelta
 
 from benqprojector import BenQProjector
 from homeassistant.components.sensor import (
@@ -16,15 +15,13 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import TIME_HOURS
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
-
-SCAN_INTERVAL = timedelta(minutes=1)
 
 
 async def async_setup_entry(
@@ -33,48 +30,107 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the BenQ Projector media player."""
-    projector: BenQProjector = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_config_entry_first_refresh()
+
+    entities_config = []
+    if coordinator.supports_command("ltim2"):
+        entities_config.append(["ltim", "Lamp 1 Time", None])
+        entities_config.append(["ltim2", "Lamp 2 Time", None])
+    elif coordinator.supports_command("ltim"):
+        entities_config.append(["ltim", "Lamp Time", None])
 
     entities = []
-    if projector.lamp2_time is not None:
-        entities.append(
-            BenQProjectorLampTimeSensor(projector, "lamp_time", "Lamp 1 Time")
-        )
-        entities.append(
-            BenQProjectorLampTimeSensor(projector, "lamp2_time", "Lamp 2 Time")
-        )
-    else:
-        entities.append(
-            BenQProjectorLampTimeSensor(projector, "lamp_time", "Lamp Time")
-        )
+
+    for entity_config in entities_config:
+        if coordinator.supports_command(entity_config[0]):
+            entities.append(
+                BenQProjectorLampTimeSensor(
+                    coordinator, entity_config[0], entity_config[1], entity_config[2]
+                )
+            )
 
     async_add_entities(entities)
 
 
-class BenQProjectorSensor(SensorEntity):
-    _projector = None
-    _property = None
-
+class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
     def __init__(
         self,
-        projector: BenQProjector,
-        attribute,
-        name,
+        coordinator: BenQProjectorCoordinator,
+        command: str,
+        name: str,
         icon=None,
     ):
         """Initialize the sensor."""
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, projector._unique_id)},
-            name=f"BenQ {projector.model}",
-            model=projector.model,
-            manufacturer="BenQ",
-        )
-        self._attr_unique_id = f"{projector._unique_id}-{attribute}"
+        super().__init__(coordinator, command)
 
-        self._projector = projector
-        self._attribute = attribute
+        self._attr_device_info = coordinator.device_info
+        self._attr_unique_id = f"{coordinator.unique_id}-{command}"
+
+        self.command = command
         self._attr_name = name
         self._attr_icon = icon
+
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+
+        if (
+            not self.coordinator.data
+            or self.command not in self.coordinator.data
+            or not self.coordinator.data[self.command]
+        ):
+            _LOGGER.debug("%s is not available", self.command)
+            self._attr_available = False
+        else:
+            self._attr_native_value = self.coordinator.data[self.command]
+            self._attr_available = True
+
+        await self.async_update()
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        if not self._attr_available:
+            return self._attr_available
+
+        return self.coordinator.last_update_success
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        updated = False
+
+        if self.coordinator.power_status in [
+            BenQProjector.POWERSTATUS_POWERINGON,
+            BenQProjector.POWERSTATUS_ON,
+        ]:
+            _LOGGER.debug(self.coordinator.data)
+
+            if self._attr_available != True:
+                self._attr_available = True
+                updated = True
+
+            if (
+                self.coordinator.data
+                and self.command in self.coordinator.data
+                and self.coordinator.data[self.command]
+            ):
+                new_state = self.coordinator.data[self.command]
+                if self._attr_native_value != new_state:
+                    self._attr_native_value = self.coorcommandator.data[self.command]
+                    updated = True
+            elif self._attr_available != False:
+                self._attr_available = False
+                updated = True
+        elif self._attr_available != False:
+            self._attr_available = False
+            updated = True
+
+        # Only update the HA state if state has updated.
+        if updated:
+            self.async_write_ha_state()
 
 
 class BenQProjectorLampTimeSensor(BenQProjectorSensor):
@@ -83,8 +139,30 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
     _attr_native_unit_of_measurement = TIME_HOURS
     _attr_native_value = None
 
-    async def async_update(self) -> None:
-        response = getattr(self._projector, self._attribute)
-        if self._attr_native_value != response:
-            self._attr_native_value = response
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        updated = False
+
+        if (
+            self.coordinator.data
+            and self.command in self.coordinator.data
+            and self.coordinator.data[self.command]
+        ):
+            try:
+                new_state = int(self.coordinator.data[self.command])
+                if self._attr_native_value != new_state:
+                    self._attr_native_value = self.coordinator.data[self.command]
+                    updated = True
+            except ValueError as ex:
+                _LOGGER.error(ex)
+                if self._attr_available != False:
+                    self._attr_available = False
+                    updated = True
+        elif self._attr_available != False:
+            self._attr_available = False
+            updated = True
+
+        # Only update the HA state if state has updated.
+        if updated:
             self.async_write_ha_state()
