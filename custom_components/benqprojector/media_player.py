@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import logging
-from datetime import timedelta
 
 from benqprojector import BenQProjector
 from homeassistant.components.media_player import (
@@ -16,6 +15,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from . import BenQProjectorCoordinator
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -48,11 +48,11 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         | MediaPlayerEntityFeature.TURN_OFF
         | MediaPlayerEntityFeature.SELECT_SOURCE
     )
-    # _attr_should_poll = False
 
     _attr_available = False
     _attr_state = None
 
+    _attr_source_list = None
     _attr_source = None
 
     _attr_is_volume_muted = None
@@ -66,32 +66,34 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
         self._attr_device_info = coordinator.device_info
         self._attr_unique_id = f"{coordinator.unique_id}-mediaplayer"
-        self._attr_source_list = coordinator.projector.video_sources
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
-        if self.coordinator.power_status in [
-            BenQProjector.POWERSTATUS_POWERINGON,
-            BenQProjector.POWERSTATUS_ON,
-        ]:
-            self._attr_state = MediaPlayerState.ON
-            self._attr_available = True
+        if self.coordinator.projector:
+            if self.coordinator.power_status in [
+                BenQProjector.POWERSTATUS_POWERINGON,
+                BenQProjector.POWERSTATUS_ON,
+            ]:
+                self._attr_state = MediaPlayerState.ON
 
-            volume_level = None
-            volume_level = self.coordinator.volume
-            self._attr_volume_level = volume_level
-            self._attr_is_volume_muted = self.coordinator.muted
+                self._attr_volume_level = self.coordinator.volume
+                self._attr_is_volume_muted = self.coordinator.muted
 
-            self._attr_source = self.coordinator.video_source
-        elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
-            self._attr_state = MediaPlayerState.OFF
-            self._attr_available = False
-        elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
-            self._attr_state = MediaPlayerState.OFF
-            self._attr_available = True
+                self._attr_source_list = self.coordinator.projector.video_sources
+                self._attr_source = self.coordinator.video_source
 
-        await self.async_update()
+                self._attr_available = True
+            elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
+                self._attr_state = MediaPlayerState.OFF
+                self._attr_available = False
+            elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
+                self._attr_state = MediaPlayerState.OFF
+                self._attr_available = True
+
+            self.async_write_ha_state()
+        else:
+            _LOGGER.debug("%s is not available", self.command)
 
     @callback
     def _handle_coordinator_update(self) -> None:
@@ -102,11 +104,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            if self._attr_state != MediaPlayerState.ON or self._attr_available != True:
-                self._attr_state = MediaPlayerState.ON
-                self._attr_available = True
-                updated = True
-
             volume_level = None
             if self.coordinator.volume is not None:
                 volume_level = self.coordinator.volume
@@ -121,16 +118,21 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             if self._attr_source != self.coordinator.video_source:
                 self._attr_source = self.coordinator.video_source
                 updated = True
+
+            if self._attr_state != MediaPlayerState.ON or self._attr_available is not True:
+                self._attr_state = MediaPlayerState.ON
+                self._attr_available = True
+                updated = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
             if (
                 self._attr_state != MediaPlayerState.OFF
-                or self._attr_available != False
+                or self._attr_available is not False
             ):
                 self._attr_state = MediaPlayerState.OFF
                 self._attr_available = False
                 updated = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
-            if self._attr_state != MediaPlayerState.OFF or self._attr_available != True:
+            if self._attr_state != MediaPlayerState.OFF or self._attr_available is not True:
                 self._attr_state = MediaPlayerState.OFF
                 self._attr_available = True
                 updated = True

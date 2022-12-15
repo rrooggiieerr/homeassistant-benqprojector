@@ -6,9 +6,11 @@ from benqprojector import BenQProjector
 from homeassistant.components.switch import SwitchDeviceClass, SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from . import BenQProjectorCoordinator
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,22 +28,22 @@ async def async_setup_entry(
     await coordinator.async_config_entry_first_refresh()
 
     entities_config = [
-        ["bc", "Brilliant Color", "mdi:diamond-stone"],
-        ["qas", "Quick Auto Search", None],
-        ["directpower", "Direct Power On", "mdi:power"],
-        ["autopower", "Signal Power On", "mdi:power"],
-        ["standbynet", "Standby Settings Network", None],
-        ["standbymic", "Standby Settings Microphone", None],
-        ["standbymnt", "Standby Settings Monitor Out ", None],
-        ["blank", "Blank", None],
-        ["freeze", "Freeze", None],
-        ["menu", "Menu", "mdi:menu"],
-        ["ins", "Instant On", "mdi:power"],
-        ["lpsaver", "Lamp Saver Mode", "mdi:lightbulb-outline"],
-        ["prjlogincode", "Projection Log In Code", None],
-        ["broadcasting", "Broadcasting", None],
-        ["amxdd", "AMX Device Discovery", None],
-        ["highaltitude", "High Altitude Mode", "mdi:image-filter-hdr"],
+        ["bc", "Brilliant Color", "mdi:diamond-stone", None],
+        ["qas", "Quick Auto Search", None, EntityCategory.CONFIG],
+        ["directpower", "Direct Power On", "mdi:power", EntityCategory.CONFIG],
+        ["autopower", "Signal Power On", "mdi:power", EntityCategory.CONFIG],
+        ["standbynet", "Standby Settings Network", None, None],
+        ["standbymic", "Standby Settings Microphone", None, None],
+        ["standbymnt", "Standby Settings Monitor Out ", None, None],
+        ["blank", "Blank", None, None],
+        ["freeze", "Freeze", None, None],
+        ["menu", "Menu", "mdi:menu", None],
+        ["ins", "Instant On", "mdi:power", EntityCategory.CONFIG],
+        ["lpsaver", "Lamp Saver Mode", "mdi:lightbulb-outline", EntityCategory.CONFIG],
+        ["prjlogincode", "Projection Log In Code", None, EntityCategory.CONFIG],
+        ["broadcasting", "Broadcasting", None, EntityCategory.CONFIG],
+        ["amxdd", "AMX Device Discovery", None, EntityCategory.CONFIG],
+        ["highaltitude", "High Altitude Mode", "mdi:image-filter-hdr", EntityCategory.CONFIG,],
     ]
 
     entities = []
@@ -50,7 +52,11 @@ async def async_setup_entry(
         if coordinator.supports_command(entity_config[0]):
             entities.append(
                 BenQProjectorSwitch(
-                    coordinator, entity_config[0], entity_config[1], entity_config[2]
+                    coordinator,
+                    entity_config[0],
+                    entity_config[1],
+                    entity_config[2],
+                    entity_config[3],
                 )
             )
 
@@ -71,6 +77,7 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         command: str,
         name: str,
         icon=None,
+        entity_category=None,
     ) -> None:
         """Initialize the switch."""
         super().__init__(coordinator, command)
@@ -81,25 +88,25 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         self.command = command
         self._attr_name = name
         self._attr_icon = icon
+        self._attr_entity_category = entity_category
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
         if (
-            not self.coordinator.data
-            or self.command not in self.coordinator.data
-            or not self.coordinator.data[self.command]
+            self.coordinator.data
+            and self.command in self.coordinator.data
+            and self.coordinator.data[self.command]
         ):
-            _LOGGER.debug("%s is not available", self.command)
-            self._attr_available = False
-        elif self.coordinator.data[self.command] == "on":
-            self._attr_is_on = True
-            self._attr_available = True
+            if self.coordinator.data[self.command] == "on":
+                self._attr_is_on = True
+                self._attr_available = True
+            else:
+                self._attr_is_on = False
+                self._attr_available = True
+            self.async_write_ha_state()
         else:
-            self._attr_is_on = False
-            self._attr_available = True
-
-        await self.async_update()
+            _LOGGER.debug("%s is not available", self.command)
 
     @property
     def available(self) -> bool:
@@ -118,10 +125,6 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            if self._attr_available != True:
-                self._attr_available = True
-                updated = True
-
             if (
                 self.coordinator.data
                 and self.command in self.coordinator.data
@@ -131,10 +134,14 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
                 if self._attr_is_on != new_state:
                     self._attr_is_on = new_state
                     updated = True
-            elif self._attr_available != False:
+
+                if self._attr_available is not True:
+                    self._attr_available = True
+                    updated = True
+            elif self._attr_available is not False:
                 self._attr_available = False
                 updated = True
-        elif self._attr_available != False:
+        elif self._attr_available is not False:
             _LOGGER.debug("%s is not available", self.command)
             self._attr_available = False
             updated = True

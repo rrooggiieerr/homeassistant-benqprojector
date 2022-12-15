@@ -58,7 +58,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     async def connect(self):
         if not self.projector.connect():
             raise ConfigEntryNotReady(
-                f"Unable to connect to device {self._serial_port}"
+                f"Unable to connect to BenQ projector on {self._serial_port}"
             )
 
         self.unique_id = self.projector.unique_id
@@ -154,21 +154,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
     try:
         serial_port = entry.data[CONF_SERIAL_PORT]
-        projectorCoordinator = BenQProjectorCoordinator(
+        projector_coordinator = BenQProjectorCoordinator(
             hass, serial_port, entry.data[CONF_BAUD_RATE]
         )
 
         # Open the connection.
-        await projectorCoordinator.connect()
+        await projector_coordinator.connect()
 
-        _LOGGER.info("Device %s is available", serial_port)
+        _LOGGER.info("BenQ projector on %s is available", serial_port)
     except serial.SerialException as ex:
         raise ConfigEntryNotReady(
-            f"Unable to connect to device {serial_port}: {ex}"
+            f"Unable to connect to BenQ projector on {serial_port}: {ex}"
         ) from ex
 
     hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = projectorCoordinator
+    hass.data[DOMAIN][entry.entry_id] = projector_coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
@@ -177,8 +177,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    projectorCoordinator: BenQProjectorCoordinator = hass.data[DOMAIN][entry.entry_id]
-    projectorCoordinator.disconnect()
+    projector_coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][entry.entry_id]
+    projector_coordinator.disconnect()
 
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)

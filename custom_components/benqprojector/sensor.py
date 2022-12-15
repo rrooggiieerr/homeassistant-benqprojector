@@ -19,6 +19,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from . import BenQProjectorCoordinator
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -56,6 +57,10 @@ async def async_setup_entry(
 
 
 class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
+    _attr_has_entity_name = True
+    _attr_available = False
+    _attr_native_value = None
+
     def __init__(
         self,
         coordinator: BenQProjectorCoordinator,
@@ -77,17 +82,15 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         await super().async_added_to_hass()
 
         if (
-            not self.coordinator.data
-            or self.command not in self.coordinator.data
-            or not self.coordinator.data[self.command]
+            self.coordinator.data
+            and self.command in self.coordinator.data
+            and self.coordinator.data[self.command]
         ):
-            _LOGGER.debug("%s is not available", self.command)
-            self._attr_available = False
-        else:
             self._attr_native_value = self.coordinator.data[self.command]
             self._attr_available = True
-
-        await self.async_update()
+            self.async_write_ha_state()
+        else:
+            _LOGGER.debug("%s is not available", self.command)
 
     @property
     def available(self) -> bool:
@@ -108,23 +111,23 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         ]:
             _LOGGER.debug(self.coordinator.data)
 
-            if self._attr_available != True:
-                self._attr_available = True
-                updated = True
-
             if (
                 self.coordinator.data
                 and self.command in self.coordinator.data
                 and self.coordinator.data[self.command]
             ):
-                new_state = self.coordinator.data[self.command]
-                if self._attr_native_value != new_state:
-                    self._attr_native_value = self.coorcommandator.data[self.command]
+                new_value = self.coordinator.data[self.command]
+                if self._attr_native_value != new_value:
+                    self._attr_native_value = new_value
                     updated = True
-            elif self._attr_available != False:
+
+                if self._attr_available is not True:
+                    self._attr_available = True
+                    updated = True
+            elif self._attr_available is not False:
                 self._attr_available = False
                 updated = True
-        elif self._attr_available != False:
+        elif self._attr_available is not False:
             self._attr_available = False
             updated = True
 
@@ -156,10 +159,10 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
                     updated = True
             except ValueError as ex:
                 _LOGGER.error(ex)
-                if self._attr_available != False:
+                if self._attr_available is not False:
                     self._attr_available = False
                     updated = True
-        elif self._attr_available != False:
+        elif self._attr_available is not False:
             self._attr_available = False
             updated = True
 

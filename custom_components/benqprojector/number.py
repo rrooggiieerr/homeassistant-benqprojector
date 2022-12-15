@@ -9,6 +9,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from . import BenQProjectorCoordinator
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the BenQ Serial Projector switch."""
+    """Set up the BenQ Serial Projector number."""
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Fetch initial data so we have data when entities subscribe
@@ -53,12 +54,9 @@ async def async_setup_entry(
 class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
     _attr_has_entity_name = True
     _attr_available = False
-    _attr_native_max_value = 20
     _attr_native_min_value = 0
     _attr_native_step = 1
     _attr_native_value = None
-
-    _attr_current_option = None
 
     def __init__(
         self,
@@ -66,7 +64,7 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
         command: str,
         name: str,
         icon: str | None = None,
-        max_value: int | None = 20,
+        max_value: int = 20,
     ) -> None:
         """Initialize the number."""
         super().__init__(coordinator, command)
@@ -83,16 +81,14 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
         await super().async_added_to_hass()
 
         if (
-            not self.coordinator.data
-            or self.command not in self.coordinator.data
-            or not self.coordinator.data[self.command]
+            self.coordinator.data
+            and self.command in self.coordinator.data
+            and self.coordinator.data[self.command]
         ):
-            _LOGGER.debug("%s is not available", self.command)
-            self._attr_available = False
-        else:
             try:
                 self._attr_native_value = float(self.coordinator.data[self.command])
                 self._attr_available = True
+                self.async_write_ha_state()
             except ValueError as ex:
                 _LOGGER.error(
                     "ValueError for %s = %s, %s",
@@ -100,12 +96,10 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                     self.coordinator.data[self.command],
                     ex,
                 )
-                self._attr_available = False
             except TypeError as ex:
                 _LOGGER.error("TypeError for %s, %s", self.command, ex)
-                self._attr_available = False
-
-        await self.async_update()
+        else:
+            _LOGGER.debug("%s is not available", self.command)
 
     @property
     def available(self) -> bool:
@@ -124,19 +118,19 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            if self._attr_available != True:
-                self._attr_available = True
-                updated = True
-
             if (
                 self.coordinator.data
                 and self.command in self.coordinator.data
                 and self.coordinator.data[self.command]
             ):
                 try:
-                    new_state = float(self.coordinator.data[self.command])
-                    if self._attr_native_value != new_state:
-                        self._attr_native_value = new_state
+                    new_value = float(self.coordinator.data[self.command])
+                    if self._attr_native_value != new_value:
+                        self._attr_native_value = new_value
+                        updated = True
+
+                    if self._attr_available is not True:
+                        self._attr_available = True
                         updated = True
                 except ValueError as ex:
                     _LOGGER.error(
@@ -145,18 +139,18 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                         self.coordinator.data[self.command],
                         ex,
                     )
-                    if self._attr_available != False:
+                    if self._attr_available is not False:
                         self._attr_available = False
                         updated = True
                 except TypeError as ex:
                     _LOGGER.error("TypeError for %s, %s", self.command, ex)
-                    if self._attr_available != False:
+                    if self._attr_available is not False:
                         self._attr_available = False
                         updated = True
-            elif self._attr_available != False:
+            elif self._attr_available is not False:
                 self._attr_available = False
                 updated = True
-        elif self._attr_available != False:
+        elif self._attr_available is not False:
             _LOGGER.debug("%s is not available", self.command)
             self._attr_available = False
             updated = True
@@ -168,16 +162,16 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         _LOGGER.debug("async_set_native_value")
         if self.coordinator.power_status == BenQProjector.POWERSTATUS_ON:
-            if self._attr_native_value == float(value):
+            if self._attr_native_value == value:
                 return
 
-            while self._attr_native_value < float(value):
+            while self._attr_native_value < value:
                 if self.coordinator.send_command(self.command, "+") == "+":
                     self._attr_native_value += self._attr_native_step
                 else:
                     break
 
-            while self._attr_native_value > float(value):
+            while self._attr_native_value > value:
                 if self.coordinator.send_command(self.command, "-") == "-":
                     self._attr_native_value -= self._attr_native_step
                 else:

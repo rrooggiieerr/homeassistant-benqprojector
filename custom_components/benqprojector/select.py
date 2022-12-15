@@ -6,9 +6,11 @@ from benqprojector import BenQProjector
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from . import BenQProjectorCoordinator
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -31,24 +33,45 @@ async def async_setup_entry(
             coordinator.projector.audio_sources,
             "Audio Source",
             "mdi:audio-input-rca",
+            None,
         ],
-        ["appmod", coordinator.projector.picture_modes, "Picture Mode", None],
+        ["appmod", coordinator.projector.picture_modes, "Picture Mode", None, None],
         [
             "ct",
             coordinator.projector.color_temperatures,
             "Color Temperature",
             "mdi:thermometer",
+            EntityCategory.CONFIG,
         ],
         [
             "asp",
             coordinator.projector.aspect_ratios,
             "Aspect Ratio",
             "mdi:aspect-ratio",
+            None,
         ],
-        ["lampm", coordinator.projector.lamp_modes, "Lamp Mode", None],
-        ["3d", coordinator.projector.threed_modes, "3D Sync", None],
-        # ["rr", None, "Remote Receiver", None],
-        ["pp", coordinator.projector.projector_positions, "Projector Position", None],
+        [
+            "lampm",
+            coordinator.projector.lamp_modes,
+            "Lamp Mode",
+            None,
+            EntityCategory.CONFIG,
+        ],
+        [
+            "3d",
+            coordinator.projector.threed_modes,
+            "3D Sync",
+            None,
+            EntityCategory.CONFIG,
+        ],
+        # ["rr", None, "Remote Receiver", None, EntityCategory.CONFIG],
+        [
+            "pp",
+            coordinator.projector.projector_positions,
+            "Projector Position",
+            None,
+            EntityCategory.CONFIG,
+        ],
     ]
 
     entities = []
@@ -62,6 +85,7 @@ async def async_setup_entry(
                     entity_config[1],
                     entity_config[2],
                     entity_config[3],
+                    entity_config[4],
                 )
             )
 
@@ -81,6 +105,7 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         options,
         name: str,
         icon: str | None = None,
+        entity_category=None,
     ) -> None:
         """Initialize the select."""
         super().__init__(coordinator, command)
@@ -92,22 +117,21 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         self._attr_options = options
         self._attr_name = name
         self._attr_icon = icon
+        self._attr_entity_category = entity_category
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
         if (
-            not self.coordinator.data
-            or self.command not in self.coordinator.data
-            or not self.coordinator.data[self.command]
+            self.coordinator.data
+            and self.command in self.coordinator.data
+            and self.coordinator.data[self.command]
         ):
-            _LOGGER.debug("%s is not available", self.command)
-            self._attr_available = False
-        else:
             self._attr_current_option = self.coordinator.data[self.command]
             self._attr_available = True
-
-        await self.async_update()
+            self.async_write_ha_state()
+        else:
+            _LOGGER.debug("%s is not available", self.command)
 
     @property
     def available(self) -> bool:
@@ -126,10 +150,6 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            if self._attr_available != True:
-                self._attr_available = True
-                updated = True
-
             if (
                 self.coordinator.data
                 and self.command in self.coordinator.data
@@ -139,10 +159,14 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
                 if self._attr_current_option != new_state:
                     self._attr_current_option = self.coordinator.data[self.command]
                     updated = True
-            elif self._attr_available != False:
+
+                if self._attr_available is not True:
+                    self._attr_available = True
+                    updated = True
+            elif self._attr_available is not False:
                 self._attr_available = False
                 updated = True
-        elif self._attr_available != False:
+        elif self._attr_available is not False:
             _LOGGER.debug("%s is not available", self.command)
             self._attr_available = False
             updated = True
