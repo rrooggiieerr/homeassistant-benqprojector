@@ -14,8 +14,6 @@ BenQ projectors and flat pannels with a serial port can support one of three
 protocols. This plugin supports projectors which are of the L, P, T, W and X
 series but probably also others.
 
-[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/rrooggiieerr)  
-
 ## Supported projectors
 
 Known to work:
@@ -51,3 +49,6 @@ can improve the overview of supported devices.
 When your wiring is right a new BenQ Projector integration and device will now
 be added to your Integrations view. If your wiring is not right you will get a
 *Failed to connect* error message.
+
+Do you enjoy using this Home Assistant integration? Then consider sponsoring my work:
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/rrooggiieerr)  
