@@ -157,6 +157,10 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
                 if self._attr_native_value != new_state:
                     self._attr_native_value = self.coordinator.data[self.command]
                     updated = True
+
+                if self._attr_available is not True:
+                    self._attr_available = True
+                    updated = True
             except ValueError as ex:
                 _LOGGER.error(ex)
                 if self._attr_available is not False:
