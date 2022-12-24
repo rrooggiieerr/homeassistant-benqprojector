@@ -80,7 +80,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
                 self._attr_volume_level = self.coordinator.volume
                 self._attr_is_volume_muted = self.coordinator.muted
 
-                self._attr_source_list = self.coordinator.projector.video_sources
                 self._attr_source = self.coordinator.video_source
 
                 self._attr_available = True
@@ -90,6 +89,8 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
                 self._attr_state = MediaPlayerState.OFF
                 self._attr_available = True
+
+            self._attr_source_list = self.coordinator.projector.video_sources
 
             self.async_write_ha_state()
         else:
