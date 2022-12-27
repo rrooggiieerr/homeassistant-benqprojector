@@ -1,14 +1,35 @@
 # Home Assistant BenQ projector integration
 
 Home Assistant integration that supports sending commands to BenQ projectors
-over the serial interface. The same commands should work over a network
-connection, but I don't own such projector and have not implemented any
-network functionality. Contact me if you have a network connected BenQ
-projector and like this to work.
+over the serial interface.
 
 BenQ projectors and flat pannels with a serial port can support one of three
 protocols. This plugin supports projectors which are of the L, P, T, W and X
 series but probably also others.
+
+# Protocol
+
+This integration works if your projector has a serial port **and** supports
+the following command structure: 
+
+```
+<CR>*<key>=<value>#<CR>
+```
+
+Where `<CR>` is a Cariage Return
+
+Example:  
+Power on   : `<CR>*pow=on#<CR>`  
+
+The same commands should work over a network connection, but I don't own such
+projector and have not implemented any network functionality. Contact me if
+you have a network connected BenQ projector and like this to work.
+
+### PJLink
+
+This integration does **not** implement the PJLink protocol, but a proparitary
+BenQ protocol instead. The PJLink protocol is covered by it's own integration:
+[Home Assistant PJLink integration](https://www.home-assistant.io/integrations/pjlink/)
 
 ## Supported projectors
 
