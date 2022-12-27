@@ -7,6 +7,8 @@
 Integration that supports sending commands to BenQ projectors
 over the serial interface.
 
+<img src="Screenshot%201b.png" style="width: 50%"/>
+
 BenQ projectors and flat pannels with a serial port can support one of three
 protocols. This plugin supports projectors which are of the L, P, T, W and X
 series but probably also others.
@@ -20,7 +22,7 @@ the following command structure:
 <CR>*<key>=<value>#<CR>
 ```
 
-Where `<CR>` is a Cariage Return
+Where `<CR>` is a Carriage Return
 
 Example:  
 Power on   : `<CR>*pow=on#<CR>`  
@@ -71,5 +73,6 @@ When your wiring is right a new BenQ Projector integration and device will now
 be added to your Integrations view. If your wiring is not right you will get a
 *Failed to connect* error message.
 
-Do you enjoy using this Home Assistant integration? Then consider sponsoring my work:
+Do you enjoy using this Home Assistant integration? Then consider sponsoring
+my work:\
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/rrooggiieerr)  
