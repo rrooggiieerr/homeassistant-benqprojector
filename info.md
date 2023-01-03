@@ -73,6 +73,6 @@ When your wiring is right a new BenQ Projector integration and device will now
 be added to your Integrations view. If your wiring is not right you will get a
 *Failed to connect* error message.
 
-Do you enjoy using this Home Assistant integration? Then consider sponsoring
+Do you enjoy using this Home Assistant integration? Then consider supporting
 my work:\
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/rrooggiieerr)  

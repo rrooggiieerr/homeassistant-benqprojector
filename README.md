@@ -68,6 +68,8 @@ can improve the overview of supported devices.
 - Click **Add**
 - Restart Home Assistant
 
+[![Install BenQ projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
+
 ### Manually
 - Copy the `custom_components/benqprojector` directory of this repository into
 the `config/custom_components/` directory of your Home Assistant installation
