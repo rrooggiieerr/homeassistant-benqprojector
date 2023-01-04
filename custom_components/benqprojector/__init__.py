@@ -13,7 +13,7 @@ from homeassistant.const import Platform
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import CONF_BAUD_RATE, CONF_PROJECTOR, CONF_SERIAL_PORT, DOMAIN
 
@@ -122,7 +122,11 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         if not self.projector.update_power():
             return None
 
-        self.power_status = self.projector.power_status
+        power_status = self.projector.power_status
+        if power_status is None:
+            raise UpdateFailed(f"Error communicating with BenQ projector on {self._serial_port}")
+        
+        self.power_status = power_status
 
         data = {}
 
