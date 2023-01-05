@@ -14,7 +14,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import TIME_HOURS
+from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -139,7 +139,7 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
 class BenQProjectorLampTimeSensor(BenQProjectorSensor):
     _attr_device_class = SensorDeviceClass.DURATION
     _attr_state_class = SensorStateClass.TOTAL_INCREASING
-    _attr_native_unit_of_measurement = TIME_HOURS
+    _attr_native_unit_of_measurement = UnitOfTime.HOURS
     _attr_native_value = None
 
     @callback
