@@ -118,7 +118,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         except serial.SerialException as ex:
             raise CannotConnect(
                 f"Unable to connect to the device {serial_port}: {ex}", ex
-            )
+            ) from ex
 
         # Return info that you want to store in the config entry.
         return {
