@@ -3,7 +3,7 @@
 Home Assistant integration that supports sending commands to BenQ projectors
 over the serial interface.
 
-<img src="Screenshot%201b.png" style="width: 50%"/>
+<img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
 
 BenQ projectors and flat pannels with a serial port can support one of three
 protocols. This plugin supports projectors which are of the L, P, T, W and X
