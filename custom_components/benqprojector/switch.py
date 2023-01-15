@@ -95,10 +95,9 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
 
         if (
             self.coordinator.data
-            and self.command in self.coordinator.data
-            and self.coordinator.data[self.command]
+            and (new_state := self.coordinator.data.get(self.command))
         ):
-            if self.coordinator.data[self.command] == "on":
+            if new_state == "on":
                 self._attr_is_on = True
                 self._attr_available = True
             else:
@@ -127,10 +126,9 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         ]:
             if (
                 self.coordinator.data
-                and self.command in self.coordinator.data
-                and self.coordinator.data[self.command]
+                and (new_state := self.coordinator.data.get(self.command))
             ):
-                new_state = self.coordinator.data[self.command] == "on"
+                new_state = new_state == "on"
                 if self._attr_is_on != new_state:
                     self._attr_is_on = new_state
                     updated = True

@@ -82,18 +82,17 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
 
         if (
             self.coordinator.data
-            and self.command in self.coordinator.data
-            and self.coordinator.data[self.command]
+            and (native_value := self.coordinator.data.get(self.command))
         ):
             try:
-                self._attr_native_value = float(self.coordinator.data[self.command])
+                self._attr_native_value = float(native_value)
                 self._attr_available = True
                 self.async_write_ha_state()
             except ValueError as ex:
                 _LOGGER.error(
                     "ValueError for %s = %s, %s",
                     self.command,
-                    self.coordinator.data[self.command],
+                    self.coordinator.data.get(self.command),
                     ex,
                 )
             except TypeError as ex:
@@ -120,11 +119,10 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
         ]:
             if (
                 self.coordinator.data
-                and self.command in self.coordinator.data
-                and self.coordinator.data[self.command]
+                and (new_value := self.coordinator.data.get(self.command))
             ):
                 try:
-                    new_value = float(self.coordinator.data[self.command])
+                    new_value = float(new_value)
                     if self._attr_native_value != new_value:
                         self._attr_native_value = new_value
                         updated = True
@@ -136,7 +134,7 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                     _LOGGER.error(
                         "ValueError for %s = %s, %s",
                         self.command,
-                        self.coordinator.data[self.command],
+                        self.coordinator.data.get(self.command),
                         ex,
                     )
                     if self._attr_available is not False:

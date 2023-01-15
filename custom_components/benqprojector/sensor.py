@@ -83,10 +83,9 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
 
         if (
             self.coordinator.data
-            and self.command in self.coordinator.data
-            and self.coordinator.data[self.command]
+            and (native_value := self.coordinator.data.get(self.command))
         ):
-            self._attr_native_value = self.coordinator.data[self.command]
+            self._attr_native_value = native_value
             self._attr_available = True
             self.async_write_ha_state()
         else:
@@ -113,10 +112,8 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
 
             if (
                 self.coordinator.data
-                and self.command in self.coordinator.data
-                and self.coordinator.data[self.command]
+                and (new_value := self.coordinator.data.get(self.command))
             ):
-                new_value = self.coordinator.data[self.command]
                 if self._attr_native_value != new_value:
                     self._attr_native_value = new_value
                     updated = True
@@ -149,13 +146,12 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
 
         if (
             self.coordinator.data
-            and self.command in self.coordinator.data
-            and self.coordinator.data[self.command]
+            and (new_value := self.coordinator.data.get(self.command))
         ):
             try:
-                new_state = int(self.coordinator.data[self.command])
-                if self._attr_native_value != new_state:
-                    self._attr_native_value = self.coordinator.data[self.command]
+                new_value = int(new_value)
+                if self._attr_native_value != new_value:
+                    self._attr_native_value = new_value
                     updated = True
 
                 if self._attr_available is not True:

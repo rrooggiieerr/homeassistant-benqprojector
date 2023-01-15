@@ -124,10 +124,9 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
 
         if (
             self.coordinator.data
-            and self.command in self.coordinator.data
-            and self.coordinator.data[self.command]
+            and (current_option := self.coordinator.data.get(self.command))
         ):
-            self._attr_current_option = self.coordinator.data[self.command]
+            self._attr_current_option = current_option
             self._attr_available = True
             self.async_write_ha_state()
         else:
@@ -152,12 +151,10 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         ]:
             if (
                 self.coordinator.data
-                and self.command in self.coordinator.data
-                and self.coordinator.data[self.command]
+                and (new_state := self.coordinator.data.get(self.command))
             ):
-                new_state = self.coordinator.data[self.command]
                 if self._attr_current_option != new_state:
-                    self._attr_current_option = self.coordinator.data[self.command]
+                    self._attr_current_option = new_state
                     updated = True
 
                 if self._attr_available is not True:
