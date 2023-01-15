@@ -1,0 +1,44 @@
+send:
+  name: Send command
+  description: Sends a command to a BenQ projector.
+  fields:
+    device_id:
+      name: Projector
+      description: The projector you want to send a comand to
+      required: true
+      selector:
+        device:
+          integration: benqprojector
+    command:
+      name: Command
+      description: A command to send.
+      required: true
+      example: "menu"
+      selector:
+        text:
+    action:
+      name: Action
+      description: The action for the given command.
+      required: true
+      example: "on"
+      selector:
+        text:
+send_raw:
+  name: Send command
+  description: Sends a raw command to a BenQ projector.
+  fields:
+    device_id:
+      name: Projector
+      description: The projector you want to send a comand to
+      required: true
+      selector:
+        device:
+          integration: benqprojector
+    command:
+      name: Command
+      description: A raw command to send.
+      required: true
+      example: "*menu=on#"
+      selector:
+        text:
+ 

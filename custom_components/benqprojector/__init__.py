@@ -6,11 +6,13 @@ import os
 from datetime import timedelta
 from typing import Any, Callable
 
+import homeassistant.helpers.config_validation as cv
 import serial
+import voluptuous as vol
 from benqprojector import BenQProjector
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
-from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
+from homeassistant.const import CONF_DEVICE_ID, Platform
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
@@ -26,6 +28,23 @@ PLATFORMS: list[Platform] = [
     Platform.SELECT,
     Platform.NUMBER,
 ]
+
+CONF_SERVICE_COMMAND = "command"
+CONF_SERVICE_ACTION = "action"
+
+SERVICE_SEND_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_DEVICE_ID): cv.string,
+        vol.Required(CONF_SERVICE_COMMAND): cv.string,
+        vol.Required(CONF_SERVICE_ACTION): cv.string,
+    }
+)
+SERVICE_SEND_RAW_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_DEVICE_ID): cv.string,
+        vol.Required(CONF_SERVICE_COMMAND): cv.string,
+    }
+)
 
 
 class BenQProjectorCoordinator(DataUpdateCoordinator):
@@ -101,6 +120,9 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             return self.projector.send_command(command, action)
         return self.projector.send_command(command)
 
+    def send_raw_command(self, command: str):
+        return self.projector.send_raw_command(command)
+
     def turn_on(self) -> bool:
         if self.projector.turn_on():
             self.power_status = self.projector.power_status
@@ -124,8 +146,10 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
         power_status = self.projector.power_status
         if power_status is None:
-            raise UpdateFailed(f"Error communicating with BenQ projector on {self._serial_port}")
-        
+            raise UpdateFailed(
+                f"Error communicating with BenQ projector on {self._serial_port}"
+            )
+
         self.power_status = power_status
 
         data = {}
@@ -175,6 +199,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = projector_coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
+    async def async_handle_send(call: ServiceCall):
+        """Handle the service call."""
+        command: str = call.data.get(CONF_SERVICE_COMMAND)
+        action: str = call.data.get(CONF_SERVICE_ACTION)
+
+        projector_coordinator.send_command(command, action)
+
+    async def async_handle_send_raw(call: ServiceCall):
+        """Handle the service call."""
+        command: str = call.data.get(CONF_SERVICE_COMMAND)
+
+        projector_coordinator.send_raw_command(command)
+
+    hass.services.async_register(
+        DOMAIN, "send", async_handle_send, schema=SERVICE_SEND_SCHEMA
+    )
+    hass.services.async_register(
+        DOMAIN, "send_raw", async_handle_send_raw, schema=SERVICE_SEND_RAW_SCHEMA
+    )
 
     return True
 
