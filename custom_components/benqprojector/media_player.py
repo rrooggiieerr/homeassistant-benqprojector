@@ -120,7 +120,10 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
                 self._attr_source = self.coordinator.video_source
                 updated = True
 
-            if self._attr_state != MediaPlayerState.ON or self._attr_available is not True:
+            if (
+                self._attr_state != MediaPlayerState.ON
+                or self._attr_available is not True
+            ):
                 self._attr_state = MediaPlayerState.ON
                 self._attr_available = True
                 updated = True
@@ -133,7 +136,10 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
                 self._attr_available = False
                 updated = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
-            if self._attr_state != MediaPlayerState.OFF or self._attr_available is not True:
+            if (
+                self._attr_state != MediaPlayerState.OFF
+                or self._attr_available is not True
+            ):
                 self._attr_state = MediaPlayerState.OFF
                 self._attr_available = True
                 updated = True
