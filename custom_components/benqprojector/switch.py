@@ -98,10 +98,9 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         ):
             if new_state == "on":
                 self._attr_is_on = True
-                self._attr_available = True
             else:
                 self._attr_is_on = False
-                self._attr_available = True
+            self._attr_available = True
             self.async_write_ha_state()
         else:
             _LOGGER.debug("%s is not available", self.command)
