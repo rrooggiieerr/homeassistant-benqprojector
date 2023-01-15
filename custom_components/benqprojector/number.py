@@ -32,6 +32,7 @@ async def async_setup_entry(
         ["color", "Color", "mdi:palette", 20],
         ["sharp", "Sharpness", None, 20],
         ["micvol", "Microphone Volume", "mdi:microphone", 20],
+        ["keyst", "Keystone", None, 20]
     ]
 
     entities = []
