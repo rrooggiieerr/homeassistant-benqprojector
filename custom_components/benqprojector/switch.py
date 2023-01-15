@@ -37,7 +37,6 @@ async def async_setup_entry(
         ["standbymnt", "Standby Settings Monitor Out ", None, None],
         ["blank", "Blank", None, None],
         ["freeze", "Freeze", None, None],
-        ["menu", "Menu", "mdi:menu", None],
         ["ins", "Instant On", "mdi:power", EntityCategory.CONFIG],
         ["lpsaver", "Lamp Saver Mode", "mdi:lightbulb-outline", EntityCategory.CONFIG],
         ["prjlogincode", "Projection Log In Code", None, EntityCategory.CONFIG],
