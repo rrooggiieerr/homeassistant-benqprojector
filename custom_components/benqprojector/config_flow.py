@@ -9,8 +9,7 @@ import homeassistant.helpers.config_validation as cv
 import serial
 import serial.tools.list_ports
 import voluptuous as vol
-from benqprojector import BenQProjector
-from benqprojector.config import BAUD_RATES
+from benqprojector import BAUD_RATES, BenQProjector
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
