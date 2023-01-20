@@ -1,12 +1,12 @@
 {
   "domain": "benqprojector",
   "name": "BenQ Projector",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "config_flow": true,
   "documentation": "https://github.com/rrooggiieerr/homeassistant-benqprojector",
   "issue_tracker": "https://github.com/rrooggiieerr/homeassistant-benqprojector/issues",
   "requirements": [
-    "benqprojector==0.0.11"
+    "benqprojector==0.0.12"
   ],
   "ssdp": [],
   "zeroconf": [],
@@ -16,5 +16,6 @@
     "@rrooggiieerr"
   ],
   "iot_class": "local_polling",
-  "integration_type": "device"
+  "integration_type": "device",
+  "loggers": ["benqprojector"]
 }
