@@ -1,4 +1,4 @@
-[![](https://img.shields.io/github/v/release/rrooggiieerr/homeassistant-benqprojector.svg?include_prereleases&style=for-the-badge)
+[![](https://img.shields.io/github/v/release/rrooggiieerr/homeassistant-benqprojector.svg?include_prereleases&style=for-the-badge)](https://github.com/rrooggiieerr/homeassistant-benqprojector)
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 [![](https://img.shields.io/badge/MAINTAINER-%40rrooggiieerr-41BDF5?style=for-the-badge)](https://github.com/rrooggiieerr)
 
@@ -40,6 +40,7 @@ BenQ protocol instead. The PJLink protocol is covered by it's own integration:
 ## Supported projectors
 
 Known to work:
+* W1100
 * W1110
 * X3000i
 
