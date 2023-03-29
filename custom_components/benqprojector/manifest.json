@@ -13,7 +13,7 @@
   	"benqprojector"
   ],
   "requirements": [
-    "benqprojector==0.0.12"
+    "benqprojector==0.0.12.2"
   ],
   "version": "0.0.9"
 }
