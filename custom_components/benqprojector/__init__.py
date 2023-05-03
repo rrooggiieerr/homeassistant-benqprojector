@@ -51,7 +51,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
     unique_id = None
     model = None
-    device_info = None
+    device_info: DeviceInfo = None
     power_status = None
     volume = None
     muted = None
@@ -97,7 +97,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     def async_add_listener(
         self, update_callback: CALLBACK_TYPE, context: Any = None
     ) -> Callable[[], None]:
-        super().async_add_listener(update_callback, context)
+        remove_listener = super().async_add_listener(update_callback, context)
 
         _LOGGER.debug("Adding listener for %s", context)
         if context:
@@ -110,6 +110,8 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
                     if self.data:
                         self.data[context] = self.send_command(context)
                         _LOGGER.debug(self.data)
+
+        return remove_listener
 
     def supports_command(self, command: str):
         return self.projector.supports_command(command)
@@ -200,14 +202,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     async def async_handle_send(call: ServiceCall):
-        """Handle the service call."""
+        """Handle the send service call."""
         command: str = call.data.get(CONF_SERVICE_COMMAND)
         action: str = call.data.get(CONF_SERVICE_ACTION)
 
         projector_coordinator.send_command(command, action)
 
     async def async_handle_send_raw(call: ServiceCall):
-        """Handle the service call."""
+        """Handle the send_raw service call."""
         command: str = call.data.get(CONF_SERVICE_COMMAND)
 
         projector_coordinator.send_raw_command(command)
@@ -225,7 +227,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     projector_coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][entry.entry_id]
-    projector_coordinator.disconnect()
+    await projector_coordinator.disconnect()
 
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)
