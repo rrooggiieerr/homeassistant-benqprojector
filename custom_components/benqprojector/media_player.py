@@ -37,7 +37,7 @@ async def async_setup_entry(
 
 class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     _attr_has_entity_name = True
-    _attr_name = "Projector"
+    _attr_name = None
     _attr_device_class = MediaPlayerDeviceClass.TV
     _attr_icon = "mdi:projector"
     _attr_supported_features = (
@@ -57,8 +57,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
     _attr_is_volume_muted = None
     _attr_volume_level = None
-
-    _attr_extra_state_attributes = {}
 
     def __init__(self, coordinator: BenQProjectorCoordinator) -> None:
         """Initialize the media player."""
