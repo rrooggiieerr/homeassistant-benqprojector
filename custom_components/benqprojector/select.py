@@ -21,7 +21,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the BenQ Serial Projector switch."""
+    """Set up the BenQ Serial Projector select."""
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     # Fetch initial data so we have data when entities subscribe
