@@ -41,4 +41,3 @@ send_raw:
       example: "*menu=on#"
       selector:
         text:
- 
