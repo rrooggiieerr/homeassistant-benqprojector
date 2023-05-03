@@ -1,7 +1,9 @@
 """Constants for the BenQ Projector integration."""
-DOMAIN = "benqprojector"
+from typing import Final
 
-CONF_SERIAL_PORT = "serial_port"
-CONF_MANUAL_PATH = "manual_path"
-CONF_PROJECTOR = "projector"
-CONF_BAUD_RATE = "baud_rate"
+DOMAIN: Final = "benqprojector"
+
+CONF_SERIAL_PORT: Final = "serial_port"
+CONF_MANUAL_PATH: Final = "manual_path"
+CONF_PROJECTOR: Final = "projector"
+CONF_BAUD_RATE: Final = "baud_rate"
