@@ -11,6 +11,7 @@ from benqprojector import BenQProjector
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
+    SensorEntityDescription,
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
@@ -36,21 +37,25 @@ async def async_setup_entry(
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_config_entry_first_refresh()
 
-    entities_config = []
+    entity_descriptions = []
     if coordinator.supports_command("ltim2"):
-        entities_config.append(["ltim", "Lamp 1 Time", None])
-        entities_config.append(["ltim2", "Lamp 2 Time", None])
+        entity_descriptions.append(
+            SensorEntityDescription(key="ltim", name="Lamp 1 Time")
+        )
+        entity_descriptions.append(
+            SensorEntityDescription(key="ltim2", name="Lamp 2 Time")
+        )
     elif coordinator.supports_command("ltim"):
-        entities_config.append(["ltim", "Lamp Time", None])
+        entity_descriptions.append(
+            SensorEntityDescription(key="ltim", name="Lamp Time")
+        )
 
     entities = []
 
-    for entity_config in entities_config:
-        if coordinator.supports_command(entity_config[0]):
+    for entity_description in entity_descriptions:
+        if coordinator.supports_command(entity_description.key):
             entities.append(
-                BenQProjectorLampTimeSensor(
-                    coordinator, entity_config[0], entity_config[1], entity_config[2]
-                )
+                BenQProjectorLampTimeSensor(coordinator, entity_description)
             )
 
     async_add_entities(entities)
@@ -64,32 +69,27 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
     def __init__(
         self,
         coordinator: BenQProjectorCoordinator,
-        command: str,
-        name: str,
-        icon=None,
+        entity_description: SensorEntityDescription,
     ):
         """Initialize the sensor."""
-        super().__init__(coordinator, command)
+        super().__init__(coordinator, entity_description.key)
 
         self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{coordinator.unique_id}-{command}"
+        self._attr_unique_id = f"{coordinator.unique_id}-{entity_description.key}"
 
-        self.command = command
-        self._attr_name = name
-        self._attr_icon = icon
+        self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
-        if (
-            self.coordinator.data
-            and (native_value := self.coordinator.data.get(self.command))
+        if self.coordinator.data and (
+            native_value := self.coordinator.data.get(self.entity_description.key)
         ):
             self._attr_native_value = native_value
             self._attr_available = True
             self.async_write_ha_state()
         else:
-            _LOGGER.debug("%s is not available", self.command)
+            _LOGGER.debug("%s is not available", self.entity_description.key)
 
     @property
     def available(self) -> bool:
@@ -110,9 +110,8 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         ]:
             _LOGGER.debug(self.coordinator.data)
 
-            if (
-                self.coordinator.data
-                and (new_value := self.coordinator.data.get(self.command))
+            if self.coordinator.data and (
+                new_value := self.coordinator.data.get(self.entity_description.key)
             ):
                 if self._attr_native_value != new_value:
                     self._attr_native_value = new_value
@@ -144,9 +143,8 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
         """Handle updated data from the coordinator."""
         updated = False
 
-        if (
-            self.coordinator.data
-            and (new_value := self.coordinator.data.get(self.command))
+        if self.coordinator.data and (
+            new_value := self.coordinator.data.get(self.entity_description.key)
         ):
             try:
                 new_value = int(new_value)

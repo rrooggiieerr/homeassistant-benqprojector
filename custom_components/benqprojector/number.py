@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from benqprojector import BenQProjector
-from homeassistant.components.number import NumberEntity
+from homeassistant.components.number import NumberEntity, NumberEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -26,28 +26,31 @@ async def async_setup_entry(
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_config_entry_first_refresh()
 
-    entities_config = [
-        ["con", "Contrast", "mdi:contrast", 100],
-        ["bri", "Brightness", "mdi:brightness-6", 100],
-        ["color", "Color", "mdi:palette", 20],
-        ["sharp", "Sharpness", None, 20],
-        ["micvol", "Microphone Volume", "mdi:microphone", 20],
-        ["keyst", "Keystone", None, 20]
+    entity_descriptions = [
+        NumberEntityDescription(
+            key="con", name="Contrast", icon="mdi:contrast", native_max_value=100
+        ),
+        NumberEntityDescription(
+            key="bri", name="Brightness", icon="mdi:brightness-6", native_max_value=100
+        ),
+        NumberEntityDescription(
+            key="color", name="Color", icon="mdi:palette", native_max_value=20
+        ),
+        NumberEntityDescription(key="sharp", name="Sharpness", native_max_value=20),
+        NumberEntityDescription(
+            key="micvol",
+            name="Microphone Volume",
+            icon="mdi:microphone",
+            native_max_value=20,
+        ),
+        NumberEntityDescription(key="keyst", name="Keystone", native_max_value=20),
     ]
 
     entities = []
 
-    for entity_config in entities_config:
-        if coordinator.supports_command(entity_config[0]):
-            entities.append(
-                BenQProjectorNumber(
-                    coordinator,
-                    entity_config[0],
-                    entity_config[1],
-                    entity_config[2],
-                    entity_config[3],
-                )
-            )
+    for entity_description in entity_descriptions:
+        if coordinator.supports_command(entity_description.key):
+            entities.append(BenQProjectorNumber(coordinator, entity_description))
 
     async_add_entities(entities)
 
@@ -62,28 +65,21 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
     def __init__(
         self,
         coordinator: BenQProjectorCoordinator,
-        command: str,
-        name: str,
-        icon: str | None = None,
-        max_value: int = 20,
+        entity_description: NumberEntityDescription,
     ) -> None:
         """Initialize the number."""
-        super().__init__(coordinator, command)
+        super().__init__(coordinator, entity_description.key)
 
         self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{coordinator.unique_id}-{command}"
+        self._attr_unique_id = f"{coordinator.unique_id}-{entity_description.key}"
 
-        self.command = command
-        self._attr_name = name
-        self._attr_icon = icon
-        self._attr_native_max_value = max_value
+        self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
-        if (
-            self.coordinator.data
-            and (native_value := self.coordinator.data.get(self.command))
+        if self.coordinator.data and (
+            native_value := self.coordinator.data.get(self.entity_description.key)
         ):
             try:
                 self._attr_native_value = float(native_value)
@@ -92,14 +88,14 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
             except ValueError as ex:
                 _LOGGER.error(
                     "ValueError for %s = %s, %s",
-                    self.command,
-                    self.coordinator.data.get(self.command),
+                    self.entity_description.key,
+                    self.coordinator.data.get(self.entity_description.key),
                     ex,
                 )
             except TypeError as ex:
-                _LOGGER.error("TypeError for %s, %s", self.command, ex)
+                _LOGGER.error("TypeError for %s, %s", self.entity_description.key, ex)
         else:
-            _LOGGER.debug("%s is not available", self.command)
+            _LOGGER.debug("%s is not available", self.entity_description.key)
 
     @property
     def available(self) -> bool:
@@ -118,9 +114,8 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            if (
-                self.coordinator.data
-                and (new_value := self.coordinator.data.get(self.command))
+            if self.coordinator.data and (
+                new_value := self.coordinator.data.get(self.entity_description.key)
             ):
                 try:
                     new_value = float(new_value)
@@ -134,15 +129,17 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                 except ValueError as ex:
                     _LOGGER.error(
                         "ValueError for %s = %s, %s",
-                        self.command,
-                        self.coordinator.data.get(self.command),
+                        self.entity_description.key,
+                        self.coordinator.data.get(self.entity_description.key),
                         ex,
                     )
                     if self._attr_available is not False:
                         self._attr_available = False
                         updated = True
                 except TypeError as ex:
-                    _LOGGER.error("TypeError for %s, %s", self.command, ex)
+                    _LOGGER.error(
+                        "TypeError for %s, %s", self.entity_description.key, ex
+                    )
                     if self._attr_available is not False:
                         self._attr_available = False
                         updated = True
@@ -150,7 +147,7 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                 self._attr_available = False
                 updated = True
         elif self._attr_available is not False:
-            _LOGGER.debug("%s is not available", self.command)
+            _LOGGER.debug("%s is not available", self.entity_description.key)
             self._attr_available = False
             updated = True
 
@@ -165,13 +162,19 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                 return
 
             while self._attr_native_value < value:
-                if self.coordinator.send_command(self.command, "+") == "+":
+                if (
+                    self.coordinator.send_command(self.entity_description.key, "+")
+                    == "+"
+                ):
                     self._attr_native_value += self._attr_native_step
                 else:
                     break
 
             while self._attr_native_value > value:
-                if self.coordinator.send_command(self.command, "-") == "-":
+                if (
+                    self.coordinator.send_command(self.entity_description.key, "-")
+                    == "-"
+                ):
                     self._attr_native_value -= self._attr_native_step
                 else:
                     break
