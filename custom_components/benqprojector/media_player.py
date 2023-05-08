@@ -92,7 +92,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
             self.async_write_ha_state()
         else:
-            _LOGGER.debug("%s is not available", self.command)
+            _LOGGER.debug("Projector is not available")
 
     @callback
     def _handle_coordinator_update(self) -> None:
