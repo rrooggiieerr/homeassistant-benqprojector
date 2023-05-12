@@ -203,22 +203,22 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the entity on."""
-        _LOGGER.debug("Turning on %s", self._attr_name)
+        _LOGGER.debug("Turning on %s", self.name)
         response = self.coordinator.send_command(self.entity_description.key, "on")
         if response == "on":
             self._attr_is_on = True
             self.async_write_ha_state()
             await self.coordinator.async_request_refresh()
         else:
-            _LOGGER.error("Failed to switch on %s", self._attr_name)
+            _LOGGER.error("Failed to switch on %s", self.name)
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the entity off."""
-        _LOGGER.debug("Turning off %s", self._attr_name)
+        _LOGGER.debug("Turning off %s", self.name)
         response = self.coordinator.send_command(self.entity_description.key, "off")
         if response == "off":
             self._attr_is_on = False
             self.async_write_ha_state()
             await self.coordinator.async_request_refresh()
         else:
-            _LOGGER.error("Failed to switch off %s", self._attr_name)
+            _LOGGER.error("Failed to switch off %s", self.name)

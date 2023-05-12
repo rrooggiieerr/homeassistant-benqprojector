@@ -160,4 +160,4 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
             self.async_write_ha_state()
             await self.coordinator.async_request_refresh()
         else:
-            _LOGGER.error("Failed to set %s to %s", self._attr_name, option)
+            _LOGGER.error("Failed to set %s to %s", self.name, option)
