@@ -74,10 +74,16 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         self.projector = BenQProjector(self._serial_port, baud_rate)
 
     async def connect(self):
-        if not self.projector.connect():
+        try:
+            if not self.projector.connect():
+                raise ConfigEntryNotReady(
+                    f"Unable to connect to BenQ projector on {self._serial_port}"
+                )
+        except TimeoutError as ex:
             raise ConfigEntryNotReady(
-                f"Unable to connect to BenQ projector on {self._serial_port}"
+                f"Unable to connect to BenQ projector on {self._serial_port}", ex
             )
+            
 
         self.unique_id = self.projector.unique_id
         self.model = self.projector.model
@@ -142,8 +148,13 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         """Fetch data from BenQ Projector."""
         _LOGGER.debug("BenQProjectorCoordinator._async_updadatata")
 
-        if not self.projector.update_power():
-            return None
+        try:
+            if not self.projector.update_power():
+                return None
+        except TimeoutError as ex:
+            raise UpdateFailed(
+                f"Error communicating with BenQ projector on {self._serial_port}", ex
+            )
 
         power_status = self.projector.power_status
         if power_status is None:
