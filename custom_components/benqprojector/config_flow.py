@@ -61,14 +61,14 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                info = await self.validate_input_setup_serial(user_input, errors)
+                title, data, options = await self.validate_input_setup_serial(user_input, errors)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
             except Exception as ex:
                 _LOGGER.exception("Unexpected exception: %s", ex)
                 errors["base"] = "unknown"
             else:
-                return self.async_create_entry(title=info["title"], data=info)
+                return self.async_create_entry(title=title, data=data, options=options)
 
         return self.async_show_form(
             step_id="setup_serial",
@@ -120,11 +120,14 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ) from ex
 
         # Return info that you want to store in the config entry.
-        return {
-            "title": f"BenQ {model} {serial_port}",
-            CONF_SERIAL_PORT: serial_port,
-            CONF_BAUD_RATE: data[CONF_BAUD_RATE],
-        }
+        return (
+            f"BenQ {model} {serial_port}",
+            {
+                CONF_SERIAL_PORT: serial_port,
+                CONF_BAUD_RATE: data[CONF_BAUD_RATE],
+            },
+            None
+        )
 
 
 def get_serial_by_id(dev_path: str) -> str:
