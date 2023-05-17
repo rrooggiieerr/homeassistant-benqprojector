@@ -163,7 +163,9 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
 
             while self._attr_native_value < value:
                 if (
-                    self.coordinator.send_command(self.entity_description.key, "+")
+                    await self.coordinator.async_send_command(
+                        self.entity_description.key, "+"
+                    )
                     == "+"
                 ):
                     self._attr_native_value += self._attr_native_step
@@ -172,7 +174,9 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
 
             while self._attr_native_value > value:
                 if (
-                    self.coordinator.send_command(self.entity_description.key, "-")
+                    await self.coordinator.async_send_command(
+                        self.entity_description.key, "-"
+                    )
                     == "-"
                 ):
                     self._attr_native_value -= self._attr_native_step

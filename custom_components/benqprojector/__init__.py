@@ -73,9 +73,9 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         self._serial_port = serial_port
         self.projector = BenQProjector(self._serial_port, baud_rate)
 
-    async def connect(self):
+    async def async_connect(self):
         try:
-            if not self.projector.connect():
+            if not await self.hass.async_add_executor_job(self.projector.connect):
                 raise ConfigEntryNotReady(
                     f"Unable to connect to BenQ projector on {self._serial_port}"
                 )
@@ -83,7 +83,8 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             raise ConfigEntryNotReady(
                 f"Unable to connect to BenQ projector on {self._serial_port}", ex
             )
-            
+
+        _LOGGER.debug("Connected to BenQ projector on %s", self._serial_port)
 
         self.unique_id = self.projector.unique_id
         self.model = self.projector.model
@@ -96,8 +97,9 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             manufacturer="BenQ",
         )
 
-    async def disconnect(self):
-        await self.projector.disconnect()
+    async def async_disconnect(self):
+        await self.hass.async_add_executor_job(self.projector.disconnect)
+        _LOGGER.debug("Disconnected from BenQ projector on %s", self._serial_port)
 
     @callback
     def async_add_listener(
@@ -109,47 +111,90 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         if context:
             if context not in self._listener_commands:
                 self._listener_commands.append(context)
-                if (
-                    context in ["pp", "ltim", "ltim2"]
-                    or self.power_status == BenQProjector.POWERSTATUS_ON
-                ):
-                    if self.data:
-                        self.data[context] = self.send_command(context)
-                        _LOGGER.debug(self.data)
 
         return remove_listener
 
     def supports_command(self, command: str):
         return self.projector.supports_command(command)
 
-    def send_command(self, command: str, action: str | None = None):
+    async def async_send_command(self, command: str, action: str | None = None):
         if action:
-            return self.projector.send_command(command, action)
-        return self.projector.send_command(command)
+            return await self.hass.async_add_executor_job(
+                self.projector.send_command, command, action
+            )
+        return await self.hass.async_add_executor_job(
+            self.projector.send_command, command
+        )
 
-    def send_raw_command(self, command: str):
-        return self.projector.send_raw_command(command)
+    async def async_send_raw_command(self, command: str):
+        return await self.hass.async_add_executor_job(
+            self.projector.send_raw_command, command
+        )
 
-    def turn_on(self) -> bool:
-        if self.projector.turn_on():
+    async def async_turn_on(self) -> bool:
+        if await self.hass.async_add_executor_job(self.projector.turn_on):
             self.power_status = self.projector.power_status
             return True
 
         return False
 
-    def turn_off(self) -> bool:
-        if self.projector.turn_off():
+    async def async_turn_off(self) -> bool:
+        if await self.hass.async_add_executor_job(self.projector.turn_off):
             self.power_status = self.projector.power_status
+            return True
+
+        return False
+
+    async def async_mute(self) -> bool:
+        if await self.hass.async_add_executor_job(self.projector.mute):
+            self.muted = True
+            return True
+
+        return False
+
+    async def async_unmute(self) -> bool:
+        if await self.hass.async_add_executor_job(self.projector.unmute):
+            self.muted = False
+            return True
+
+        return False
+
+    async def async_volume_level(self, volume: int):
+        if await self.hass.async_add_executor_job(self.projector.volume_level, volume):
+            self.volume = volume
+            return True
+
+        return False
+
+    async def async_volume_up(self):
+        if await self.hass.async_add_executor_job(self.projector.volume_up):
+            self.volume += 1
+            return True
+
+        return False
+
+    async def async_volume_down(self):
+        if await self.hass.async_add_executor_job(self.projector.volume_down):
+            self.volume -= 1
+            return True
+
+        return False
+
+    async def async_select_video_source(self, source: str):
+        if await self.hass.async_add_executor_job(
+            self.projector.select_video_source, source
+        ):
+            self.source = source
             return True
 
         return False
 
     async def _async_update_data(self):
         """Fetch data from BenQ Projector."""
-        _LOGGER.debug("BenQProjectorCoordinator._async_updadatata")
+        _LOGGER.debug("BenQProjectorCoordinator._async_update_data")
 
         try:
-            if not self.projector.update_power():
+            if not await self.hass.async_add_executor_job(self.projector.update_power):
                 return None
         except TimeoutError as ex:
             raise UpdateFailed(
@@ -166,13 +211,16 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
         data = {}
 
-        data["pp"] = self.send_command("pp")
-        data["ltim"] = self.send_command("ltim")
+        if (pp := await self.async_send_command("pp")) is not None:
+            data["pp"] = pp
+        if (ltim := await self.async_send_command("ltim")) is not None:
+            data["ltim"] = ltim
         if self.supports_command("ltim2"):
-            data["ltim2"] = self.send_command("ltim2")
+            if (ltim2 := await self.async_send_command("ltim2")) is not None:
+                data["ltim2"] = ltim2
 
         if self.power_status == BenQProjector.POWERSTATUS_ON:
-            self.projector.update_volume()
+            await self.hass.async_add_executor_job(self.projector.update_volume)
             volume_level = None
             if self.projector.volume is not None:
                 volume_level = self.projector.volume / 20.0
@@ -180,12 +228,13 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
             self.muted = self.projector.muted
 
-            self.projector.update_video_source()
+            await self.hass.async_add_executor_job(self.projector.update_video_source)
             self.video_source = self.projector.video_source
 
+            _LOGGER.debug("contexts: %s", self.async_contexts())
             for command in self._listener_commands:
                 if command not in ["pow", "pp", "ltim", "ltim2"]:
-                    data[command] = self.send_command(command)
+                    data[command] = await self.async_send_command(command)
 
         return data
 
@@ -194,12 +243,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
     try:
         serial_port = entry.data[CONF_SERIAL_PORT]
-        projector_coordinator = BenQProjectorCoordinator(
+        coordinator = BenQProjectorCoordinator(
             hass, serial_port, entry.data[CONF_BAUD_RATE]
         )
 
         # Open the connection.
-        await projector_coordinator.connect()
+        await coordinator.async_connect()
 
         _LOGGER.info("BenQ projector on %s is available", serial_port)
     except serial.SerialException as ex:
@@ -207,8 +256,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             f"Unable to connect to BenQ projector on {serial_port}: {ex}"
         ) from ex
 
-    hass.data.setdefault(DOMAIN, {})
-    hass.data[DOMAIN][entry.entry_id] = projector_coordinator
+    # Fetch initial data so we have data when entities subscribe
+    await coordinator.async_config_entry_first_refresh()
+
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
@@ -217,17 +268,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         command: str = call.data.get(CONF_SERVICE_COMMAND)
         action: str = call.data.get(CONF_SERVICE_ACTION)
 
-        projector_coordinator.send_command(command, action)
+        await coordinator.async_send_command(command, action)
 
     async def async_handle_send_raw(call: ServiceCall):
         """Handle the send_raw service call."""
         command: str = call.data.get(CONF_SERVICE_COMMAND)
 
-        projector_coordinator.send_raw_command(command)
+        await coordinator.async_send_raw_command(command)
 
     hass.services.async_register(
         DOMAIN, "send", async_handle_send, schema=SERVICE_SEND_SCHEMA
     )
+
     hass.services.async_register(
         DOMAIN, "send_raw", async_handle_send_raw, schema=SERVICE_SEND_RAW_SCHEMA
     )
@@ -237,8 +289,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    projector_coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][entry.entry_id]
-    await projector_coordinator.disconnect()
+    _LOGGER.debug("async_unload_entry")
+    coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][entry.entry_id]
+    await coordinator.async_disconnect()
 
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
         hass.data[DOMAIN].pop(entry.entry_id)

@@ -61,7 +61,9 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                title, data, options = await self.validate_input_setup_serial(user_input, errors)
+                title, data, options = await self.validate_input_setup_serial(
+                    user_input, errors
+                )
             except CannotConnect:
                 errors["base"] = "cannot_connect"
             except Exception as ex:
@@ -110,13 +112,16 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             # Get model from the device
             projector = BenQProjector(serial_port, data[CONF_BAUD_RATE])
-            projector.connect()
+            # projector.connect()
+            if not self.hass.async_add_executor_job(projector.connect):
+                raise CannotConnect(f"Unable to connect to the device {serial_port}")
+
             model = projector.model
 
             _LOGGER.info("Device %s available", serial_port)
         except serial.SerialException as ex:
             raise CannotConnect(
-                f"Unable to connect to the device {serial_port}: {ex}", ex
+                f"Unable to connect to the device {serial_port}"
             ) from ex
 
         # Return info that you want to store in the config entry.
@@ -126,7 +131,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 CONF_SERIAL_PORT: serial_port,
                 CONF_BAUD_RATE: data[CONF_BAUD_RATE],
             },
-            None
+            None,
         )
 
 

@@ -148,21 +148,21 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
     async def async_turn_on(self) -> None:
         """Turn projector on."""
-        if self.coordinator.turn_on():
+        if await self.coordinator.async_turn_on():
             self._attr_state = MediaPlayerState.ON
 
     async def async_turn_off(self) -> None:
         """Turn projector off."""
-        if self.coordinator.turn_off():
+        if await self.coordinator.async_turn_off():
             self._attr_state = MediaPlayerState.OFF
             self._attr_available = False
 
     async def async_mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) media player."""
-        if mute is True and self.coordinator.projector.mute():
+        if mute is True and await self.coordinator.async_mute():
             self._attr_is_volume_muted = True
             self.async_write_ha_state()
-        elif mute is False and self.coordinator.projector.unmute():
+        elif mute is False and await self.coordinator.async_unmute():
             self._attr_is_volume_muted = False
             self.async_write_ha_state()
 
@@ -171,26 +171,26 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         _LOGGER.debug("async_set_volume_level(%s)", volume)
 
         volume = int(volume * 20.0)
-        if self.coordinator.projector.volume_level(volume):
+        if await self.coordinator.async_volume_level(volume):
             self._attr_volume_level = self.coordinator.projector.volume / 20.0
             self.async_write_ha_state()
 
     async def async_volume_up(self) -> None:
         """Increase volume."""
-        if self.coordinator.projector.volume_up():
+        if await self.coordinator.async_volume_up():
             self._attr_volume_level = self.coordinator.projector.volume / 20.0
             self._attr_is_volume_muted = False
             self.async_write_ha_state()
 
     async def async_volume_down(self) -> None:
         """Decrease volume."""
-        if self.coordinator.projector.volume_down():
+        if await self.coordinator.async_volume_down():
             self._attr_volume_level = self.coordinator.projector.volume / 20.0
             self._attr_is_volume_muted = False
             self.async_write_ha_state()
 
     async def async_select_source(self, source: str) -> None:
         """Set the input video source."""
-        if self.coordinator.projector.select_video_source(source):
+        if await self.coordinator.async_select_video_source(source):
             self._attr_source = source
             self.async_write_ha_state()

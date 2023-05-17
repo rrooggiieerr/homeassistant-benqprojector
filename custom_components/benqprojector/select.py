@@ -154,7 +154,9 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
-        response = self.coordinator.send_command(self.entity_description.key, option)
+        response = await self.coordinator.async_send_command(
+            self.entity_description.key, option
+        )
         if response is not None:
             self._attr_current_option = response
             self.async_write_ha_state()
