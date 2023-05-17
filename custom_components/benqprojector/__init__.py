@@ -263,6 +263,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
+    await coordinator.async_request_refresh()
+
     async def async_handle_send(call: ServiceCall):
         """Handle the send service call."""
         command: str = call.data.get(CONF_SERVICE_COMMAND)

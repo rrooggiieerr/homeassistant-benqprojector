@@ -29,9 +29,6 @@ async def async_setup_entry(
     """Set up the BenQ Projector media player."""
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
-    # Fetch initial data so we have data when entities subscribe
-    await coordinator.async_config_entry_first_refresh()
-
     async_add_entities([BenQProjectorMediaPlayer(coordinator)])
 
 
