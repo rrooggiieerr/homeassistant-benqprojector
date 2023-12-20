@@ -86,34 +86,22 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
                 self._attr_available = True
 
             self._attr_source_list = self.coordinator.projector.video_sources
-
-            self.async_write_ha_state()
         else:
             _LOGGER.debug("Projector is not available")
+            self._attr_available = False
+
+        self.async_write_ha_state()
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        updated = False
-
         if self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            volume_level = None
-            if self.coordinator.volume is not None:
-                volume_level = self.coordinator.volume
-            if self._attr_volume_level != volume_level:
-                self._attr_volume_level = volume_level
-                updated = True
-
-            if self._attr_is_volume_muted != self.coordinator.muted:
-                self._attr_is_volume_muted = self.coordinator.muted
-                updated = True
-
-            if self._attr_source != self.coordinator.video_source:
-                self._attr_source = self.coordinator.video_source
-                updated = True
+            self._attr_volume_level = self.coordinator.volume
+            self._attr_is_volume_muted = self.coordinator.muted
+            self._attr_source = self.coordinator.video_source
 
             if (
                 self._attr_state != MediaPlayerState.ON
@@ -121,7 +109,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             ):
                 self._attr_state = MediaPlayerState.ON
                 self._attr_available = True
-                updated = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
             if (
                 self._attr_state != MediaPlayerState.OFF
@@ -129,7 +116,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             ):
                 self._attr_state = MediaPlayerState.OFF
                 self._attr_available = False
-                updated = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
             if (
                 self._attr_state != MediaPlayerState.OFF
@@ -137,11 +123,8 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             ):
                 self._attr_state = MediaPlayerState.OFF
                 self._attr_available = True
-                updated = True
 
-        # Only update the HA state if state has updated.
-        if updated:
-            self.async_write_ha_state()
+        self.async_write_ha_state()
 
     async def async_turn_on(self) -> None:
         """Turn projector on."""

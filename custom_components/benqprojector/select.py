@@ -106,9 +106,11 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         ):
             self._attr_current_option = current_option
             self._attr_available = True
-            self.async_write_ha_state()
         else:
             _LOGGER.debug("%s is not available", self.entity_description.key)
+            self._attr_available = False
+
+        self.async_write_ha_state()
 
     @property
     def available(self) -> bool:
@@ -121,8 +123,6 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        updated = False
-
         if self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
@@ -130,24 +130,15 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
             if self.coordinator.data and (
                 new_state := self.coordinator.data.get(self.entity_description.key)
             ):
-                if self._attr_current_option != new_state:
-                    self._attr_current_option = new_state
-                    updated = True
-
-                if self._attr_available is not True:
-                    self._attr_available = True
-                    updated = True
-            elif self._attr_available is not False:
+                self._attr_current_option = new_state
+                self._attr_available = True
+            else:
                 self._attr_available = False
-                updated = True
-        elif self._attr_available is not False:
+        else:
             _LOGGER.debug("%s is not available", self.entity_description.key)
             self._attr_available = False
-            updated = True
 
-        # Only update the HA state if state has updated.
-        if updated:
-            self.async_write_ha_state()
+        self.async_write_ha_state()
 
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""

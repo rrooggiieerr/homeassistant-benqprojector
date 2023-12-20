@@ -84,9 +84,11 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         ):
             self._attr_native_value = native_value
             self._attr_available = True
-            self.async_write_ha_state()
         else:
             _LOGGER.debug("%s is not available", self.entity_description.key)
+            self._attr_available = False
+
+        self.async_write_ha_state()
 
     @property
     def available(self) -> bool:
@@ -99,8 +101,6 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        updated = False
-
         if self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
@@ -110,23 +110,14 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
             if self.coordinator.data and (
                 new_value := self.coordinator.data.get(self.entity_description.key)
             ):
-                if self._attr_native_value != new_value:
-                    self._attr_native_value = new_value
-                    updated = True
-
-                if self._attr_available is not True:
-                    self._attr_available = True
-                    updated = True
-            elif self._attr_available is not False:
+                self._attr_native_value = new_value
+                self._attr_available = True
+            else:
                 self._attr_available = False
-                updated = True
-        elif self._attr_available is not False:
+        else:
             self._attr_available = False
-            updated = True
 
-        # Only update the HA state if state has updated.
-        if updated:
-            self.async_write_ha_state()
+        self.async_write_ha_state()
 
 
 class BenQProjectorLampTimeSensor(BenQProjectorSensor):
@@ -138,29 +129,16 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        updated = False
-
         if self.coordinator.data and (
             new_value := self.coordinator.data.get(self.entity_description.key)
         ):
             try:
-                new_value = int(new_value)
-                if self._attr_native_value != new_value:
-                    self._attr_native_value = new_value
-                    updated = True
-
-                if self._attr_available is not True:
-                    self._attr_available = True
-                    updated = True
+                self._attr_native_value = int(new_value)
+                self._attr_available = True
             except ValueError as ex:
                 _LOGGER.error(ex)
-                if self._attr_available is not False:
-                    self._attr_available = False
-                    updated = True
-        elif self._attr_available is not False:
+                self._attr_available = False
+        else:
             self._attr_available = False
-            updated = True
 
-        # Only update the HA state if state has updated.
-        if updated:
-            self.async_write_ha_state()
+        self.async_write_ha_state()

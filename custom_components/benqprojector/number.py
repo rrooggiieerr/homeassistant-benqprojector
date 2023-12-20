@@ -115,14 +115,8 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                 new_value := self.coordinator.data.get(self.entity_description.key)
             ):
                 try:
-                    new_value = float(new_value)
-                    if self._attr_native_value != new_value:
-                        self._attr_native_value = new_value
-                        updated = True
-
-                    if self._attr_available is not True:
-                        self._attr_available = True
-                        updated = True
+                    self._attr_native_value = float(new_value)
+                    self._attr_available = True
                 except ValueError as ex:
                     _LOGGER.error(
                         "ValueError for %s = %s, %s",
@@ -130,27 +124,19 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                         self.coordinator.data.get(self.entity_description.key),
                         ex,
                     )
-                    if self._attr_available is not False:
-                        self._attr_available = False
-                        updated = True
+                    self._attr_available = False
                 except TypeError as ex:
                     _LOGGER.error(
                         "TypeError for %s, %s", self.entity_description.key, ex
                     )
-                    if self._attr_available is not False:
-                        self._attr_available = False
-                        updated = True
-            elif self._attr_available is not False:
+                    self._attr_available = False
+            else:
                 self._attr_available = False
-                updated = True
-        elif self._attr_available is not False:
+        else:
             _LOGGER.debug("%s is not available", self.entity_description.key)
             self._attr_available = False
-            updated = True
 
-        # Only update the HA state if state has updated.
-        if updated:
-            self.async_write_ha_state()
+        self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         _LOGGER.debug("async_set_native_value")
