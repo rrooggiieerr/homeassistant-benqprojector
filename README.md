@@ -1,7 +1,7 @@
 # Home Assistant BenQ projector integration
 
 Home Assistant integration that supports sending commands to BenQ projectors
-over the serial interface.
+over the serial interface or serial to network bridges like esp-link.
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
 
@@ -11,8 +11,8 @@ series but probably also others.
 
 # Protocol
 
-This integration works if your projector has a serial port **and** supports
-the following command structure: 
+This integration works if your projector has a serial port or network
+connection **and** supports the following command structure: 
 
 ```
 <CR>*<key>=<value>#<CR>
@@ -21,11 +21,12 @@ the following command structure:
 Where `<CR>` is a Carriage Return
 
 Example:  
-Power on   : `<CR>*pow=on#<CR>`  
+Power on: `<CR>*pow=on#<CR>`  
 
 The same commands should work over a network connection, but I don't own such
-projector and have not implemented any network functionality. Contact me if
-you have a network connected BenQ projector and like this to work.
+projector and have implemented the network functionality using a serial to
+network bridge. The network support for native networked BenQ projectors is
+thus experimental. Let me know if your network connected BenQ projector works.
 
 ### PJLink
 
@@ -55,6 +56,8 @@ Not supported:
 * RP702
 * RP790S
 * RP705H
+
+Some projectors need to be on to be able to detect the model and the integration to work.
 
 Please let me know if your projectors is also supported by this plugin so I
 can improve the overview of supported devices.
@@ -86,5 +89,5 @@ be added to your Integrations view. If your wiring is not right you will get a
 *Failed to connect* error message.
 
 Do you enjoy using this Home Assistant integration? Then consider supporting
-my work:\
+my work:  
 [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >](https://www.buymeacoffee.com/rrooggiieerr)  
