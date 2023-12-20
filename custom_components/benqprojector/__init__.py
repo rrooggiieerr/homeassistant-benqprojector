@@ -8,15 +8,15 @@ from typing import Any, Callable
 import homeassistant.helpers.config_validation as cv
 import serial
 import voluptuous as vol
-from benqprojector import BenQProjector
+from benqprojector import BenQProjector, BenQProjectorSerial, BenQProjectorTelnet
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_DEVICE_ID, Platform
+from homeassistant.const import CONF_DEVICE_ID, Platform, CONF_HOST, CONF_PORT, CONF_TYPE
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONF_BAUD_RATE, CONF_PROJECTOR, CONF_SERIAL_PORT, DOMAIN
+from .const import CONF_BAUD_RATE, CONF_PROJECTOR, CONF_SERIAL_PORT, CONF_TYPE_SERIAL, CONF_TYPE_TELNET, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
     _listener_commands = []
 
-    def __init__(self, hass, serial_port: str, baud_rate: int):
+    def __init__(self, hass, projector: BenQProjector):
         """Initialize BenQ Projector Data Update Coordinator."""
         super().__init__(
             hass,
@@ -70,21 +70,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             update_interval=timedelta(seconds=5),
         )
 
-        self._serial_port = serial_port
-        self.projector = BenQProjector(self._serial_port, baud_rate)
-
-    async def async_connect(self):
-        try:
-            if not await self.hass.async_add_executor_job(self.projector.connect):
-                raise ConfigEntryNotReady(
-                    f"Unable to connect to BenQ projector on {self._serial_port}"
-                )
-        except TimeoutError as ex:
-            raise ConfigEntryNotReady(
-                f"Unable to connect to BenQ projector on {self._serial_port}", ex
-            )
-
-        _LOGGER.debug("Connected to BenQ projector on %s", self._serial_port)
+        self.projector = projector
 
         self.unique_id = self.projector.unique_id
         self.model = self.projector.model
@@ -96,6 +82,30 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             model=self.model,
             manufacturer="BenQ",
         )
+
+    # async def async_connect(self):
+    #     try:
+    #         if not await self.hass.async_add_executor_job(self.projector.connect):
+    #             raise ConfigEntryNotReady(
+    #                 f"Unable to connect to BenQ projector on {self._serial_port}"
+    #             )
+    #     except TimeoutError as ex:
+    #         raise ConfigEntryNotReady(
+    #             f"Unable to connect to BenQ projector on {self._serial_port}", ex
+    #         )
+    #
+    #     _LOGGER.debug("Connected to BenQ projector on %s", self._serial_port)
+    #
+    #     self.unique_id = self.projector.unique_id
+    #     self.model = self.projector.model
+    #     self.power_status = self.projector.power_status
+    #
+    #     self.device_info = DeviceInfo(
+    #         identifiers={(DOMAIN, self.unique_id)},
+    #         name=f"BenQ {self.model}",
+    #         model=self.model,
+    #         manufacturer="BenQ",
+    #     )
 
     async def async_disconnect(self):
         await self.hass.async_add_executor_job(self.projector.disconnect)
@@ -219,7 +229,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             if (ltim2 := await self.async_send_command("ltim2")) is not None:
                 data["ltim2"] = ltim2
 
-        if self.power_status == BenQProjector.POWERSTATUS_ON:
+        if self.power_status == self.projector.POWERSTATUS_ON:
             await self.hass.async_add_executor_job(self.projector.update_volume)
             volume_level = None
             if self.projector.volume is not None:
@@ -241,20 +251,56 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
-    try:
-        serial_port = entry.data[CONF_SERIAL_PORT]
-        coordinator = BenQProjectorCoordinator(
-            hass, serial_port, entry.data[CONF_BAUD_RATE]
-        )
+    projector = None
+
+    conf_type = CONF_TYPE_SERIAL
+    if CONF_TYPE in entry.data:
+        conf_type = entry.data[CONF_TYPE]
+
+    if conf_type == CONF_TYPE_TELNET:
+        host = entry.data[CONF_HOST]
+        port = entry.data[CONF_PORT]
+
+        # Test if we can connect to the device.
+        projector = BenQProjectorTelnet(host, port)
 
         # Open the connection.
-        await coordinator.async_connect()
+        if not await hass.async_add_executor_job(projector.connect):
+            raise ConfigEntryNotReady(f"Unable to connect to device {host}:{port}")
+    else:
+        serial_port = entry.data[CONF_SERIAL_PORT]
+        baud_rate = entry.data[CONF_BAUD_RATE]
 
-        _LOGGER.info("BenQ projector on %s is available", serial_port)
-    except serial.SerialException as ex:
-        raise ConfigEntryNotReady(
-            f"Unable to connect to BenQ projector on {serial_port}: {ex}"
-        ) from ex
+        # Test if we can connect to the device.
+        try:
+            projector = BenQProjectorSerial(serial_port, baud_rate)
+
+            # Open the connection.
+            if not await hass.async_add_executor_job(projector.connect):
+                raise ConfigEntryNotReady(f"Unable to connect to device {serial_port}")
+    
+            _LOGGER.info("Device %s is available", serial_port)
+        except serial.SerialException as ex:
+            raise ConfigEntryNotReady(
+                f"Unable to connect to device {serial_port}"
+            ) from ex
+
+    coordinator = BenQProjectorCoordinator(hass, projector)
+
+    # try:
+    #     serial_port = entry.data[CONF_SERIAL_PORT]
+    #     coordinator = BenQProjectorCoordinator(
+    #         hass, serial_port, entry.data[CONF_BAUD_RATE]
+    #     )
+    #
+    #     # Open the connection.
+    #     await coordinator.async_connect()
+    #
+    #     _LOGGER.info("BenQ projector on %s is available", serial_port)
+    # except serial.SerialException as ex:
+    #     raise ConfigEntryNotReady(
+    #         f"Unable to connect to BenQ projector on {serial_port}: {ex}"
+    #     ) from ex
 
     # Fetch initial data so we have data when entities subscribe
     await coordinator.async_config_entry_first_refresh()

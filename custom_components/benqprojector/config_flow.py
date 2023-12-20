@@ -3,21 +3,23 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any
+from typing import Any, Final
 
 import homeassistant.helpers.config_validation as cv
 import serial
 import serial.tools.list_ports
 import voluptuous as vol
-from benqprojector import BAUD_RATES, BenQProjector
+from benqprojector import BAUD_RATES, BenQProjectorSerial, BenQProjectorTelnet
 from homeassistant import config_entries
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 
-from .const import CONF_BAUD_RATE, CONF_MANUAL_PATH, CONF_SERIAL_PORT, DOMAIN
+from .const import CONF_BAUD_RATE, CONF_MANUAL_PATH, CONF_SERIAL_PORT, CONF_TYPE_SERIAL, CONF_TYPE_TELNET, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
+DEFAULT_PORT: Final = 8000
 
 class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for BenQ Projector."""
@@ -26,11 +28,28 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     STEP_SETUP_SERIAL_SCHEMA = None
 
+    _step_setup_network_schema = vol.Schema(
+        {
+            vol.Required(CONF_HOST): str,
+            vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
+        }
+    )
+
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle the initial step."""
-        return await self.async_step_setup_serial(user_input)
+        if user_input is not None:
+            user_selection = user_input[CONF_TYPE]
+            if user_selection == "Serial":
+                return await self.async_step_setup_serial()
+
+            return await self.async_step_setup_network()
+
+        list_of_types = ["Serial", "Network"]
+
+        schema = vol.Schema({vol.Required(CONF_TYPE): vol.In(list_of_types)})
+        return self.async_show_form(step_id="user", data_schema=schema)
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
@@ -111,7 +130,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Test if we can connect to the device
         try:
             # Get model from the device
-            projector = BenQProjector(serial_port, data[CONF_BAUD_RATE])
+            projector = BenQProjectorSerial(serial_port, data[CONF_BAUD_RATE])
             # projector.connect()
             if not self.hass.async_add_executor_job(projector.connect):
                 raise CannotConnect(f"Unable to connect to the device {serial_port}")
@@ -133,6 +152,75 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             },
             None,
         )
+
+    async def async_step_setup_network(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Step when setting up network configuration."""
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            try:
+                info = await self.validate_input_setup_network(user_input, errors)
+            except CannotConnect:
+                errors["base"] = "cannot_connect"
+            except Exception as ex:  # pylint: disable=broad-except
+                _LOGGER.exception("Unexpected exception: %s", ex)
+                errors["base"] = "unknown"
+            else:
+                return self.async_create_entry(title=info["title"], data=info)
+            # data = await self.validate_input_setup_network(user_input, errors)
+            # if not errors:
+            #     return self.async_create_entry(
+            #         title=f"{data[CONF_HOST]}:{data[CONF_PORT]}", data=data
+            #     )
+
+        return self.async_show_form(
+            step_id="setup_network",
+            data_schema=self._step_setup_network_schema,
+            errors=errors,
+        )
+
+    async def validate_input_setup_network(
+        self, data: dict[str, Any], errors: dict[str, str]
+    ) -> dict[str, Any]:
+        """Validate the user input allows us to connect.
+
+        Data has the keys from _step_setup_network_schema with values provided by the user.
+        """
+        # Validate the data can be used to set up a network connection.
+        self._step_setup_network_schema(data)
+        
+        host = data[CONF_HOST]
+        port = data[CONF_PORT]
+        
+        #ToDo Test if the host exists
+
+        await self.async_set_unique_id(f"{host}:{port}")
+        self._abort_if_unique_id_configured()
+
+        # Test if we can connect to the device.
+        try:
+            projector = BenQProjectorTelnet(host, port)
+            if not await self.hass.async_add_executor_job(projector.connect):
+                raise CannotConnect(f"Unable to connect to the device on {host}:{port}")
+
+            model = projector.model
+
+            await self.hass.async_add_executor_job(projector.disconnect)
+            _LOGGER.info("Device on %s:%s available", host, port)
+        except serial.SerialException as ex:
+            raise CannotConnect(
+                f"Unable to connect to the device on {host}:{port}"
+            ) from ex
+
+        # Return info that you want to store in the config entry.
+        return {
+            "title": f"BenQ {model} {host}:{port}",
+            CONF_TYPE: CONF_TYPE_TELNET,
+            CONF_HOST: host,
+            CONF_PORT: port,
+        }
 
 
 def get_serial_by_id(dev_path: str) -> str:
