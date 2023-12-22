@@ -61,13 +61,17 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
     def __init__(self, hass, projector: BenQProjector):
         """Initialize BenQ Projector Data Update Coordinator."""
+        update_interval = timedelta(seconds=15)
+        if isinstance(projector, BenQProjectorSerial):
+            update_interval = timedelta(seconds=5)
+
         super().__init__(
             hass,
             _LOGGER,
             # Name of the data. For logging purposes.
             name=__name__,
             # Polling interval. Will only be polled if there are subscribers.
-            update_interval=timedelta(seconds=5),
+            update_interval=update_interval,
         )
 
         self.projector = projector
@@ -87,14 +91,14 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     #     try:
     #         if not await self.hass.async_add_executor_job(self.projector.connect):
     #             raise ConfigEntryNotReady(
-    #                 f"Unable to connect to BenQ projector on {self._serial_port}"
+    #                 f"Unable to connect to BenQ projector on {self.projector._connection}"
     #             )
     #     except TimeoutError as ex:
     #         raise ConfigEntryNotReady(
-    #             f"Unable to connect to BenQ projector on {self._serial_port}", ex
+    #             f"Unable to connect to BenQ projector on {self.projector._connection}", ex
     #         )
     #
-    #     _LOGGER.debug("Connected to BenQ projector on %s", self._serial_port)
+    #     _LOGGER.debug("Connected to BenQ projector on %s", self.projector._connection)
     #
     #     self.unique_id = self.projector.unique_id
     #     self.model = self.projector.model
@@ -109,7 +113,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
     async def async_disconnect(self):
         await self.hass.async_add_executor_job(self.projector.disconnect)
-        _LOGGER.debug("Disconnected from BenQ projector on %s", self._serial_port)
+        _LOGGER.debug("Disconnected from BenQ projector on %s", self.projector._connection)
 
     @callback
     def async_add_listener(
@@ -208,13 +212,13 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
                 return None
         except TimeoutError as ex:
             raise UpdateFailed(
-                f"Error communicating with BenQ projector on {self._serial_port}", ex
+                f"Error communicating with BenQ projector on {self.projector._connection}", ex
             )
 
         power_status = self.projector.power_status
         if power_status is None:
             raise UpdateFailed(
-                f"Error communicating with BenQ projector on {self._serial_port}"
+                f"Error communicating with BenQ projector on {self.projector._connection}"
             )
 
         self.power_status = power_status
