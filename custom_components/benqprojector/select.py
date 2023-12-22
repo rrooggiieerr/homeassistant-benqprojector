@@ -68,6 +68,12 @@ async def async_setup_entry(
             name="Projector Position",
             entity_category=EntityCategory.CONFIG,
         ),
+        SelectEntityDescription(
+            key="menuposition",
+            options=coordinator.projector.menu_positions,
+            name="Menu Position",
+            entity_category=EntityCategory.CONFIG,
+        ),
     ]
 
     entities = []
