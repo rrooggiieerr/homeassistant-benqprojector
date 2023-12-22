@@ -6,6 +6,7 @@ from benqprojector import BenQProjector
 from homeassistant.components.number import NumberEntity, NumberEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -40,7 +41,15 @@ async def async_setup_entry(
             icon="mdi:microphone",
             native_max_value=20,
         ),
-        NumberEntityDescription(key="keyst", name="Keystone", native_max_value=20),
+        NumberEntityDescription(key="keyst", name="Keystone", native_max_value=20, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="rgain", name="Red Gain", native_max_value=200, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="ggain", name="Green Gain", native_max_value=200, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="bgain", name="Blue Gain", native_max_value=200, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="roffset", name="Red Offset", native_max_value=511, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="goffset", name="Green Offset", native_max_value=511, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="boffset", name="Blue Offset", native_max_value=511, entity_category=EntityCategory.CONFIG,),
+        # NumberEntityDescription(key="gamma", name="Gamma", icon="mdi:gamma", native_min_value=1.6, native_max_value=2.8, native_step=0.1, entity_category=EntityCategory.CONFIG,),
+        NumberEntityDescription(key="hdrbri", name="HDR Brightness", icon="mdi:brightness-6", native_min_value=-2, native_max_value=2, entity_category=EntityCategory.CONFIG,),
     ]
 
     entities = []
@@ -105,8 +114,6 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        updated = False
-
         if self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
