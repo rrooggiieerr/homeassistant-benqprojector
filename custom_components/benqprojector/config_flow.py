@@ -131,8 +131,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             # Get model from the device
             projector = BenQProjectorSerial(serial_port, data[CONF_BAUD_RATE])
-            # projector.connect()
-            if not self.hass.async_add_executor_job(projector.connect):
+            if not await self.hass.async_add_executor_job(projector.connect):
                 raise CannotConnect(f"Unable to connect to the device {serial_port}")
 
             model = projector.model
