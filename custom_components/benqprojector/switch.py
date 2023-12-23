@@ -111,6 +111,13 @@ async def async_setup_entry(
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
+        SwitchEntityDescription(
+            key="led",
+            name="LED indicator",
+            icon="mdi:image-filter-hdr",
+            entity_category=EntityCategory.CONFIG,
+            entity_registry_enabled_default=False,
+        ),
     ]
 
     entities = []
