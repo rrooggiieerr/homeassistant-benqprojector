@@ -24,7 +24,7 @@ send:
       selector:
         text:
 send_raw:
-  name: Send command
+  name: Send Raw command
   description: Sends a raw command to a BenQ projector.
   fields:
     device_id:
