@@ -15,8 +15,8 @@ series but probably also others.
 
 ## Protocol
 
-This integration works if your projector has a serial port or network
-connection **and** supports the following command structure: 
+This integration works if your projector supports the following command
+structure:
 
 ```
 <CR>*<key>=<value>#<CR>
@@ -24,13 +24,31 @@ connection **and** supports the following command structure:
 
 Where `<CR>` is a Carriage Return
 
-Example:  
-Power on: `<CR>*pow=on#<CR>`  
+Examples:  
+Power on   : `<CR>*pow=on#<CR>`  
+Power off  : `<CR>*pow=off#<CR>`  
+Change source to HDMI: `<CR>*sour=hdmi#<CR>`  
 
-The same commands should work over a network connection, but I don't own such
-projector and have implemented the network functionality using a serial to
-network bridge. The network support for native networked BenQ projectors is
-thus experimental. Let me know if your network connected BenQ projector works.
+### Serial port
+
+You can lookup and change the baud rate in the menu of your BenQ projector.
+
+### Network connected projectors
+
+The commands as described above should also work over a network connection,
+however I don't own such projector and have implemented the network
+functionality using a serial to network bridge. The network support for native
+networked BenQ projectors is thus experimental. Let me know if your network
+connected BenQ projector works.
+
+Example of a serial to network bridge using a serial to TTL converter and a
+Wemos C3 Mini:  
+<img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
+
+It has to be said that a direct serial conection to the projector is much more
+responsive than using a network connection, at least when using a serial to
+network bridge. Maybe this is different on a native networked BenQ projector or
+using ethernet instead of WiFi.
 
 ### PJLink
 
@@ -41,6 +59,8 @@ BenQ protocol instead. The PJLink protocol is covered by it's own integration:
 ## Supported projectors
 
 Known to work:
+* MW519
+* TH585
 * W1100
 * W1110
 * X3000i
@@ -61,8 +81,11 @@ Not supported:
 * RP790S
 * RP705H
 
-Please let me know if your projectors is also supported by this plugin so I
-can improve the overview of supported devices.
+Some projectors need to be on to be able to detect the model and the
+integration to work.
+
+Please let me know if your projectors is also supported by this plugin so I can
+improve the overview of supported devices.
 
 ##  Adding a new BenQ projector
 - After restarting go to **Settings** then **Devices & Services**

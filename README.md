@@ -55,6 +55,8 @@ BenQ protocol instead. The PJLink protocol is covered by it's own integration:
 ## Supported projectors
 
 Known to work:
+* MW519
+* TH585
 * W1100
 * W1110
 * X3000i
@@ -75,10 +77,11 @@ Not supported:
 * RP790S
 * RP705H
 
-Some projectors need to be on to be able to detect the model and the integration to work.
+Some projectors need to be on to be able to detect the model and the
+integration to work.
 
-Please let me know if your projectors is also supported by this plugin so I
-can improve the overview of supported devices.
+Please let me know if your projectors is also supported by this plugin so I can
+improve the overview of supported devices.
 
 ## Installation
 
