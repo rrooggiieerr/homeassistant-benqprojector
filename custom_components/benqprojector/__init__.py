@@ -1,4 +1,5 @@
 """The BenQ Projector integration."""
+
 from __future__ import annotations
 
 import logging
@@ -10,13 +11,26 @@ import serial
 import voluptuous as vol
 from benqprojector import BenQProjector, BenQProjectorSerial, BenQProjectorTelnet
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_DEVICE_ID, Platform, CONF_HOST, CONF_PORT, CONF_TYPE
+from homeassistant.const import (
+    CONF_DEVICE_ID,
+    CONF_HOST,
+    CONF_PORT,
+    CONF_TYPE,
+    Platform,
+)
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .const import CONF_BAUD_RATE, CONF_PROJECTOR, CONF_SERIAL_PORT, CONF_TYPE_SERIAL, CONF_TYPE_TELNET, DOMAIN
+from .const import (
+    CONF_BAUD_RATE,
+    CONF_PROJECTOR,
+    CONF_SERIAL_PORT,
+    CONF_TYPE_SERIAL,
+    CONF_TYPE_TELNET,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -113,7 +127,9 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
     async def async_disconnect(self):
         await self.hass.async_add_executor_job(self.projector.disconnect)
-        _LOGGER.debug("Disconnected from BenQ projector on %s", self.projector.connection)
+        _LOGGER.debug(
+            "Disconnected from BenQ projector on %s", self.projector.connection
+        )
 
     @callback
     def async_add_listener(
@@ -215,7 +231,8 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
                 return None
         except TimeoutError as ex:
             raise UpdateFailed(
-                f"Error communicating with BenQ projector on {self.projector.connection}", ex,
+                f"Error communicating with BenQ projector on {self.projector.connection}",
+                ex,
             )
 
         power_status = self.projector.power_status
@@ -284,7 +301,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             # Open the connection.
             if not await hass.async_add_executor_job(projector.connect):
                 raise ConfigEntryNotReady(f"Unable to connect to device {serial_port}")
-    
+
             _LOGGER.info("Device %s is available", serial_port)
         except serial.SerialException as ex:
             raise ConfigEntryNotReady(

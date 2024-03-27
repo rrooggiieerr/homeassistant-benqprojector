@@ -1,4 +1,5 @@
 """Constants for the BenQ Projector integration."""
+
 from typing import Final
 
 DOMAIN: Final = "benqprojector"

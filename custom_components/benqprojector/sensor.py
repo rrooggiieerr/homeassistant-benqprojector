@@ -3,6 +3,7 @@ Created on 27 Nov 2022
 
 @author: Rogier van Staveren
 """
+
 from __future__ import annotations
 
 import logging
