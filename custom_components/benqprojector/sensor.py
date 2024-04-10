@@ -18,6 +18,7 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -38,14 +39,14 @@ async def async_setup_entry(
     entity_descriptions = []
     if coordinator.supports_command("ltim2"):
         entity_descriptions.append(
-            SensorEntityDescription(key="ltim", name="Lamp 1 Time")
+            SensorEntityDescription(key="ltim", name="Lamp 1 Time", entity_category=EntityCategory.DIAGNOSTIC)
         )
         entity_descriptions.append(
-            SensorEntityDescription(key="ltim2", name="Lamp 2 Time")
+            SensorEntityDescription(key="ltim2", name="Lamp 2 Time", entity_category=EntityCategory.DIAGNOSTIC)
         )
     elif coordinator.supports_command("ltim"):
         entity_descriptions.append(
-            SensorEntityDescription(key="ltim", name="Lamp Time")
+            SensorEntityDescription(key="ltim", name="Lamp Time", entity_category=EntityCategory.DIAGNOSTIC)
         )
 
     entities = []
