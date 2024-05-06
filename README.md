@@ -45,38 +45,38 @@ You can lookup and change the baud rate in the menu of your BenQ projector.
 
 ### Network connected projectors
 
-The commands as described above should also work over a network connection,
-however I don't own such projector and have implemented the network
-functionality using a serial to network bridge. The network support for native
-networked BenQ projectors is thus experimental. Let me know if your network
-connected BenQ projector works.
+The commands as described above should also work over a network connection, however I don't own
+such projector and have implemented the network functionality using a serial to network bridge. The
+network support for native networked BenQ projectors is thus experimental. Let me know if your
+network connected BenQ projector works.
 
-Example of a serial to network bridge using a serial to TTL converter and a
-Wemos C3 Mini:  
+Example of a serial to network bridge using a serial to TTL converter and a Wemos C3 Mini:  
+
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
 
-It has to be said that a direct serial conection to the projector is much more
-responsive than using a network connection, at least when using a serial to
-network bridge. Maybe this is different on a native networked BenQ projector or
-using ethernet instead of WiFi.
+It has to be said that a direct serial conection to the projector is much more responsive than
+using a network connection, at least when using a serial to network bridge. Maybe this is different
+on a native networked BenQ projector or using ethernet instead of WiFi.
 
 ### PJLink
 
-This integration does **not** implement the PJLink protocol, but a proparitary
-BenQ protocol instead. The PJLink protocol is covered by it's own integration:
+This integration does **not** implement the PJLink protocol, but a proparitary BenQ protocol
+instead. The PJLink protocol is covered by it's own integration:
+
 [Home Assistant PJLink integration](https://www.home-assistant.io/integrations/pjlink/)
 
 ## Supported projectors
 
-The following devices are known to work:
+The following projectors are known to work:
 
 * MW519
 * TH585
+* W1070
 * W1100
 * W1110
 * X3000i
 
-The following device are not tested but use te same protocol according to the documentation:
+The following projectors are not tested but use te same protocol according to the documentation:
 
 Others in the L, P, T, W and X Series
 
@@ -96,8 +96,8 @@ Not supported:
 
 Some projectors need to be on to be able to detect the model and the integration to work.
 
-Please let me know if your projectors is also supported by this integration so I can improve the
-overview of supported devices.
+Please let me know if your projector is also supported by this Home Assistant integration so I can
+improve the overview of supported projectors.
 
 ## Installation
 
@@ -143,7 +143,8 @@ More on translating custom integrations can be found
 
 ## Support my work
 
-Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of the following platforms:
+Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of
+the following platforms:
 
 [![Github Sponsors][github-shield]][github]
 [![PayPal][paypal-shield]][paypal]
