@@ -1,18 +1,32 @@
-# Home Assistant BenQ projector integration
+# Home Assistant integration for BenQ projectors
 
-Home Assistant integration that supports sending commands to BenQ projectors
-over the serial interface or serial to network bridges like esp-link.
+![Python][python-shield]
+[![GitHub Release][releases-shield]][releases]
+[![Licence][license-badge]][license]
+[![Home Assistant][homeassistant-shield]][homeassistant]
+[![HACS][hacs-shield]][hacs]  
+[![Github Sponsors][github-shield]][github]
+[![PayPal][paypal-shield]][paypal]
+[![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
+[![Patreon][patreon-shield]][patreon]
+
+## Introduction
+
+Home Assistant integration that supports sending commands to BenQ projectors over the serial
+interface or serial to network bridges like esp-link.
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
 
-BenQ projectors and flat pannels with a serial port can support one of three
-protocols. This plugin supports projectors which are of the L, P, T, W and X
-series but probably also others.
+BenQ projectors and flat pannels with a serial port can support one of three protocols. This plugin
+supports projectors which are of the L, P, T, W and X series but probably also others.
+
+## Hardware
+
+## Features
 
 ## Protocol
 
-This integration works if your projector supports the following command
-structure:
+This integration works if your projector supports the following command structure:
 
 ```
 <CR>*<key>=<value>#<CR>
@@ -54,17 +68,20 @@ BenQ protocol instead. The PJLink protocol is covered by it's own integration:
 
 ## Supported projectors
 
-Known to work:
+The following devices are known to work:
+
 * MW519
 * TH585
 * W1100
 * W1110
 * X3000i
 
-Not tested but use te same protocol according to the documentation:  
+The following device are not tested but use te same protocol according to the documentation:
+
 Others in the L, P, T, W and X Series
 
 Not supported:
+
 * RP552
 * RP552H
 * RP840G
@@ -77,27 +94,31 @@ Not supported:
 * RP790S
 * RP705H
 
-Some projectors need to be on to be able to detect the model and the
-integration to work.
+Some projectors need to be on to be able to detect the model and the integration to work.
 
-Please let me know if your projectors is also supported by this plugin so I can
-improve the overview of supported devices.
+Please let me know if your projectors is also supported by this integration so I can improve the
+overview of supported devices.
 
 ## Installation
 
 ### HACS
+
+The recomended way to install this Home Assistant integration is using by [HACS][hacs].
+Click the following button to open the integration directly on the HACS integration page.
+
+[![Install BenQ projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
+
+Or follow these instructions:
 
 - Go to your **HACS** view in Home Assistant and then to **Integrations**
 - Select **+ Explore & download repositories** and search for *BenQ Projector*
 - Select **Download**
 - Restart Home Assistant
 
-[![Install BenQ projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
-
 ### Manually
 
-- Copy the `custom_components/benqprojector` directory of this repository into
-the `config/custom_components/` directory of your Home Assistant installation
+- Copy the `custom_components/benqprojector` directory of this repository into the
+`config/custom_components/` directory of your Home Assistant installation
 - Restart Home Assistant
 
 ##  Adding a new BenQ projector
@@ -108,12 +129,43 @@ the `config/custom_components/` directory of your Home Assistant installation
 - Enter the baud rate
 - Select **Submit**
 
-When your wiring is right a new BenQ Projector integration and device will now
-be added to your Integrations view. If your wiring is not right you will get a
-*Failed to connect* error message.
+When your wiring is right a new BenQ Projector integration and device will now be added to your
+Integrations view. If your wiring is not right you will get a *Failed to connect* error message.
+
+## Contributing
+
+If you would like to use this Home Assistant integration in youw own language you can provide me
+with a translation file as found in the `custom_components/xyscreens/translations` directory.
+Create a pull request (preferred) or issue with the file attached.
+
+More on translating custom integrations can be found
+[here](https://developers.home-assistant.io/docs/internationalization/custom_integration/).
 
 ## Support my work
 
-Do you enjoy using this Home Assistant integration? Then consider supporting
-my work:  
-[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;">](https://www.buymeacoffee.com/rrooggiieerr)  
+Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of the following platforms:
+
+[![Github Sponsors][github-shield]][github]
+[![PayPal][paypal-shield]][paypal]
+[![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
+[![Patreon][patreon-shield]][patreon]
+
+---
+
+[python-shield]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[releases]: https://github.com/rrooggiieerr/homeassistant-benqprojector/releases
+[releases-shield]: https://img.shields.io/github/v/release/rrooggiieerr/homeassistant-benqprojector?style=for-the-badge
+[license]: ./LICENSE
+[license-badge]: https://img.shields.io/github/license/rrooggiieerr/homeassistant-benqprojector?style=for-the-badge
+[homeassistant]: https://www.home-assistant.io/
+[homeassistant-shield]: https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white
+[hacs]: https://hacs.xyz/
+[hacs-shield]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
+[paypal]: https://paypal.me/seekingtheedge
+[paypal-shield]: https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white
+[buymecoffee]: https://www.buymeacoffee.com/rrooggiieerr
+[buymecoffee-shield]: https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black
+[github]: https://github.com/sponsors/rrooggiieerr
+[github-shield]: https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA
+[patreon]: https://www.patreon.com/seekingtheedge/creators
+[patreon-shield]: https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white
