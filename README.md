@@ -13,7 +13,7 @@
 ## Introduction
 
 Home Assistant integration that supports sending commands to BenQ projectors over the serial
-interface or serial to network bridges like esp-link.
+interface or serial to network bridges like [esp-link](https://github.com/jeelabs/esp-link).
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
 
