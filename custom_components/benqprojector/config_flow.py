@@ -10,7 +10,7 @@ import homeassistant.helpers.config_validation as cv
 import serial
 import serial.tools.list_ports
 import voluptuous as vol
-from benqprojector import BAUD_RATES, BenQProjectorSerial, BenQProjectorTelnet
+from benqprojector import BAUD_RATES, BenQProjectorSerial, BenQProjectorTelnet, DEFAULT_PORT
 from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE
 from homeassistant.data_entry_flow import FlowResult
@@ -27,8 +27,6 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
-DEFAULT_PORT: Final = 8000
-
 
 class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for BenQ Projector."""
@@ -40,7 +38,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     _step_setup_network_schema = vol.Schema(
         {
             vol.Required(CONF_HOST): str,
-            vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
+            vol.Required(CONF_PORT, default=DEFAULT_PORT): cv.port,
         }
     )
 
