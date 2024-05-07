@@ -2,7 +2,8 @@
 
 ![Python][python-shield]
 [![GitHub Release][releases-shield]][releases]
-[![Licence][license-badge]][license]
+[![Licence][license-shield]][license]
+[![Maintainer][maintainer-shield]][maintainer]
 [![Home Assistant][homeassistant-shield]][homeassistant]
 [![HACS][hacs-shield]][hacs]  
 [![Github Sponsors][github-shield]][github]
@@ -17,7 +18,7 @@ interface or serial to network bridges like [esp-link](https://github.com/jeelab
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
 
-BenQ projectors and flat pannels with a serial port can support one of three protocols. This plugin
+BenQ projectors and flat panels with a serial port can support one of three protocols. This plugin
 supports projectors which are of the L, P, T, W and X series but probably also others.
 
 ## Hardware
@@ -54,7 +55,7 @@ Example of a serial to network bridge using a serial to TTL converter and a Wemo
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
 
-It has to be said that a direct serial conection to the projector is much more responsive than
+It has to be said that a direct serial connection to the projector is much more responsive than
 using a network connection, at least when using a serial to network bridge. Maybe this is different
 on a native networked BenQ projector or using ethernet instead of WiFi.
 
@@ -76,7 +77,7 @@ The following projectors are known to work:
 * W1110
 * X3000i
 
-The following projectors are not tested but use te same protocol according to the documentation:
+The following projectors are not tested but use the same protocol according to the documentation:
 
 Others in the L, P, T, W and X Series
 
@@ -103,7 +104,7 @@ improve the overview of supported projectors.
 
 ### HACS
 
-The recomended way to install this Home Assistant integration is using by [HACS][hacs].
+The recommended way to install this Home Assistant integration is using by [HACS][hacs].
 Click the following button to open the integration directly on the HACS integration page.
 
 [![Install BenQ projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
@@ -121,7 +122,7 @@ Or follow these instructions:
 `config/custom_components/` directory of your Home Assistant installation
 - Restart Home Assistant
 
-##  Adding a new BenQ projector
+## Adding a new BenQ projector
 
 - After restarting go to **Settings** then **Devices & Services**
 - Select **+ Add integration** and type in *BenQ Projector*
@@ -134,8 +135,8 @@ Integrations view. If your wiring is not right you will get a *Failed to connect
 
 ## Contributing
 
-If you would like to use this Home Assistant integration in youw own language you can provide me
-with a translation file as found in the `custom_components/xyscreens/translations` directory.
+If you would like to use this Home Assistant integration in your own language you can provide me
+with a translation file as found in the `custom_components/benqprojector/translations` directory.
 Create a pull request (preferred) or issue with the file attached.
 
 More on translating custom integrations can be found
@@ -144,12 +145,18 @@ More on translating custom integrations can be found
 ## Support my work
 
 Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of
-the following platforms:
+the following platforms, your donation is greatly appreciated and keeps me motivated:
 
 [![Github Sponsors][github-shield]][github]
 [![PayPal][paypal-shield]][paypal]
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
 [![Patreon][patreon-shield]][patreon]
+
+## Hire me
+
+If you would like to have a Home Assistant integration developed for your product or are in need
+for a freelance Python developer for your project please contact me, you can find my email address
+on [my GitHub profile](https://github.com/rrooggiieerr).
 
 ---
 
@@ -157,7 +164,9 @@ the following platforms:
 [releases]: https://github.com/rrooggiieerr/homeassistant-benqprojector/releases
 [releases-shield]: https://img.shields.io/github/v/release/rrooggiieerr/homeassistant-benqprojector?style=for-the-badge
 [license]: ./LICENSE
-[license-badge]: https://img.shields.io/github/license/rrooggiieerr/homeassistant-benqprojector?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/rrooggiieerr/homeassistant-benqprojector?style=for-the-badge
+[maintainer]: https://github.com/rrooggiieerr
+[maintainer-shield]: https://img.shields.io/badge/MAINTAINER-%40rrooggiieerr-41BDF5?style=for-the-badge
 [homeassistant]: https://www.home-assistant.io/
 [homeassistant-shield]: https://img.shields.io/badge/home%20assistant-%2341BDF5.svg?style=for-the-badge&logo=home-assistant&logoColor=white
 [hacs]: https://hacs.xyz/
