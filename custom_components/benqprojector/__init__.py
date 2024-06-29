@@ -78,7 +78,6 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             _LOGGER,
             # Name of the data. For logging purposes.
             name=__name__,
-            # Polling interval. Will only be polled if there are subscribers.
         )
 
         self.projector = projector
