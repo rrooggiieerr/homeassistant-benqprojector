@@ -39,14 +39,24 @@ async def async_setup_entry(
     entity_descriptions = []
     if coordinator.supports_command("ltim2"):
         entity_descriptions.append(
-            SensorEntityDescription(key="ltim", name="Lamp 1 Time", entity_category=EntityCategory.DIAGNOSTIC)
+            SensorEntityDescription(
+                key="ltim",
+                name="Lamp 1 Time",
+                entity_category=EntityCategory.DIAGNOSTIC,
+            )
         )
         entity_descriptions.append(
-            SensorEntityDescription(key="ltim2", name="Lamp 2 Time", entity_category=EntityCategory.DIAGNOSTIC)
+            SensorEntityDescription(
+                key="ltim2",
+                name="Lamp 2 Time",
+                entity_category=EntityCategory.DIAGNOSTIC,
+            )
         )
     elif coordinator.supports_command("ltim"):
         entity_descriptions.append(
-            SensorEntityDescription(key="ltim", name="Lamp Time", entity_category=EntityCategory.DIAGNOSTIC)
+            SensorEntityDescription(
+                key="ltim", name="Lamp Time", entity_category=EntityCategory.DIAGNOSTIC
+            )
         )
 
     entities = []
