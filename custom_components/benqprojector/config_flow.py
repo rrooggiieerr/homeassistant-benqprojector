@@ -9,7 +9,12 @@ from typing import Any, Final
 import serial
 import serial.tools.list_ports
 import voluptuous as vol
-from benqprojector import BAUD_RATES, BenQProjectorSerial, BenQProjectorTelnet, DEFAULT_PORT
+from benqprojector import (
+    BAUD_RATES,
+    DEFAULT_PORT,
+    BenQProjectorSerial,
+    BenQProjectorTelnet,
+)
 from homeassistant import config_entries
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE
 from homeassistant.data_entry_flow import FlowResult
@@ -152,9 +157,9 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 projector = BenQProjectorSerial(serial_port, data[CONF_BAUD_RATE])
                 if not await self.hass.async_add_executor_job(projector.connect):
                     errors["base"] = "cannot_connect"
-    
+
                 model = projector.model
-    
+
                 _LOGGER.info("Device %s available", serial_port)
             except serial.SerialException:
                 errors["base"] = "cannot_connect"
@@ -208,7 +213,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._step_setup_network_schema(data)
 
         host = data[CONF_HOST]
-        port = data[CONF_PORT]
+        port = int(data[CONF_PORT])
 
         # ToDo Test if the host exists
 
