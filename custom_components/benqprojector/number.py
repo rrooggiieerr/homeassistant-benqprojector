@@ -178,33 +178,29 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
+        if self.entity_description.key in self.coordinator.data:
+            try:
+                self._attr_native_value = float(
+                    self.coordinator.data.get(self.entity_description.key)
+                )
+                self._attr_available = True
+            except ValueError:
+                _LOGGER.exception(
+                    "ValueError for %s = %s",
+                    self.entity_description.key,
+                    self.coordinator.data.get(self.entity_description.key),
+                )
+                self._attr_available = False
+            except TypeError:
+                _LOGGER.exception("TypeError for %s", self.entity_description.key)
+                self._attr_available = False
+
         if self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            if self.coordinator.data and (
-                new_value := self.coordinator.data.get(self.entity_description.key)
-            ):
-                try:
-                    self._attr_native_value = float(new_value)
-                    self._attr_available = True
-                except ValueError as ex:
-                    _LOGGER.error(
-                        "ValueError for %s = %s, %s",
-                        self.entity_description.key,
-                        self.coordinator.data.get(self.entity_description.key),
-                        ex,
-                    )
-                    self._attr_available = False
-                except TypeError as ex:
-                    _LOGGER.error(
-                        "TypeError for %s, %s", self.entity_description.key, ex
-                    )
-                    self._attr_available = False
-            else:
-                self._attr_available = False
+            self._attr_available = True
         else:
-            _LOGGER.debug("%s is not available", self.entity_description.key)
             self._attr_available = False
 
         self.async_write_ha_state()

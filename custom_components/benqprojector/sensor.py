@@ -103,19 +103,17 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
+        if self.entity_description.key in self.coordinator.data:
+            self._attr_native_value = self.coordinator.data.get(
+                self.entity_description.key
+            )
+            self._attr_available = True
+
         if self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            _LOGGER.debug(self.coordinator.data)
-
-            if self.coordinator.data and (
-                new_value := self.coordinator.data.get(self.entity_description.key)
-            ):
-                self._attr_native_value = new_value
-                self._attr_available = True
-            else:
-                self._attr_available = False
+            self._attr_available = True
         else:
             self._attr_available = False
 
@@ -131,16 +129,18 @@ class BenQProjectorLampTimeSensor(BenQProjectorSensor):
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        if self.coordinator.data and (
-            new_value := self.coordinator.data.get(self.entity_description.key)
-        ):
+        if self.entity_description.key in self.coordinator.data:
             try:
-                self._attr_native_value = int(new_value)
+                self._attr_native_value = int(
+                    self.coordinator.data.get(self.entity_description.key)
+                )
                 self._attr_available = True
-            except ValueError as ex:
-                _LOGGER.error(ex)
+            except ValueError:
+                _LOGGER.exception(
+                    "ValueError for %s = %s",
+                    self.entity_description.key,
+                    self.coordinator.data.get(self.entity_description.key),
+                )
                 self._attr_available = False
-        else:
-            self._attr_available = False
 
-        self.async_write_ha_state()
+            self.async_write_ha_state()
