@@ -4,7 +4,7 @@ send:
   fields:
     device_id:
       name: Projector
-      description: The projector you want to send a comand to
+      description: The projector you want to send a command to
       required: true
       selector:
         device:
@@ -29,7 +29,7 @@ send_raw:
   fields:
     device_id:
       name: Projector
-      description: The projector you want to send a comand to
+      description: The projector you want to send a command to
       required: true
       selector:
         device:
