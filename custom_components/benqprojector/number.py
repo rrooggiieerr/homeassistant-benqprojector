@@ -195,7 +195,9 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                 _LOGGER.exception("TypeError for %s", self.entity_description.key)
                 self._attr_available = False
 
-        if self.coordinator.power_status in [
+        if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
+            self._attr_available = False
+        elif self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
@@ -234,7 +236,6 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
                     break
 
             self.async_write_ha_state()
-            await self.coordinator.async_request_refresh()
         else:
             self._attr_available = False
 

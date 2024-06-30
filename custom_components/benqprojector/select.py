@@ -135,7 +135,9 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
             )
             self._attr_available = True
 
-        if self.coordinator.power_status in [
+        if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
+            self._attr_available = False
+        elif self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
@@ -153,6 +155,5 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         if response is not None:
             self._attr_current_option = response
             self.async_write_ha_state()
-            await self.coordinator.async_request_refresh()
         else:
             _LOGGER.error("Failed to set %s to %s", self.name, option)

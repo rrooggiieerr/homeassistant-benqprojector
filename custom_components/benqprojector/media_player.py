@@ -66,64 +66,69 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
 
-        if self.coordinator.projector:
-            if self.coordinator.power_status in [
-                BenQProjector.POWERSTATUS_POWERINGON,
-                BenQProjector.POWERSTATUS_ON,
-            ]:
-                self._attr_state = MediaPlayerState.ON
-
-                self._attr_volume_level = self.coordinator.volume
-                self._attr_is_volume_muted = self.coordinator.muted
-
-                self._attr_source = self.coordinator.video_source
-
-                self._attr_available = True
-            elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
-                self._attr_state = MediaPlayerState.OFF
-                self._attr_available = False
-            elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
-                self._attr_state = MediaPlayerState.OFF
-                self._attr_available = True
-
-            self._attr_source_list = self.coordinator.projector.video_sources
-        else:
+        if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
             _LOGGER.debug("Projector is not available")
             self._attr_available = False
+        elif self.coordinator.power_status in [
+            BenQProjector.POWERSTATUS_POWERINGON,
+            BenQProjector.POWERSTATUS_ON,
+        ]:
+            self._attr_state = MediaPlayerState.ON
+
+            if self.coordinator.volume is not None:
+                self._attr_volume_level = self.coordinator.volume / 20
+
+            self._attr_is_volume_muted = self.coordinator.muted
+
+            self._attr_source = self.coordinator.video_source
+
+            self._attr_available = True
+        elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
+            self._attr_state = MediaPlayerState.OFF
+            self._attr_available = False
+        elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
+            self._attr_state = MediaPlayerState.OFF
+            self._attr_available = True
+
+        self._attr_source_list = self.coordinator.video_sources
 
         self.async_write_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        if not self._attr_available:
+            return self._attr_available
+
+        return self.coordinator.last_update_success
 
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
-        if self.coordinator.power_status in [
+        if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
+            self._attr_available = False
+        elif self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
-            self._attr_volume_level = self.coordinator.volume
-            self._attr_is_volume_muted = self.coordinator.muted
-            self._attr_source = self.coordinator.video_source
-
-            if (
-                self._attr_state != MediaPlayerState.ON
-                or self._attr_available is not True
-            ):
-                self._attr_state = MediaPlayerState.ON
-                self._attr_available = True
+            self._attr_state = MediaPlayerState.ON
+            self._attr_available = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
-            if (
-                self._attr_state != MediaPlayerState.OFF
-                or self._attr_available is not False
-            ):
-                self._attr_state = MediaPlayerState.OFF
-                self._attr_available = False
+            self._attr_state = MediaPlayerState.OFF
+            self._attr_available = False
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
-            if (
-                self._attr_state != MediaPlayerState.OFF
-                or self._attr_available is not True
-            ):
-                self._attr_state = MediaPlayerState.OFF
-                self._attr_available = True
+            self._attr_state = MediaPlayerState.OFF
+            self._attr_available = True
+
+        _LOGGER.debug("data: %s", self.coordinator.data)
+        if "vol" in self.coordinator.data:
+            self._attr_volume_level = self.coordinator.data.get("vol") / 20.0
+
+        if "mute" in self.coordinator.data:
+            self._attr_is_volume_muted = self.coordinator.data.get("mute")
+
+        if "sour" in self.coordinator.data:
+            self._attr_source = self.coordinator.data.get("sour")
 
         self.async_write_ha_state()
 
@@ -153,25 +158,25 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
         volume = int(volume * 20.0)
         if await self.coordinator.async_volume_level(volume):
-            self._attr_volume_level = self.coordinator.projector.volume / 20.0
+            self._attr_volume_level = self.coordinator.volume / 20.0
             self.async_write_ha_state()
 
     async def async_volume_up(self) -> None:
         """Increase volume."""
         if await self.coordinator.async_volume_up():
-            self._attr_volume_level = self.coordinator.projector.volume / 20.0
+            self._attr_volume_level = self.coordinator.volume / 20.0
             self._attr_is_volume_muted = False
             self.async_write_ha_state()
 
     async def async_volume_down(self) -> None:
         """Decrease volume."""
         if await self.coordinator.async_volume_down():
-            self._attr_volume_level = self.coordinator.projector.volume / 20.0
+            self._attr_volume_level = self.coordinator.volume / 20.0
             self._attr_is_volume_muted = False
             self.async_write_ha_state()
 
     async def async_select_source(self, source: str) -> None:
         """Set the input video source."""
         if await self.coordinator.async_select_video_source(source):
-            self._attr_source = source
+            self._attr_source = self.coordinator.video_source
             self.async_write_ha_state()

@@ -181,7 +181,9 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
             )
             self._attr_available = True
 
-        if self.coordinator.power_status in [
+        if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
+            self._attr_available = False
+        elif self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
         ]:
@@ -200,7 +202,6 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         if response == "on":
             self._attr_is_on = True
             self.async_write_ha_state()
-            await self.coordinator.async_request_refresh()
         else:
             _LOGGER.error("Failed to switch on %s", self.name)
 
@@ -213,6 +214,5 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         if response == "off":
             self._attr_is_on = False
             self.async_write_ha_state()
-            await self.coordinator.async_request_refresh()
         else:
             _LOGGER.error("Failed to switch off %s", self.name)
