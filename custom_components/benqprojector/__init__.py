@@ -66,10 +66,6 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     unique_id = None
     model = None
     device_info: DeviceInfo = None
-    power_status = None
-    volume = None
-    muted = None
-    video_source = None
 
     def __init__(self, hass, projector: BenQProjector):
         """Initialize BenQ Projector Data Update Coordinator."""
@@ -85,7 +81,6 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
         self.unique_id = self.projector.unique_id
         self.model = self.projector.model
-        self.power_status = self.projector.power_status
 
         self.device_info = DeviceInfo(
             identifiers={(DOMAIN, self.unique_id)},
@@ -94,10 +89,28 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
             manufacturer="BenQ",
         )
 
+    @property
+    def power_status(self):
+        return self.projector.power_status
+
+    @property
+    def volume(self):
+        return self.projector.volume
+
+    @property
+    def muted(self):
+        return self.projector.muted
+
+    @property
+    def video_source(self):
+        return self.projector.video_source
+
+    @property
+    def video_sources(self):
+        return self.projector.video_sources
+
     @callback
     def _listener(self, command: str, data):
-        _LOGGER.debug("command: %s, data: %s", command, data)
-
         self.async_set_updated_data({command: data})
 
     # async def async_connect(self):
@@ -115,7 +128,6 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     #
     #     self.unique_id = self.projector.unique_id
     #     self.model = self.projector.model
-    #     self.power_status = self.projector.power_status
     #
     #     self.device_info = DeviceInfo(
     #         identifiers={(DOMAIN, self.unique_id)},
@@ -150,60 +162,28 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         return await self.projector.send_raw_command(command)
 
     async def async_turn_on(self) -> bool:
-        if await self.projector.turn_on():
-            self.power_status = self.projector.power_status
-            return True
-
-        return False
+        return await self.projector.turn_on()
 
     async def async_turn_off(self) -> bool:
-        if await self.projector.turn_off():
-            self.power_status = self.projector.power_status
-            return True
-
-        return False
+        return await self.projector.turn_off()
 
     async def async_mute(self) -> bool:
-        if await self.projector.mute():
-            self.muted = True
-            return True
-
-        return False
+        return await self.projector.mute()
 
     async def async_unmute(self) -> bool:
-        if await self.projector.unmute():
-            self.muted = False
-            return True
-
-        return False
+        return await self.projector.unmute()
 
     async def async_volume_level(self, volume: int):
-        if await self.projector.volume_level(volume):
-            self.volume = volume
-            return True
-
-        return False
+        return await self.projector.volume_level(volume)
 
     async def async_volume_up(self):
-        if await self.projector.volume_up():
-            self.volume += 1
-            return True
-
-        return False
+        return await self.projector.volume_up()
 
     async def async_volume_down(self):
-        if await self.projector.volume_down():
-            self.volume -= 1
-            return True
-
-        return False
+        return await self.projector.volume_down()
 
     async def async_select_video_source(self, source: str):
-        if await self.projector.select_video_source(source):
-            self.source = source
-            return True
-
-        return False
+        return await self.projector.select_video_source(source)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
