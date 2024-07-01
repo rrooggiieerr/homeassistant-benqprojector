@@ -145,12 +145,13 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
     async def async_mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) media player."""
-        if mute is True and await self.coordinator.async_mute():
-            self._attr_is_volume_muted = True
-            self.async_write_ha_state()
-        elif mute is False and await self.coordinator.async_unmute():
-            self._attr_is_volume_muted = False
-            self.async_write_ha_state()
+        if mute:
+            await self.coordinator.async_mute()
+        else:
+            await self.coordinator.async_unmute()
+
+        self._attr_is_volume_muted = self.coordinator.muted
+        self.async_write_ha_state()
 
     async def async_set_volume_level(self, volume: float) -> None:
         """Set volume level, range 0..1."""
