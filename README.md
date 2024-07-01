@@ -23,7 +23,15 @@ supports projectors which are of the L, P, T, W and X series but probably also o
 
 ## Hardware
 
+I'm using a generic serial to USB converter to connect to my projector. The projector has a male
+DB9 connector, thus you need a female conector on your USB converter.
+
 ## Features
+
+* Connects to a BenQ projector over serial and serial to network bridge
+* Sending commands to projectors
+* Reading the projector status
+* Uses asynchronous IO
 
 ## Protocol
 
@@ -56,8 +64,8 @@ Example of a serial to network bridge using a serial to TTL converter and a Wemo
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
 
 It has to be said that a direct serial connection to the projector is much more responsive than
-using a network connection, at least when using a serial to network bridge. Maybe this is different
-on a native networked BenQ projector or using ethernet instead of WiFi.
+using a serial to network bridge, at least when using a serial to network bridge. Maybe this is
+different on a native networked BenQ projector or using ethernet instead of WiFi.
 
 ### PJLink
 
