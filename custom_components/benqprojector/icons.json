@@ -1,0 +1,124 @@
+{
+	"entity": {
+		"media_player": {
+			"mediaplayer": {
+				"default": "mdi:projector",
+				"state": {
+					"off": "mdi:projector-off",
+					"unavailable": "mdi:projector-off"
+				}
+			}
+		},
+		"number": {
+			"con": {
+				"default": "mdi:contrast"
+			},
+			"bri": {
+				"default": "mdi:brightness-6"
+			},
+			"color": {
+				"default": "mdi:palette"
+			},
+			"sharp": {
+			},
+			"micvol": {
+				"default": "mdi:microphone"
+			},
+			"keyst": {
+			},
+			"hkeystone": {
+			},
+			"vkeystone": {
+			},
+			"rgain": {
+			},
+			"ggain": {
+			},
+			"bgain": {
+			},
+			"roffset": {
+			},
+			"goffset": {
+			},
+			"boffset": {
+			},
+			"gamma": {
+				"default": "mdi:gamma"
+			},
+			"hdrbri": {
+				"default": "mdi:brightness-6"
+			}
+		},
+		"select": {
+			"audiosour": {
+				"default": "mdi:audio-input-rca"
+			},
+			"appmod": {
+			},
+			"ct": {
+				"default": "mdi:thermometer"
+			},
+			"asp": {
+				"default": "mdi:aspect-ratio"
+			},
+			"lampm": {
+			},
+			"3d": {
+			},
+			"rr": {
+			},
+			"pp": {
+			},
+			"menuposition": {
+			}
+		},
+		"sensor": {
+			"ltim": {
+			},
+			"ltim1": {
+			},
+			"ltim2": {
+			}
+		},
+		"switch": {
+			"bc": {
+				"default": "mdi:diamond-stone"
+			},
+			"qas": {
+			},
+			"directpower": {
+				"default": "mdi:power"
+			},
+			"autopower": {
+				"default": "mdi:power"
+			},
+			"standbynet": {
+			},
+			"standbymic": {
+			},
+			"standbymnt": {
+			},
+			"blank": {
+			},
+			"freeze": {
+			},
+			"ins": {
+				"default": "mdi:power"
+			},
+			"lpsaver": {
+				"default": "mdi:lightbulb-outline"
+			},
+			"prjlogincode": {
+			},
+			"broadcasting": {
+			},
+			"amxdd": {
+			},
+			"highaltitude": {
+				"default": "mdi:image-filter-hdr"
+			},
+			"led": {
+			}
+		}
+	}
+}

@@ -37,7 +37,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     _attr_has_entity_name = True
     _attr_name = None
     _attr_device_class = MediaPlayerDeviceClass.TV
-    _attr_icon = "mdi:projector"
+    _attr_translation_key = "mediaplayer"
     _attr_supported_features = (
         MediaPlayerEntityFeature.VOLUME_MUTE
         | MediaPlayerEntityFeature.VOLUME_SET

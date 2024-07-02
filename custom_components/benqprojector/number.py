@@ -25,90 +25,84 @@ async def async_setup_entry(
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     entity_descriptions = [
+        NumberEntityDescription(key="con", translation_key="con", native_max_value=100),
+        NumberEntityDescription(key="bri", translation_key="bri", native_max_value=100),
         NumberEntityDescription(
-            key="con", name="Contrast", icon="mdi:contrast", native_max_value=100
+            key="color", translation_key="color", native_max_value=20
         ),
         NumberEntityDescription(
-            key="bri", name="Brightness", icon="mdi:brightness-6", native_max_value=100
+            key="sharp", translation_key="sharp", native_max_value=20
         ),
         NumberEntityDescription(
-            key="color", name="Color", icon="mdi:palette", native_max_value=20
-        ),
-        NumberEntityDescription(key="sharp", name="Sharpness", native_max_value=20),
-        NumberEntityDescription(
-            key="micvol",
-            name="Microphone Volume",
-            icon="mdi:microphone",
-            native_max_value=20,
+            key="micvol", translation_key="micvol", native_max_value=20
         ),
         NumberEntityDescription(
             key="keyst",
-            name="Keystone",
+            translation_key="keyst",
             native_max_value=20,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="hkeystone",
-            name="Horizontal Keystone",
+            translation_key="hkeystone",
             native_max_value=20,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="vkeystone",
-            name="Vertical Keystone",
+            translation_key="vkeystone",
             native_max_value=20,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="rgain",
-            name="Red Gain",
+            translation_key="rgain",
             native_max_value=200,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="ggain",
-            name="Green Gain",
+            translation_key="ggain",
             native_max_value=200,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="bgain",
-            name="Blue Gain",
+            translation_key="bgain",
             native_max_value=200,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="roffset",
-            name="Red Offset",
+            translation_key="roffset",
             native_max_value=511,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="goffset",
-            name="Green Offset",
+            translation_key="goffset",
             native_max_value=511,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
         NumberEntityDescription(
             key="boffset",
-            name="Blue Offset",
+            translation_key="boffset",
             native_max_value=511,
             entity_category=EntityCategory.CONFIG,
             entity_registry_enabled_default=False,
         ),
-        # NumberEntityDescription(key="gamma", name="Gamma", icon="mdi:gamma", native_min_value=1.6, native_max_value=2.8, native_step=0.1, entity_category=EntityCategory.CONFIG, entity_registry_enabled_default=False,),
+        # NumberEntityDescription(key="gamma", translation_key="gamma", native_min_value=1.6, native_max_value=2.8, native_step=0.1, entity_category=EntityCategory.CONFIG, entity_registry_enabled_default=False,),
         NumberEntityDescription(
             key="hdrbri",
-            name="HDR Brightness",
-            icon="mdi:brightness-6",
+            translation_key="hdrbri",
             native_min_value=-2,
             native_max_value=2,
             entity_category=EntityCategory.CONFIG,

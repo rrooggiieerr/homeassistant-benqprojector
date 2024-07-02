@@ -1,21 +1,280 @@
 {
-    "config": {
-        "abort": {
-            "already_configured": "Device is already configured"
-        },
-        "error": {
-            "cannot_connect": "Failed to connect",
-            "unknown": "Unexpected error"
-        },
-        "step": {
-            "setup_serial": {
-                "title": "Device",
-                "data": {
-                    "serial_port": "Serial port",
-                    "manual_path": "Or enter manually",
-                    "baud_rate": "Baud rate"
-                }
-            }
-        }
-    }
+	"config": {
+		"abort": {
+			"already_configured": "Device is already configured"
+		},
+		"error": {
+			"cannot_connect": "Failed to connect",
+			"nonexisting_serial_port": "Serial poort does not exist",
+			"unknown": "Unexpected error"
+		},
+		"step": {
+			"setup_serial": {
+				"title": "Device",
+				"data": {
+					"serial_port": "Serial port",
+					"baud_rate": "Baud rate"
+				},
+				"data_description": {
+					"serial_port": "The serial port your BenQ projector is connected to.",
+					"baud_rate": "The configured baud rate of your BenQ projector."
+				}
+			}
+		}
+	},
+	"entity": {
+		"media_player": {
+			"": {
+				"name": ""
+			}
+		},
+		"number": {
+			"con": {
+				"name": "Contrast"
+			},
+			"bri": {
+				"name": "Brightness"
+			},
+			"color": {
+				"name": "Color"
+			},
+			"sharp": {
+				"name": "Sharpness"
+			},
+			"micvol": {
+				"name": "Microphone Volume"
+			},
+			"keyst": {
+				"name": "Keystone"
+			},
+			"hkeystone": {
+				"name": "Horizontal Keystone"
+			},
+			"vkeystone": {
+				"name": "Vertical Keystone"
+			},
+			"rgain": {
+				"name": "Red Gain"
+			},
+			"ggain": {
+				"name": "Green Gain"
+			},
+			"bgain": {
+				"name": "Blue Gain"
+			},
+			"roffset": {
+				"name": "Red Offset"
+			},
+			"goffset": {
+				"name": "Green Offset"
+			},
+			"boffset": {
+				"name": "Blue Offset"
+			},
+			"gamma": {
+				"name": "Gamma"
+			},
+			"hdrbri": {
+				"name": "HDR Brightness"
+			}
+		},
+		"select": {
+			"audiosour": {
+				"name": "Audio Source",
+				"state": {
+					"off": "Off",
+					"rgb": "Computer 1",
+					"rgb2": "Computer 2",
+					"vid": "Video/S-Video",
+					"ypbr": "Component",
+					"hdmi": "HDMI 1",
+					"hdmi2": "HDMI 2",
+					"hdmi3": "HDMI 3"
+				}
+			},
+			"appmod": {
+				"name": "Picture Mode",
+				"state": {
+					"dynamic": "Dynamic",
+					"preset": "Presentation",
+					"srgb": "sRGB",
+					"bright": "Bright",
+					"livingroom": "Living Room",
+					"game": "Game",
+					"vivid": "Vivid",
+					"cine": "Cinema/Rec.709",
+					"std": "Standard/Vivid ",
+					"football": "Football",
+					"footballbt": "Football Bright",
+					"dicom": "DICOM",
+					"user1": "User 1",
+					"user2": "User 2",
+					"user3": "User 3",
+					"isfday": "ISF Day",
+					"isfnight": "ISF Night",
+					"threed": "3D",
+					"thx": "THX",
+					"silence": "Silence",
+					"dci-p3": "DCI-P3 mode/D. Cinema",
+					"infographic": "Infographic",
+					"sport": "Sport",
+					"hdr": "HDR10",
+					"hlg": "HLG"
+				}
+			},
+			"ct": {
+				"name": "Color Temperature",
+				"state": {
+					"warmer": "Warmer",
+					"warm": "Warm",
+					"normal": "Normal",
+					"cool": "Cool",
+					"cooler": "Cooler",
+					"native": "Native"
+				}
+			},
+			"asp": {
+				"name": "Aspect Ratio",
+				"state": {
+					"4:3": "4:3",
+					"16:6": "16:6",
+					"16:9": "16:9",
+					"16:10": "16:10",
+					"2.35": "2.35:1",
+					"auto": "Auto",
+					"real": "Real",
+					"lbox": "Letterbox",
+					"wide": "Wide",
+					"anam": "Anamorphic",
+					"anam2.35": "Anamorphic 2.35:1",
+					"anam16:9": "Anamorphic 16:9"
+				}
+			},
+			"lampm": {
+				"name": "Lamp Mode",
+				"state": {
+					"lnor": "Normal",
+					"eco": "Eco",
+					"seco": "SmartEco",
+					"seco2": "SmartEco 2",
+					"seco3": "SmartEco 3",
+					"dimming": "Dimming",
+					"custom": "Custom",
+					"dualbr": "dualbr",
+					"dualre": "dualre",
+					"single": "single",
+					"singleeco": "singleeco"
+				}
+			},
+			"3d": {
+				"name": "3D Sync",
+				"state": {
+					"off": "Off",
+					"auto": "Auto",
+					"tb": "Sync Top Bottom",
+					"fs": "Sync Frame Sequential ",
+					"fp": "Frame Packing",
+					"sbs": "Side by Side",
+					"da": "Inverter Disable",
+					"iv": "Inverter",
+					"2d3d": "2D to 3D",
+					"nvidia": "NVIDIA"
+				}
+			},
+			"rr": {
+				"name": "Remote Receiver",
+				"state": {
+					"on": "On",
+					"off": "Off",
+					"fr": "Front + Rear",
+					"f": "Front",
+					"r": "Rear",
+					"t": "Top",
+					"tf": "Top + Front",
+					"tr": "Top + Rear"
+				}
+			},
+			"pp": {
+				"name": "Projector Position",
+				"state": {
+					"ft": "Front Table",
+					"re": "Rear Table",
+					"rc": "Rear Ceiling",
+					"fc": "Front Ceiling"
+				}
+			},
+			"menuposition": {
+				"name": "Menu Position",
+				"state": {
+					"cen": "Center",
+					"center": "Center",
+					"tl": "Top Left",
+					"tr": "Top Right",
+					"br": "Bottom Right",
+					"bl": "Bottom Left"
+				}
+			}
+		},
+		"sensor": {
+			"ltim": {
+				"name": "Lamp Time"
+			},
+			"ltim1": {
+				"name": "Lamp 1 Time"
+			},
+			"ltim2": {
+				"name": "Lamp 2 Time"
+			}
+		},
+		"switch": {
+			"bc": {
+				"name": "Brilliant Color"
+			},
+			"qas": {
+				"name": "Quick Auto Search"
+			},
+			"directpower": {
+				"name": "Direct Power"
+			},
+			"autopower": {
+				"name": "Signal Power"
+			},
+			"standbynet": {
+				"name": "Standby Settings Network"
+			},
+			"standbymic": {
+				"name": "Standby Settings Microphone"
+			},
+			"standbymnt": {
+				"name": "Standby Settings Monitor Out"
+			},
+			"blank": {
+				"name": "Blank"
+			},
+			"freeze": {
+				"name": "Freeze"
+			},
+			"ins": {
+				"name": "Instant On"
+			},
+			"lpsaver": {
+				"name": "Lamp Saver Mode"
+			},
+			"prjlogincode": {
+				"name": "Projection Log In Code"
+			},
+			"broadcasting": {
+				"name": "Broadcasting"
+			},
+			"amxdd": {
+				"name": "AMX Device Discovery"
+			},
+			"highaltitude": {
+				"name": "High Altitude Mode"
+			},
+			"led": {
+				"name": "LED indicator"
+			}
+		}
+	}
 }
