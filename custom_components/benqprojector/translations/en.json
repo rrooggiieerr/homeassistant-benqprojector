@@ -23,11 +23,6 @@
 		}
 	},
 	"entity": {
-		"media_player": {
-			"": {
-				"name": ""
-			}
-		},
 		"number": {
 			"con": {
 				"name": "Contrast"
