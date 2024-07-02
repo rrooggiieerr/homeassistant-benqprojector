@@ -27,6 +27,7 @@ from homeassistant.helpers.selector import (
     SelectOptionDict,
     SelectSelector,
     SelectSelectorConfig,
+    SelectSelectorMode,
 )
 
 from .const import (
@@ -103,6 +104,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             SelectOptionDict(value=k, label=v)
                             for k, v in list_of_ports.items()
                         ],
+                        mode=SelectSelectorMode.DROPDOWN,
                         custom_value=True,
                         sort=True,
                     )
