@@ -120,7 +120,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             self._attr_state = MediaPlayerState.OFF
             self._attr_available = True
 
-        _LOGGER.debug("data: %s", self.coordinator.data)
         if "vol" in self.coordinator.data:
             self._attr_volume_level = self.coordinator.data.get("vol") / 20.0
 
@@ -155,8 +154,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
     async def async_set_volume_level(self, volume: float) -> None:
         """Set volume level, range 0..1."""
-        _LOGGER.debug("async_set_volume_level(%s)", volume)
-
         volume = int(volume * 20.0)
         if await self.coordinator.async_volume_level(volume):
             self._attr_volume_level = self.coordinator.volume / 20.0
