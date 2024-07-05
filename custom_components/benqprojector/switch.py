@@ -119,7 +119,11 @@ async def async_setup_entry(
 
     for entity_description in entity_descriptions:
         if coordinator.supports_command(entity_description.key):
-            entities.append(BenQProjectorSwitch(coordinator, entity_description))
+            entities.append(
+                BenQProjectorSwitch(
+                    coordinator, entity_description, config_entry.entry_id
+                )
+            )
 
     async_add_entities(entities)
 
@@ -136,12 +140,13 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         self,
         coordinator: BenQProjectorCoordinator,
         entity_description: SwitchEntityDescription,
+        config_entry_id: str,
     ) -> None:
         """Initialize the switch."""
         super().__init__(coordinator, entity_description.key)
 
         self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{coordinator.unique_id}-{entity_description.key}"
+        self._attr_unique_id = f"{config_entry_id}-{entity_description.key}"
 
         self.entity_description = entity_description
 

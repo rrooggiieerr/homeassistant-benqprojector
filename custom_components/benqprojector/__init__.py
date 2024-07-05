@@ -20,6 +20,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import entity_registry
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -190,37 +191,53 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
     projector = None
 
-    conf_type = CONF_TYPE_SERIAL
-    if CONF_TYPE in entry.data:
-        conf_type = entry.data[CONF_TYPE]
+    conf_type = entry.data.get(CONF_TYPE, CONF_TYPE_SERIAL)
 
     if conf_type == CONF_TYPE_TELNET:
         host = entry.data[CONF_HOST]
         port = entry.data[CONF_PORT]
 
-        # Test if we can connect to the device.
         projector = BenQProjectorTelnet(host, port)
-
-        # Open the connection.
-        if not await projector.connect():
-            raise ConfigEntryNotReady(f"Unable to connect to device {host}:{port}")
     else:
         serial_port = entry.data[CONF_SERIAL_PORT]
         baud_rate = entry.data[CONF_BAUD_RATE]
 
-        # Test if we can connect to the device.
-        try:
-            projector = BenQProjectorSerial(serial_port, baud_rate)
+        projector = BenQProjectorSerial(serial_port, baud_rate)
 
-            # Open the connection.
-            if not await projector.connect():
-                raise ConfigEntryNotReady(f"Unable to connect to device {serial_port}")
+    @callback
+    def _async_migrate_entity_entry(
+        registry_entry: entity_registry.RegistryEntry,
+    ) -> dict[str, Any] | None:
+        """
+        Migrates old unique ID to the new unique ID.
+        """
+        if registry_entry.unique_id.startswith(f"{projector.unique_id}-"):
+            new_unique_id = registry_entry.unique_id.replace(
+                f"{projector.unique_id}-", f"{registry_entry.config_entry_id}-"
+            )
+            _LOGGER.debug("Migrating entity unique id")
+            return {"new_unique_id": new_unique_id}
 
-            _LOGGER.info("Device %s is available", serial_port)
-        except serial.SerialException as ex:
+        # No migration needed
+        return None
+
+    await entity_registry.async_migrate_entries(
+        hass, entry.entry_id, _async_migrate_entity_entry
+    )
+
+    # Test if we can connect to the device.
+    try:
+        # Open the connection.
+        if not await projector.connect(interval=interval):
             raise ConfigEntryNotReady(
-                f"Unable to connect to device {serial_port}"
-            ) from ex
+                f"Unable to connect to device {projector.unique_id}"
+            )
+
+        _LOGGER.info("Device %s is available", projector.unique_id)
+    except serial.SerialException as ex:
+        raise ConfigEntryNotReady(
+            f"Unable to connect to device {projector.unique_id}"
+        ) from ex
 
     coordinator = BenQProjectorCoordinator(hass, projector)
 

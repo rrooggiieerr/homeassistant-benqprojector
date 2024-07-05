@@ -30,7 +30,7 @@ async def async_setup_entry(
     """Set up the BenQ Projector media player."""
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
-    async_add_entities([BenQProjectorMediaPlayer(coordinator)])
+    async_add_entities([BenQProjectorMediaPlayer(coordinator, config_entry.entry_id)])
 
 
 class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
@@ -56,12 +56,14 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     _attr_is_volume_muted = None
     _attr_volume_level = None
 
-    def __init__(self, coordinator: BenQProjectorCoordinator) -> None:
+    def __init__(
+        self, coordinator: BenQProjectorCoordinator, config_entry_id: str
+    ) -> None:
         """Initialize the media player."""
         super().__init__(coordinator)
 
         self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{coordinator.unique_id}-mediaplayer"
+        self._attr_unique_id = f"{config_entry_id}-mediaplayer"
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
