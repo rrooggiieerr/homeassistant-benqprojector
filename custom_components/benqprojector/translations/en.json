@@ -17,14 +17,25 @@
 				}
 			},
 			"setup_serial": {
-				"title": "Device",
+				"title": "Serial Device",
 				"data": {
-					"serial_port": "Serial port",
+					"serial_port": "Serial Projector",
 					"baud_rate": "Baud rate"
 				},
 				"data_description": {
-					"serial_port": "The serial port your BenQ projector is connected to.",
-					"baud_rate": "The configured baud rate of your BenQ projector."
+					"serial_port": "The serial port the BenQ projector is connected to.",
+					"baud_rate": "The configured baud rate of the projector."
+				}
+			},
+			"setup_network": {
+				"title": "Network Projector",
+				"data": {
+					"host": "Host",
+					"port": "Port"
+				},
+				"data_description": {
+					"host": "The hostname or IP address of the BenQ projector.",
+					"port": "The port number needed to communicate with the projector. 8000 is the default port for native network connected projectors but if a serial to network bridges like esp-link is used port 23 might need to be select."
 				}
 			}
 		}

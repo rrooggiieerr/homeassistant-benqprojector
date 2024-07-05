@@ -16,13 +16,28 @@
 				}
 			},
             "setup_serial": {
-                "title": "Apparaat",
+                "title": "Seri\u00ebl Projector",
                 "data": {
                     "serial_port": "Seri\u00eble poort",
                     "manual_path": "Of voer handmatig in",
                     "baud_rate": "Poortsnelheid"
-                }
-            }
+                },
+				"data_description": {
+					"serial_port": "De seriële poort waarop de BenQ projector is aangesloten.",
+					"baud_rate": "De geconfigureerde baudsnelheid van de projector."
+				}
+            },
+			"setup_network": {
+				"title": "Netwerk Projector",
+				"data": {
+					"host": "Host",
+					"port": "Poort"
+				},
+				"data_description": {
+					"host": "De hostnaam of het IP adres van de BenQ projector.",
+					"port": "Het poortnummer dat nodig is om met de projector te communiceren. 8000 is de standaardpoort voor native netwerkprojectoren, maar als een serieel-naar-netwerkbrug wordt gebruikt, zoals esp-link, moet mogelijk poort 23 worden geselecteerd."
+				}
+			}
         }
     }
 }
