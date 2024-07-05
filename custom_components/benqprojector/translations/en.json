@@ -22,6 +22,17 @@
 			}
 		}
 	},
+    "options": {
+        "step": {
+	    	"init": {
+                "data": {
+                	"interval": "Interval"
+                },
+                "data_description": {
+                }
+	    	}
+	    }
+    },
 	"entity": {
 		"number": {
 			"con": {
