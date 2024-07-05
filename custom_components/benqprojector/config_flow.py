@@ -62,17 +62,10 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> FlowResult:
         """Handle the initial step."""
-        if user_input is not None:
-            user_selection = user_input[CONF_TYPE]
-            if user_selection == "Serial":
-                return await self.async_step_setup_serial()
-
-            return await self.async_step_setup_network()
-
-        list_of_types = ["Serial", "Network"]
-
-        schema = vol.Schema({vol.Required(CONF_TYPE): vol.In(list_of_types)})
-        return self.async_show_form(step_id="user", data_schema=schema)
+        return self.async_show_menu(
+            step_id="user",
+            menu_options=["setup_serial", "setup_network"],
+        )
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None

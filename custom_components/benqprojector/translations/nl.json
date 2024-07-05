@@ -8,6 +8,13 @@
             "unknown": "Onverwachte fout"
         },
         "step": {
+			"user": {
+				"title": "Connectie Methode",
+				"menu_options": {
+					"setup_serial": "Seri\u00ebl",
+					"setup_network": "Netwerk"
+				}
+			},
             "setup_serial": {
                 "title": "Apparaat",
                 "data": {

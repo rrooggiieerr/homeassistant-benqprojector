@@ -9,6 +9,13 @@
 			"unknown": "Unexpected error"
 		},
 		"step": {
+			"user": {
+				"title": "Connection Method",
+				"menu_options": {
+					"setup_serial": "Serial",
+					"setup_network": "Network"
+				}
+			},
 			"setup_serial": {
 				"title": "Device",
 				"data": {
