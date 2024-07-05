@@ -157,11 +157,12 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 # Get model from the device
                 projector = BenQProjectorSerial(serial_port, data[CONF_BAUD_RATE])
-                if not await self.hass.async_add_executor_job(projector.connect):
+                if not await projector.connect():
                     errors["base"] = "cannot_connect"
 
                 model = projector.model
 
+                await projector.disconnect()
                 _LOGGER.info("Device %s available", serial_port)
             except serial.SerialException:
                 errors["base"] = "cannot_connect"
@@ -225,12 +226,12 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Test if we can connect to the device.
         try:
             projector = BenQProjectorTelnet(host, port)
-            if not await self.hass.async_add_executor_job(projector.connect):
+            if not await projector.connect():
                 raise CannotConnect(f"Unable to connect to the device on {host}:{port}")
 
             model = projector.model
 
-            await self.hass.async_add_executor_job(projector.disconnect)
+            await projector.disconnect()
             _LOGGER.info("Device on %s:%s available", host, port)
         except serial.SerialException as ex:
             raise CannotConnect(
