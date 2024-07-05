@@ -16,7 +16,8 @@ from benqprojector import (
     BenQProjectorTelnet,
 )
 from homeassistant import config_entries
-from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE, UnitOfTime
+from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.selector import (
@@ -32,7 +33,8 @@ from homeassistant.helpers.selector import (
 
 from .const import (
     CONF_BAUD_RATE,
-    CONF_MANUAL_PATH,
+    CONF_DEFAULT_INTERVAL,
+    CONF_INTERVAL,
     CONF_SERIAL_PORT,
     CONF_TYPE_SERIAL,
     CONF_TYPE_TELNET,
@@ -238,6 +240,56 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             CONF_HOST: host,
             CONF_PORT: port,
         }
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(
+        config_entry: config_entries.ConfigEntry,
+    ) -> config_entries.OptionsFlow:
+        """Create the options flow."""
+        return BenQProjectorOptionsFlowHandler(config_entry)
+
+
+class BenQProjectorOptionsFlowHandler(config_entries.OptionsFlow):
+    _OPTIONS_SCHEMA = vol.Schema(
+        {
+            vol.Optional(CONF_INTERVAL, default=CONF_DEFAULT_INTERVAL): NumberSelector(
+                NumberSelectorConfig(
+                    min=0,
+                    mode=NumberSelectorMode.BOX,
+                    unit_of_measurement=UnitOfTime.SECONDS,
+                )
+            ),
+        }
+    )
+
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        """Initialize options flow."""
+        _LOGGER.debug(config_entry.data)
+        self.config_entry = config_entry
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
+        """Manage the options."""
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            self._OPTIONS_SCHEMA(user_input)
+            return self.async_create_entry(title="", data=user_input)
+
+        if user_input is not None:
+            data_schema = self.add_suggested_values_to_schema(
+                self._OPTIONS_SCHEMA, user_input
+            )
+        else:
+            data_schema = self.add_suggested_values_to_schema(
+                self._OPTIONS_SCHEMA, self.config_entry.options
+            )
+
+        return self.async_show_form(
+            step_id="init", data_schema=data_schema, errors=errors
+        )
 
 
 def get_serial_by_id(dev_path: str) -> str:

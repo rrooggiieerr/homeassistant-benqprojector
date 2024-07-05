@@ -11,3 +11,5 @@ CONF_SERIAL_PORT: Final = "serial_port"
 CONF_MANUAL_PATH: Final = "manual_path"
 CONF_PROJECTOR: Final = "projector"
 CONF_BAUD_RATE: Final = "baud_rate"
+CONF_INTERVAL: Final = "interval"
+CONF_DEFAULT_INTERVAL: Final = 5

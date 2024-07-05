@@ -26,6 +26,8 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import (
     CONF_BAUD_RATE,
+    CONF_DEFAULT_INTERVAL,
+    CONF_INTERVAL,
     CONF_PROJECTOR,
     CONF_SERIAL_PORT,
     CONF_TYPE_SERIAL,
@@ -192,6 +194,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     projector = None
 
     conf_type = entry.data.get(CONF_TYPE, CONF_TYPE_SERIAL)
+    interval = entry.options.get(CONF_INTERVAL, CONF_DEFAULT_INTERVAL)
 
     if conf_type == CONF_TYPE_TELNET:
         host = entry.data[CONF_HOST]
@@ -260,6 +263,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
+    entry.async_on_unload(entry.add_update_listener(update_listener))
+
     async def async_handle_send(call: ServiceCall):
         """Handle the send service call."""
         command: str = call.data.get(CONF_SERVICE_COMMAND)
@@ -294,3 +299,8 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok
+
+
+async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Handle options update."""
+    hass.config_entries.async_schedule_reload(entry.entry_id)
