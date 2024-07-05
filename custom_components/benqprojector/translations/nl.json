@@ -19,7 +19,6 @@
                 "title": "Seri\u00ebl Projector",
                 "data": {
                     "serial_port": "Seri\u00eble poort",
-                    "manual_path": "Of voer handmatig in",
                     "baud_rate": "Poortsnelheid"
                 },
 				"data_description": {
