@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 from benqprojector import BenQProjector
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
@@ -104,6 +105,11 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         self._attr_device_info = coordinator.device_info
         self._attr_unique_id = f"{config_entry_id}-{entity_description.key}"
 
+        self._options_map = {
+            re.sub("[^a-z0-9]", "_", value.lower()): value
+            for value in entity_description.options
+        }
+
         self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
@@ -149,8 +155,14 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
 
         self.async_write_ha_state()
 
+    @property
+    def options(self) -> list[str]:
+        return list(self._options_map.keys())
+
     async def async_select_option(self, option: str) -> None:
         """Change the selected option."""
+        option = self._options_map[option]
+
         response = await self.coordinator.async_send_command(
             self.entity_description.key, option
         )

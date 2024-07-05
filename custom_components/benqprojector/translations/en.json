@@ -160,18 +160,18 @@
 			"asp": {
 				"name": "Aspect Ratio",
 				"state": {
-					"4:3": "4:3",
-					"16:6": "16:6",
-					"16:9": "16:9",
-					"16:10": "16:10",
-					"2.35": "2.35:1",
+					"4_3": "4:3",
+					"16_6": "16:6",
+					"16_9": "16:9",
+					"16_10": "16:10",
+					"2_35": "2.35:1",
 					"auto": "Auto",
 					"real": "Real",
 					"lbox": "Letterbox",
 					"wide": "Wide",
 					"anam": "Anamorphic",
-					"anam2.35": "Anamorphic 2.35:1",
-					"anam16:9": "Anamorphic 16:9"
+					"anam2_35": "Anamorphic 2.35:1",
+					"anam16_9": "Anamorphic 16:9"
 				}
 			},
 			"lampm": {
