@@ -297,7 +297,3 @@ def get_serial_by_id(dev_path: str) -> str:
         if os.path.realpath(path) == dev_path:
             return path
     return dev_path
-
-
-class CannotConnect(HomeAssistantError):
-    """Error to indicate we cannot connect."""
