@@ -5,6 +5,7 @@
         },
         "error": {
             "cannot_connect": "Kan geen verbinding maken",
+			"nonexisting_serial_port": "Seri\u00eble poort",
             "unknown": "Onverwachte fout"
         },
         "step": {
@@ -38,5 +39,253 @@
 				}
 			}
         }
-    }
+    },
+	"entity": {
+		"number": {
+			"bri": {
+				"name": "Helderheid"
+			},
+			"color": {
+				"name": "Kleur"
+			},
+			"sharp": {
+				"name": "Scherpte"
+			},
+			"micvol": {
+				"name": "Microfoonvolume"
+			},
+			"keyst": {
+				"name": "Keystone"
+			},
+			"hkeystone": {
+				"name": "Horizontale Keystone"
+			},
+			"vkeystone": {
+				"name": "Verticale Keystone"
+			},
+			"rgain": {
+				"name": "Rood Gain"
+			},
+			"ggain": {
+				"name": "Groen Gain"
+			},
+			"bgain": {
+				"name": "Blauw Gain"
+			},
+			"roffset": {
+				"name": "Rood Compenastie"
+			},
+			"goffset": {
+				"name": "Groen Compenastie"
+			},
+			"boffset": {
+				"name": "Blauw Compenastie"
+			},
+			"gamma": {
+				"name": "Gamma"
+			},
+			"hdrbri": {
+				"name": "HDR Helderheid"
+			}
+		},
+		"select": {
+			"audiosour": {
+				"name": "Geluidsbron",
+				"state": {
+					"off": "Uit",
+					"rgb": "Computer 1",
+					"rgb2": "Computer 2",
+					"vid": "Video/S-Video",
+					"ypbr": "Component",
+					"hdmi": "HDMI 1",
+					"hdmi2": "HDMI 2",
+					"hdmi3": "HDMI 3"
+				}
+			},
+			"appmod": {
+				"name": "Beeeld Modus",
+				"state": {
+					"dynamic": "Dynamisch",
+					"preset": "Presentatie",
+					"srgb": "sRGB",
+					"bright": "Helder",
+					"livingroom": "Woonkamer",
+					"game": "Spel",
+					"vivid": "Vivid",
+					"cine": "Cinema/Rec.709",
+					"std": "Standaard/Vivid ",
+					"football": "Voetbal",
+					"footballbt": "Voetbal Helder",
+					"dicom": "DICOM",
+					"user1": "User 1",
+					"user2": "User 2",
+					"user3": "User 3",
+					"isfday": "ISF Day",
+					"isfnight": "ISF Nacht",
+					"threed": "3D",
+					"thx": "THX",
+					"silence": "Stil",
+					"dci-p3": "DCI-P3 mode/D. Cinema",
+					"infographic": "Infografiek",
+					"sport": "Sport",
+					"hdr": "HDR10",
+					"hlg": "HLG"
+				}
+			},
+			"ct": {
+				"name": "Kleur Temperatuur",
+				"state": {
+					"warmer": "Warmer",
+					"warm": "Warm",
+					"normal": "Normaal",
+					"cool": "Koel",
+					"cooler": "Koeler",
+					"native": "Native"
+				}
+			},
+			"asp": {
+				"name": "Beeldverhouding",
+				"state": {
+					"4_3": "4:3",
+					"16_6": "16:6",
+					"16_9": "16:9",
+					"16_10": "16:10",
+					"2_35": "2.35:1",
+					"auto": "Auto",
+					"real": "Real",
+					"lbox": "Letterbox",
+					"wide": "Wide",
+					"anam": "Anamorphic",
+					"anam2_35": "Anamorphic 2.35:1",
+					"anam16_9": "Anamorphic 16:9"
+				}
+			},
+			"lampm": {
+				"name": "Lamp Mode",
+				"state": {
+					"lnor": "Normaal",
+					"eco": "Eco",
+					"seco": "SmartEco",
+					"seco2": "SmartEco 2",
+					"seco3": "SmartEco 3",
+					"dimming": "Dimming",
+					"custom": "Custom",
+					"dualbr": "dualbr",
+					"dualre": "dualre",
+					"single": "single",
+					"singleeco": "singleeco"
+				}
+			},
+			"3d": {
+				"name": "3D Sync",
+				"state": {
+					"off": "Off",
+					"auto": "Auto",
+					"tb": "Sync Top Bottom",
+					"fs": "Sync Frame Sequential ",
+					"fp": "Frame Packing",
+					"sbs": "Side by Side",
+					"da": "Inverter Disable",
+					"iv": "Inverter",
+					"2d3d": "2D to 3D",
+					"nvidia": "NVIDIA"
+				}
+			},
+			"rr": {
+				"name": "Remote Receiver",
+				"state": {
+					"on": "On",
+					"off": "Off",
+					"fr": "Front + Rear",
+					"f": "Front",
+					"r": "Rear",
+					"t": "Top",
+					"tf": "Top + Front",
+					"tr": "Top + Rear"
+				}
+			},
+			"pp": {
+				"name": "Projector Positie",
+				"state": {
+					"ft": "Tafel Voor",
+					"re": "Tafel Achter",
+					"rc": "Plafond Achter",
+					"fc": "Plafond Voor"
+				}
+			},
+			"menuposition": {
+				"name": "Menu Positie",
+				"state": {
+					"cen": "Center",
+					"center": "Center",
+					"tl": "Linksboven",
+					"tr": "Rechtsboven",
+					"br": "Rechtsonder",
+					"bl": "Linksonder"
+				}
+			}
+		},
+		"sensor": {
+			"ltim": {
+				"name": "Lamp Tijd"
+			},
+			"ltim1": {
+				"name": "Lamp 1 Tijd"
+			},
+			"ltim2": {
+				"name": "Lamp 2 Tijd"
+			}
+		},
+		"switch": {
+			"bc": {
+				"name": "Brilliante Kleur"
+			},
+			"qas": {
+				"name": "Snel Automatisch Zoeken"
+			},
+			"directpower": {
+				"name": "Direct Power"
+			},
+			"autopower": {
+				"name": "Signal Power"
+			},
+			"standbynet": {
+				"name": "Standby Instellingen Netwerk"
+			},
+			"standbymic": {
+				"name": "Standby Instellingen Microfoon"
+			},
+			"standbymnt": {
+				"name": "Standby Instellingen Monitor Uitgang"
+			},
+			"blank": {
+				"name": "Blank"
+			},
+			"freeze": {
+				"name": "Bevriezen"
+			},
+			"ins": {
+				"name": "Direct Aan"
+			},
+			"lpsaver": {
+				"name": "Lampbesparingsmodus"
+			},
+			"prjlogincode": {
+				"name": "Projection Log In Code"
+			},
+			"broadcasting": {
+				"name": "Broadcasting"
+			},
+			"amxdd": {
+				"name": "AMX Apparaatdetectie"
+			},
+			"highaltitude": {
+				"name": "High Altitude Mode"
+			},
+			"led": {
+				"name": "LED Indicator"
+			}
+		}
+	}
+
 }
