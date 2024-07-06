@@ -35,6 +35,7 @@ from .const import (
     CONF_BAUD_RATE,
     CONF_DEFAULT_INTERVAL,
     CONF_INTERVAL,
+    CONF_MODEL,
     CONF_SERIAL_PORT,
     CONF_TYPE_SERIAL,
     CONF_TYPE_TELNET,
@@ -155,7 +156,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if not await projector.connect():
                     errors["base"] = "cannot_connect"
 
-                model = projector.model
+                model = projector.model.upper()
 
                 await projector.disconnect()
                 _LOGGER.info("Device %s available", serial_port)
@@ -166,6 +167,8 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return (
             f"BenQ {model}",
             {
+                CONF_MODEL: projector.model,
+                CONF_TYPE: CONF_TYPE_SERIAL,
                 CONF_SERIAL_PORT: serial_port,
                 CONF_BAUD_RATE: data[CONF_BAUD_RATE],
             },
@@ -179,20 +182,12 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors: dict[str, str] = {}
 
         if user_input is not None:
-            try:
-                info = await self.validate_input_setup_network(user_input, errors)
-            except CannotConnect:
-                errors["base"] = "cannot_connect"
-            except Exception as ex:  # pylint: disable=broad-except
-                _LOGGER.exception("Unexpected exception: %s", ex)
-                errors["base"] = "unknown"
-            else:
-                return self.async_create_entry(title=info["title"], data=info)
-            # data = await self.validate_input_setup_network(user_input, errors)
-            # if not errors:
-            #     return self.async_create_entry(
-            #         title=f"{data[CONF_HOST]}:{data[CONF_PORT]}", data=data
-            #     )
+            title, data, options = await self.validate_input_setup_network(
+                user_input, errors
+            )
+
+            if not errors:
+                return self.async_create_entry(title=title, data=data, options=options)
 
         return self.async_show_form(
             step_id="setup_network",
@@ -218,28 +213,28 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         await self.async_set_unique_id(f"{host}:{port}")
         self._abort_if_unique_id_configured()
 
-        # Test if we can connect to the device.
-        try:
+        if errors.get(CONF_HOST) is None:
+            # Test if we can connect to the device.
             projector = BenQProjectorTelnet(host, port)
             if not await projector.connect():
-                raise CannotConnect(f"Unable to connect to the device on {host}:{port}")
+                errors["base"] = "cannot_connect"
 
-            model = projector.model
+            model = projector.model.upper()
 
             await projector.disconnect()
             _LOGGER.info("Device on %s:%s available", host, port)
-        except serial.SerialException as ex:
-            raise CannotConnect(
-                f"Unable to connect to the device on {host}:{port}"
-            ) from ex
 
         # Return info that you want to store in the config entry.
-        return {
-            "title": f"BenQ {model} {host}:{port}",
-            CONF_TYPE: CONF_TYPE_TELNET,
-            CONF_HOST: host,
-            CONF_PORT: port,
-        }
+        return (
+            f"BenQ {model}",
+            {
+                CONF_MODEL: projector.model,
+                CONF_TYPE: CONF_TYPE_TELNET,
+                CONF_HOST: host,
+                CONF_PORT: port,
+            },
+            None,
+        )
 
     @staticmethod
     @callback

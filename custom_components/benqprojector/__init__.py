@@ -28,6 +28,7 @@ from .const import (
     CONF_BAUD_RATE,
     CONF_DEFAULT_INTERVAL,
     CONF_INTERVAL,
+    CONF_MODEL,
     CONF_SERIAL_PORT,
     CONF_TYPE_SERIAL,
     CONF_TYPE_TELNET,
@@ -82,12 +83,12 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         self.projector.add_listener(self._listener)
 
         self.unique_id = self.projector.unique_id
-        self.model = self.projector.model
+        model = self.projector.model.upper()
 
         self.device_info = DeviceInfo(
             identifiers={(DOMAIN, self.unique_id)},
-            name=f"BenQ {self.model}",
-            model=self.model,
+            name=f"BenQ {model}",
+            model=model,
             manufacturer="BenQ",
         )
 
@@ -129,12 +130,12 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     #     _LOGGER.debug("Connected to BenQ projector on %s", self.projector.connection)
     #
     #     self.unique_id = self.projector.unique_id
-    #     self.model = self.projector.model
+    #     model = self.projector.model.upper()
     #
     #     self.device_info = DeviceInfo(
     #         identifiers={(DOMAIN, self.unique_id)},
-    #         name=f"BenQ {self.model}",
-    #         model=self.model,
+    #         name=f"BenQ {model}",
+    #         model=model,
     #         manufacturer="BenQ",
     #     )
 
@@ -192,6 +193,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
     projector = None
 
+    model = entry.data.get(CONF_MODEL)
     conf_type = entry.data.get(CONF_TYPE, CONF_TYPE_SERIAL)
     interval = entry.options.get(CONF_INTERVAL, CONF_DEFAULT_INTERVAL)
 
@@ -199,12 +201,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         host = entry.data[CONF_HOST]
         port = entry.data[CONF_PORT]
 
-        projector = BenQProjectorTelnet(host, port)
+        projector = BenQProjectorTelnet(host, port, model)
     else:
         serial_port = entry.data[CONF_SERIAL_PORT]
         baud_rate = entry.data[CONF_BAUD_RATE]
 
-        projector = BenQProjectorSerial(serial_port, baud_rate)
+        projector = BenQProjectorSerial(serial_port, baud_rate, model)
 
     @callback
     def _async_migrate_entity_entry(
