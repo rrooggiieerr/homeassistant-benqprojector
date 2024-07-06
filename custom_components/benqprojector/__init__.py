@@ -245,21 +245,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     coordinator = BenQProjectorCoordinator(hass, projector)
 
-    # try:
-    #     serial_port = entry.data[CONF_SERIAL_PORT]
-    #     coordinator = BenQProjectorCoordinator(
-    #         hass, serial_port, entry.data[CONF_BAUD_RATE]
-    #     )
-    #
-    #     # Open the connection.
-    #     await coordinator.async_connect()
-    #
-    #     _LOGGER.info("BenQ projector on %s is available", serial_port)
-    # except serial.SerialException as ex:
-    #     raise ConfigEntryNotReady(
-    #         f"Unable to connect to BenQ projector on {serial_port}: {ex}"
-    #     ) from ex
-
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
