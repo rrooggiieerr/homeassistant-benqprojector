@@ -176,10 +176,14 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         if self.entity_description.key in self.coordinator.data:
-            self._attr_is_on = (
-                self.coordinator.data.get(self.entity_description.key) == "on"
-            )
-            self._attr_available = True
+            if self.coordinator.data.get(self.entity_description.key) == "on":
+                self._attr_is_on = True
+                self._attr_available = True
+            elif self.coordinator.data.get(self.entity_description.key) == "off":
+                self._attr_is_on = False
+                self._attr_available = True
+            else:
+                self._attr_available = False
 
         if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
             self._attr_available = False

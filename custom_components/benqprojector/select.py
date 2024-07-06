@@ -166,8 +166,8 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         response = await self.coordinator.async_send_command(
             self.entity_description.key, option
         )
-        if response is not None:
-            self._attr_current_option = response
+        if response == option:
+            self._attr_current_option = option
             self.async_write_ha_state()
         else:
             _LOGGER.error("Failed to set %s to %s", self.name, option)
