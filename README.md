@@ -112,7 +112,7 @@ improve the overview of supported projectors.
 
 ### HACS
 
-The recommended way to install this Home Assistant integration is using by [HACS][hacs].
+The recommended way to install this Home Assistant integration is by using [HACS][hacs].
 Click the following button to open the integration directly on the HACS integration page.
 
 [![Install BenQ projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
