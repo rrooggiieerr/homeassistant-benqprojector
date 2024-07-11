@@ -136,8 +136,6 @@ If you would like to have a Home Assistant integration developed for your produc
 for a freelance Python developer for your project please contact me, you can find my email address
 on [my GitHub profile](https://github.com/rrooggiieerr).
 
----
-
 [python-shield]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
 [releases]: https://github.com/rrooggiieerr/homeassistant-benqprojector/releases
 [releases-shield]: https://img.shields.io/github/v/release/rrooggiieerr/homeassistant-benqprojector?style=for-the-badge
