@@ -152,15 +152,15 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if errors.get(CONF_SERIAL_PORT) is None:
             # Test if we can connect to the device
             try:
-                # Get model from the device
                 projector = BenQProjectorSerial(serial_port, data[CONF_BAUD_RATE])
                 if not await projector.connect():
                     errors["base"] = "cannot_connect"
+                else:
+                    # Get model from the device
+                    model = projector.model.upper()
 
-                model = projector.model.upper()
-
-                await projector.disconnect()
-                _LOGGER.info("Device %s available", serial_port)
+                    await projector.disconnect()
+                    _LOGGER.info("Device %s available", serial_port)
             except serial.SerialException:
                 errors["base"] = "cannot_connect"
 
@@ -217,13 +217,14 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if errors.get(CONF_HOST) is None:
             # Test if we can connect to the device.
             projector = BenQProjectorTelnet(host, port)
-            if not await projector.connect():
+            if await projector.connect():
                 errors["base"] = "cannot_connect"
+            else:
+                # Get model from the device
+                model = projector.model.upper()
 
-            model = projector.model.upper()
-
-            await projector.disconnect()
-            _LOGGER.info("Device on %s:%s available", host, port)
+                await projector.disconnect()
+                _LOGGER.info("Device on %s:%s available", host, port)
 
         # Return info that you want to store in the config entry.
         return (
