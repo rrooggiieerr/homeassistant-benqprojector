@@ -134,6 +134,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._step_setup_serial_schema(data)
 
         serial_port = data.get(CONF_SERIAL_PORT)
+        model = None
 
         if serial_port is None:
             raise vol.error.RequiredFieldInvalid("No serial port configured")
@@ -210,6 +211,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         host = data[CONF_HOST]
         port = int(data[CONF_PORT])
+        model = None
 
         # ToDo Test if the host exists
 
