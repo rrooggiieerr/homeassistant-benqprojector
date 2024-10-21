@@ -5,7 +5,7 @@
         },
         "error": {
             "cannot_connect": "Kan geen verbinding maken",
-			"nonexisting_serial_port": "Seri\u00eble poort",
+			"nonexisting_serial_port": "Seri\u00eble poort bestaat niet",
             "unknown": "Onverwachte fout"
         },
         "step": {
@@ -18,6 +18,7 @@
 			},
             "setup_serial": {
                 "title": "Seri\u00ebl Projector",
+				"description": "Sommige projectoren worden niet gedetecteerd als ze zijn uitgeschakeld. Als de projector op dit moment is uitgeschakeld schakel dan de projector in en probeert het opnieuw.",
                 "data": {
                     "serial_port": "Seri\u00eble poort",
                     "baud_rate": "Poortsnelheid"
@@ -29,6 +30,7 @@
             },
 			"setup_network": {
 				"title": "Netwerk Projector",
+				"description": "Sommige projectoren worden niet gedetecteerd als ze zijn uitgeschakeld. Als de projector op dit moment is uitgeschakeld schakel dan de projector in en probeert het opnieuw.",
 				"data": {
 					"host": "Host",
 					"port": "Poort"
@@ -287,5 +289,4 @@
 			}
 		}
 	}
-
 }

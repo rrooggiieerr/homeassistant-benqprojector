@@ -18,6 +18,7 @@
 			},
 			"setup_serial": {
 				"title": "Serial Projector",
+				"description": "Some projectors can not be detected when powered off, if the projector is currenty powered off power on the projector and try again.",
 				"data": {
 					"serial_port": "Serial Port",
 					"baud_rate": "Baud rate"
@@ -29,6 +30,7 @@
 			},
 			"setup_network": {
 				"title": "Network Projector",
+				"description": "Some projectors can not be detected when powered off, if the projector is currenty powered off power on the projector and try again.",
 				"data": {
 					"host": "Host",
 					"port": "Port"
