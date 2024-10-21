@@ -221,7 +221,7 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if errors.get(CONF_HOST) is None:
             # Test if we can connect to the device.
             projector = BenQProjectorTelnet(host, port)
-            if await projector.connect():
+            if not await projector.connect():
                 errors["base"] = "cannot_connect"
             else:
                 _LOGGER.info("Device on %s:%s available", host, port)
