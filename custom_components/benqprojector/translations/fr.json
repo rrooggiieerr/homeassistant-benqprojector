@@ -1,0 +1,305 @@
+{
+	"config": {
+		"abort": {
+			"already_configured": "L'appareil est déjà configuré"
+		},
+		"error": {
+			"cannot_connect": "Échec de la connexion",
+			"nonexisting_serial_port": "Le port série n'existe pas",
+			"unknown": "Erreur inattendue"
+		},
+		"step": {
+			"user": {
+				"title": "Méthode de connexion",
+				"menu_options": {
+					"setup_serial": "Série",
+					"setup_network": "Réseau"
+				}
+			},
+			"setup_serial": {
+				"title": "Projecteur Série",
+				"description": "Certains projecteurs ne peuvent pas être détectés lorsqu'ils sont éteints. Si le projecteur est actuellement éteint, allumez le projecteur et réessayez.",
+				"data": {
+					"serial_port": "Port Série",
+					"baud_rate": "Débit en bauds"
+				},
+				"data_description": {
+					"serial_port": "Le port série auquel le projecteur BenQ est connecté.",
+					"baud_rate": "Le débit en bauds configuré du projecteur."
+				}
+			},
+			"setup_network": {
+				"title": "Projecteur Réseau",
+				"description": "Certains projecteurs ne peuvent pas être détectés lorsqu'ils sont éteints. Si le projecteur est actuellement éteint, allumez le projecteur et réessayez.",
+				"data": {
+					"host": "Hôte",
+					"port": "Port"
+				},
+				"data_description": {
+					"host": "Le nom d'hôte ou l'adresse IP du projecteur BenQ.",
+					"port": "Le numéro de port nécessaire pour communiquer avec le projecteur. 8000 est le port par défaut pour les projecteurs connectés en réseau, mais si un pont série-réseau comme esp-link est utilisé, le port 23 pourrait devoir être sélectionné."
+				}
+			}
+		}
+	},
+	"options": {
+		"step": {
+			"init": {
+				"data": {
+					"interval": "Intervalle"
+				},
+				"data_description": {}
+			}
+		}
+	},
+	"entity": {
+		"number": {
+			"con": {
+				"name": "Contraste"
+			},
+			"bri": {
+				"name": "Luminosité"
+			},
+			"color": {
+				"name": "Couleur"
+			},
+			"sharp": {
+				"name": "Netteté"
+			},
+			"micvol": {
+				"name": "Volume Microphone"
+			},
+			"keyst": {
+				"name": "Trapèze"
+			},
+			"hkeystone": {
+				"name": "Trapèze Horizontal"
+			},
+			"vkeystone": {
+				"name": "Trapèze Vertical"
+			},
+			"rgain": {
+				"name": "Gain Rouge"
+			},
+			"ggain": {
+				"name": "Gain Vert"
+			},
+			"bgain": {
+				"name": "Gain Bleu"
+			},
+			"roffset": {
+				"name": "Décalage Rouge"
+			},
+			"goffset": {
+				"name": "Décalage Vert"
+			},
+			"boffset": {
+				"name": "Décalage Bleu"
+			},
+			"gamma": {
+				"name": "Gamma"
+			},
+			"hdrbri": {
+				"name": "Luminosité HDR"
+			}
+		},
+		"select": {
+			"audiosour": {
+				"name": "Source Audio",
+				"state": {
+					"off": "Éteint",
+					"rgb": "Ordinateur 1",
+					"rgb2": "Ordinateur 2",
+					"vid": "Vidéo/S-Vidéo",
+					"ypbr": "Composant",
+					"hdmi": "HDMI 1",
+					"hdmi2": "HDMI 2",
+					"hdmi3": "HDMI 3"
+				}
+			},
+			"appmod": {
+				"name": "Mode Image",
+				"state": {
+					"dynamic": "Dynamique",
+					"preset": "Présentation",
+					"srgb": "sRGB",
+					"bright": "Luminosité",
+					"livingroom": "Salon",
+					"game": "Jeu",
+					"vivid": "Vivant",
+					"cine": "Cinéma/Rec.709",
+					"std": "Standard/Vivant",
+					"football": "Football",
+					"footballbt": "Football Lumineux",
+					"dicom": "DICOM",
+					"user1": "Utilisateur 1",
+					"user2": "Utilisateur 2",
+					"user3": "Utilisateur 3",
+					"isfday": "ISF Jour",
+					"isfnight": "ISF Nuit",
+					"threed": "3D",
+					"thx": "THX",
+					"silence": "Silence",
+					"dci-p3": "Mode DCI-P3/D. Cinéma",
+					"infographic": "Infographique",
+					"sport": "Sport",
+					"hdr": "HDR10",
+					"hlg": "HLG"
+				}
+			},
+			"ct": {
+				"name": "Température de Couleur",
+				"state": {
+					"warmer": "Plus Chaud",
+					"warm": "Chaud",
+					"normal": "Normal",
+					"cool": "Froid",
+					"cooler": "Plus Froid",
+					"native": "D'origine"
+				}
+			},
+			"asp": {
+				"name": "Format d'image",
+				"state": {
+					"4_3": "4:3",
+					"16_6": "16:6",
+					"16_9": "16:9",
+					"16_10": "16:10",
+					"2_35": "2.35:1",
+					"auto": "Automatique",
+					"real": "Réel",
+					"lbox": "Letterbox",
+					"wide": "Large",
+					"anam": "Anamorphique",
+					"anam2_35": "Anamorphique 2.35:1",
+					"anam16_9": "Anamorphique 16:9"
+				}
+			},
+			"lampm": {
+				"name": "Mode Lampe",
+				"state": {
+					"lnor": "Normal",
+					"eco": "Éco",
+					"seco": "SmartEco",
+					"seco2": "SmartEco 2",
+					"seco3": "SmartEco 3",
+					"dimming": "Atténuation",
+					"custom": "Personnalisé",
+					"dualbr": "dualbr",
+					"dualre": "dualre",
+					"single": "simple",
+					"singleeco": "simpleeco"
+				}
+			},
+			"3d": {
+				"name": "Synchronisation 3D",
+				"state": {
+					"off": "Éteint",
+					"auto": "Automatique",
+					"tb": "Synchronisation Haut-Bas",
+					"fs": "Synchronisation Séquentielle",
+					"fp": "Emballage de Cadres",
+					"sbs": "Côté à Côté",
+					"da": "Désactiver Inverseur",
+					"iv": "Inverseur",
+					"2d3d": "2D vers 3D",
+					"nvidia": "NVIDIA"
+				}
+			},
+			"rr": {
+				"name": "Récepteur Télécommande",
+				"state": {
+					"on": "Activé",
+					"off": "Désactivé",
+					"fr": "Avant + Arrière",
+					"f": "Avant",
+					"r": "Arrière",
+					"t": "Haut",
+					"tf": "Haut + Avant",
+					"tr": "Haut + Arrière"
+				}
+			},
+			"pp": {
+				"name": "Position du Projecteur",
+				"state": {
+					"ft": "Avant Table",
+					"re": "Arrière Table",
+					"rc": "Arrière Plafond",
+					"fc": "Avant Plafond"
+				}
+			},
+			"menuposition": {
+				"name": "Position du Menu",
+				"state": {
+					"cen": "Centre",
+					"center": "Centre",
+					"tl": "Haut Gauche",
+					"tr": "Haut Droit",
+					"br": "Bas Droit",
+					"bl": "Bas Gauche"
+				}
+			}
+		},
+		"sensor": {
+			"ltim": {
+				"name": "Temps de Lampe"
+			},
+			"ltim1": {
+				"name": "Temps de Lampe 1"
+			},
+			"ltim2": {
+				"name": "Temps de Lampe 2"
+			}
+		},
+		"switch": {
+			"bc": {
+				"name": "Couleur Brillante"
+			},
+			"qas": {
+				"name": "Recherche Auto Rapide"
+			},
+			"directpower": {
+				"name": "Alimentation Directe"
+			},
+			"autopower": {
+				"name": "Alimentation Signal"
+			},
+			"standbynet": {
+				"name": "Paramètres de Veille Réseau"
+			},
+			"standbymic": {
+				"name": "Paramètres de Veille Microphone"
+			},
+			"standbymnt": {
+				"name": "Paramètres de Veille Sortie Moniteur"
+			},
+			"blank": {
+				"name": "Vider"
+			},
+			"freeze": {
+				"name": "Gel"
+			},
+			"ins": {
+				"name": "Mise en Marche Instantanée"
+			},
+			"lpsaver": {
+				"name": "Mode Économie de Lampe"
+			},
+			"prjlogincode": {
+				"name": "Code de Connexion Projection"
+			},
+			"broadcasting": {
+				"name": "Diffusion"
+			},
+			"amxdd": {
+				"name": "Découverte Appareil AMX"
+			},
+			"highaltitude": {
+				"name": "Mode Haute Altitude"
+			},
+			"led": {
+				"name": "Indicateur LED"
+			}
+		}
+	}
+}
