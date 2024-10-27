@@ -193,10 +193,6 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
-    await entity_registry.async_migrate_entries(
-        hass, entry.entry_id, async_migrate_entity_entry
-    )
-
     projector = None
 
     model = entry.data.get(CONF_MODEL)
@@ -221,6 +217,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         """
         Migrates old unique ID to the new unique ID.
         """
+        if registry_entry.entity_id.startswith(
+            "media_player."
+        ) and registry_entry.unique_id.endswith("-mediaplayer"):
+            _LOGGER.debug("Migrating media_player entity unique id")
+            return {"new_unique_id": f"{registry_entry.config_entry_id}-projector"}
+
         if registry_entry.unique_id.startswith(f"{projector.unique_id}-"):
             new_unique_id = registry_entry.unique_id.replace(
                 f"{projector.unique_id}-", f"{registry_entry.config_entry_id}-"
@@ -296,20 +298,3 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Handle options update."""
     hass.config_entries.async_schedule_reload(entry.entry_id)
-
-
-@callback
-def async_migrate_entity_entry(
-    entry: entity_registry.RegistryEntry,
-) -> dict[str, Any] | None:
-    """
-    Migrates old unique ID to the new unique ID.
-    """
-    if entry.entity_id.startswith("media_player.") and entry.unique_id.endswith(
-        "-mediaplayer"
-    ):
-        _LOGGER.debug("Migrating media_player entity unique id")
-        return {"new_unique_id": f"{entry.config_entry_id}-projector"}
-
-    # No migration needed
-    return None
