@@ -37,7 +37,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     _attr_has_entity_name = True
     _attr_name = None
     _attr_device_class = MediaPlayerDeviceClass.TV
-    _attr_translation_key = "mediaplayer"
+    _attr_translation_key = "projector"
     _attr_supported_features = (
         MediaPlayerEntityFeature.VOLUME_MUTE
         | MediaPlayerEntityFeature.VOLUME_SET
@@ -63,10 +63,33 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         super().__init__(coordinator)
 
         self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{config_entry_id}-mediaplayer"
+        self._attr_unique_id = f"{config_entry_id}-projector"
+
+    def _get_source_translation_key(self, source: str):
+        """
+        Projectors can have 1 or multiple sources for HDMI, RGB and YPBR. In case multiple sources
+        of the same kind are present the source translation should include a sequence number, if
+        only one source of a kind is present no sequence number is needed in the translation.
+        """
+        source_translation_key = source
+        if (
+            source in ("hdmi", "rgb", "ypbr")
+            and len([s for s in self._attr_source_list if s.startswith(source)]) > 1
+        ):
+            # More than 1 source of this kind present, add "1" to the source to use the translation
+            # with sequence number.
+            source_translation_key = source + "1"
+        return source_translation_key
 
     async def async_added_to_hass(self) -> None:
         await super().async_added_to_hass()
+
+        self._attr_source_list = self.coordinator.video_sources
+        source_list = [
+            self._get_source_translation_key(source)
+            for source in self.coordinator.video_sources
+        ]
+        self._attr_source_list = source_list
 
         if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
             _LOGGER.debug("Projector is not available")
@@ -82,7 +105,9 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
             self._attr_is_volume_muted = self.coordinator.muted
 
-            self._attr_source = self.coordinator.video_source
+            self._attr_source = self._get_source_translation_key(
+                self.coordinator.video_source
+            )
 
             self._attr_available = True
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_POWERINGOFF:
@@ -91,8 +116,6 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         elif self.coordinator.power_status == BenQProjector.POWERSTATUS_OFF:
             self._attr_state = MediaPlayerState.OFF
             self._attr_available = True
-
-        self._attr_source_list = self.coordinator.video_sources
 
         self.async_write_ha_state()
 
@@ -129,7 +152,9 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             self._attr_is_volume_muted = self.coordinator.data.get("mute")
 
         if "sour" in self.coordinator.data:
-            self._attr_source = self.coordinator.data.get("sour")
+            self._attr_source = self._get_source_translation_key(
+                self.coordinator.data.get("sour")
+            )
 
         self.async_write_ha_state()
 
@@ -177,6 +202,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
     async def async_select_source(self, source: str) -> None:
         """Set the input video source."""
-        if await self.coordinator.async_select_video_source(source):
-            self._attr_source = self.coordinator.video_source
+        video_source = source.rstrip("1")
+        if await self.coordinator.async_select_video_source(video_source):
+            self._attr_source = source
             self.async_write_ha_state()

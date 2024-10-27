@@ -54,6 +54,39 @@
 	    }
     },
 	"entity": {
+		"media_player": {
+			"projector": {
+				"state_attributes": {
+					"source": {
+						"state": {
+							"dp": "DisplayPort",
+							"dvia": "DVI-A",
+							"dvid": "DVI-D",
+							"hdbaset": "HDBaseT",
+							"hdmi": "HDMI",
+							"hdmi1": "HDMI 1",
+							"hdmi2": "HDMI 2",
+							"hdmi3": "HDMI 3",
+							"network": "Network",
+							"rgb": "Computer",
+							"rgb1": "Computer 1",
+							"rgb2": "Computer 2",
+							"rgb3": "Computer 3",
+							"sdi": "3G-SDI",
+							"svid": "S-Video",
+							"usbdisplay": "USB Display",
+							"usbreader": "USB Reader",
+							"vid": "Composite",
+							"wireless": "Wireless",
+							"ypbr": "Component",
+							"ypbr1": "Component 1",
+							"ypbr2": "Component 2",
+							"smartsystem": "Smart System"
+						}
+					}
+				}
+			}
+		},
 		"number": {
 			"con": {
 				"name": "Contrast"
