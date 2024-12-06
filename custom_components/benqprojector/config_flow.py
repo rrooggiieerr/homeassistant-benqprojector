@@ -15,13 +15,12 @@ from benqprojector import (
     BenQProjectorSerial,
     BenQProjectorTelnet,
 )
-from homeassistant import config_entries
+from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE, UnitOfTime
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.selector import (
-    BooleanSelector,
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
@@ -46,7 +45,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for BenQ Projector."""
 
     VERSION = 1
@@ -126,7 +125,8 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def validate_input_setup_serial(
         self, data: dict[str, Any], errors: dict[str, str]
     ) -> dict[str, Any]:
-        """Validate the user input and create data.
+        """
+        Validate the user input and create data.
 
         Data has the keys from _step_setup_serial_schema with values provided by the user.
         """
@@ -247,13 +247,13 @@ class BenQProjectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @staticmethod
     @callback
     def async_get_options_flow(
-        config_entry: config_entries.ConfigEntry,
-    ) -> config_entries.OptionsFlow:
+        config_entry: ConfigEntry,
+    ) -> OptionsFlow:
         """Create the options flow."""
-        return BenQProjectorOptionsFlowHandler(config_entry)
+        return BenQProjectorOptionsFlowHandler()
 
 
-class BenQProjectorOptionsFlowHandler(config_entries.OptionsFlow):
+class BenQProjectorOptionsFlowHandler(OptionsFlow):
     _OPTIONS_SCHEMA = vol.Schema(
         {
             vol.Optional(CONF_INTERVAL, default=CONF_DEFAULT_INTERVAL): NumberSelector(
@@ -265,11 +265,6 @@ class BenQProjectorOptionsFlowHandler(config_entries.OptionsFlow):
             ),
         }
     )
-
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        """Initialize options flow."""
-        _LOGGER.debug(config_entry.data)
-        self.config_entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
