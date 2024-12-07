@@ -78,11 +78,16 @@ instead. The PJLink protocol is covered by it's own integration:
 
 The following projectors are known to work:
 
+* HT4550i
 * MW519
 * TH585
+* TK800m
 * W1070
 * W1100
 * W1110
+* W1140
+* W1250
+* W4000i
 * X3000i
 
 The following projectors are not tested but use the same protocol according to the documentation:
@@ -103,7 +108,7 @@ Not supported:
 * RP790S
 * RP705H
 
-Some projectors need to be on to be able to detect the model and the integration to work.
+Some projectors need to be **on** to be able to detect the model and the integration to work.
 
 Please let me know if your projector is also supported by this Home Assistant integration so I can
 improve the overview of supported projectors.
