@@ -141,6 +141,31 @@ Or follow these instructions:
 When your wiring is right a new BenQ Projector integration and device will now be added to your
 Integrations view. If your wiring is not right you will get a *Failed to connect* error message.
 
+## Actions
+
+The integration supports actions so commands can be send which are (not yet) implemented.
+
+`benqprojector.send` This action allows you to send commands with or withouth action to your BenQ
+Projector. To get the current state of a setting use `?` as the action.
+
+```
+action: benqprojector.send
+data:
+  device_id: 1481637509cb0c89ea1582e195fe6370
+  command: "pow"
+  action: "?"
+```
+
+`benqprojector.send_raw` This action allows you to send any raw command to your BenQ Projector. The
+command needs to include the `*` and `#` prefix and suffix.
+
+```
+action: benqprojector.send_raw
+data:
+  device_id: 1481637509cb0c89ea1582e195fe6370
+  command: "*pow=?#"
+```
+
 ## Contributing
 
 If you would like to use this Home Assistant integration in your own language you can provide me

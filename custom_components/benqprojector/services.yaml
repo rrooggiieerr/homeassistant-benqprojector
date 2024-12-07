@@ -19,8 +19,9 @@ send:
     action:
       name: Action
       description: The action for the given command.
-      required: true
+      required: false
       example: "on"
+      default: "?"
       selector:
         text:
 send_raw:

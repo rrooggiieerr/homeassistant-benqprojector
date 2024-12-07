@@ -18,7 +18,13 @@ from homeassistant.const import (
     CONF_TYPE,
     Platform,
 )
-from homeassistant.core import CALLBACK_TYPE, HomeAssistant, ServiceCall, callback
+from homeassistant.core import (
+    CALLBACK_TYPE,
+    HomeAssistant,
+    ServiceCall,
+    SupportsResponse,
+    callback,
+)
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import entity_registry
 from homeassistant.helpers.entity import DeviceInfo
@@ -52,7 +58,7 @@ SERVICE_SEND_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_DEVICE_ID): cv.string,
         vol.Required(CONF_SERVICE_COMMAND): cv.string,
-        vol.Required(CONF_SERVICE_ACTION): cv.string,
+        vol.Optional(CONF_SERVICE_ACTION): cv.string,
     }
 )
 SERVICE_SEND_RAW_SCHEMA = vol.Schema(
@@ -264,20 +270,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         command: str = call.data.get(CONF_SERVICE_COMMAND)
         action: str = call.data.get(CONF_SERVICE_ACTION)
 
-        await coordinator.async_send_command(command, action)
+        response = await coordinator.projector.send_command(command, action, False)
+
+        return {"response": response}
 
     async def async_handle_send_raw(call: ServiceCall):
         """Handle the send_raw service call."""
         command: str = call.data.get(CONF_SERVICE_COMMAND)
 
-        await coordinator.async_send_raw_command(command)
+        response = await coordinator.async_send_raw_command(command)
+
+        return {"response": response}
 
     hass.services.async_register(
-        DOMAIN, "send", async_handle_send, schema=SERVICE_SEND_SCHEMA
+        DOMAIN,
+        "send",
+        async_handle_send,
+        schema=SERVICE_SEND_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
     )
 
     hass.services.async_register(
-        DOMAIN, "send_raw", async_handle_send_raw, schema=SERVICE_SEND_RAW_SCHEMA
+        DOMAIN,
+        "send_raw",
+        async_handle_send_raw,
+        schema=SERVICE_SEND_RAW_SCHEMA,
+        supports_response=SupportsResponse.ONLY,
     )
 
     return True
