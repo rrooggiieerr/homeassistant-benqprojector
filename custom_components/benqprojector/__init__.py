@@ -91,7 +91,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         self.unique_id = self.projector.unique_id
         model = self.projector.model
         if model is not None:
-            model = model.upper()
+            model = model
 
         self.device_info = DeviceInfo(
             identifiers={(DOMAIN, self.unique_id)},
@@ -138,7 +138,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     #     _LOGGER.debug("Connected to BenQ projector on %s", self.projector.connection)
     #
     #     self.unique_id = self.projector.unique_id
-    #     model = self.projector.model.upper()
+    #     model = self.projector.model
     #
     #     self.device_info = DeviceInfo(
     #         identifiers={(DOMAIN, self.unique_id)},

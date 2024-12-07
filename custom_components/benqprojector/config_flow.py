@@ -161,7 +161,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
 
                     # Get model from the device
                     if projector.model is not None:
-                        model = projector.model.upper()
+                        model = projector.model
 
                 await projector.disconnect()
             except serial.SerialException:
@@ -228,7 +228,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
 
                 # Get model from the device
                 if projector.model is not None:
-                    model = projector.model.upper()
+                    model = projector.model
 
             await projector.disconnect()
 
