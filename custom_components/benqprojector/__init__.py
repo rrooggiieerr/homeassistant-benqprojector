@@ -243,19 +243,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass, entry.entry_id, _async_migrate_entity_entry
     )
 
-    # Test if we can connect to the device.
-    try:
-        # Open the connection.
-        if not await projector.connect(interval=interval):
-            raise ConfigEntryNotReady(
-                f"Unable to connect to device {projector.unique_id}"
-            )
-
-        _LOGGER.info("Device %s is available", projector.unique_id)
-    except serial.SerialException as ex:
+    # Open the connection.
+    if not await projector.connect(interval=interval):
         raise ConfigEntryNotReady(
             f"Unable to connect to device {projector.unique_id}"
-        ) from ex
+        )
+
+    _LOGGER.info("Device %s is available", projector.unique_id)
 
     coordinator = BenQProjectorCoordinator(hass, projector)
 
@@ -303,7 +297,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
-    _LOGGER.debug("async_unload_entry")
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][entry.entry_id]
     await coordinator.async_disconnect()
 
