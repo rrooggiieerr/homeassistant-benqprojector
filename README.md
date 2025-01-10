@@ -180,6 +180,11 @@ Create a pull request (preferred) or issue with the file attached.
 More on translating custom integrations can be found
 [here](https://developers.home-assistant.io/docs/internationalization/custom_integration/).
 
+## Star this repository
+
+Help other Home Assistant users find this integration by starring this repository. Click **⭐ Star**
+on the top right of the GitHub page.
+
 ## Support my work
 
 Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of
