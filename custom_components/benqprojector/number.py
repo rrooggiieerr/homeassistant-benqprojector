@@ -207,7 +207,6 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
-        _LOGGER.debug("async_set_native_value")
         if self.coordinator.power_status == BenQProjector.POWERSTATUS_ON:
             if self._attr_native_value == value:
                 return
