@@ -50,10 +50,10 @@ instead. The PJLink protocol is covered by it's own [PJLink integration](https:/
 
 ## Hardware
 
+### Serial port
+
 I'm using a generic serial to USB converter to connect to my projector. The projector has a male
 DB9 connector, thus you need a female conector on your USB converter.
-
-### Serial port
 
 You can lookup and change the baud rate in the menu of your BenQ projector.
 
@@ -69,7 +69,7 @@ Example of a serial to WiFi bridge using a serial to TTL converter and a Wemos C
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
 
 It has to be said that a direct serial connection to the projector is much more responsive than
-using a serial to network bridge. Maybe this is different on an integrated networked BenQ projector
+using a serial to WiFi bridge. Maybe this is different on an integrated networked BenQ projector
 or using ethernet instead of WiFi.
 
 ## Supported projectors
@@ -106,8 +106,6 @@ Not supported:
 * RP790S
 * RP705H
 
-Some projectors need to be **on** to be able to detect the model and the integration to work.
-
 Please let me know if your projector is also supported by this Home Assistant integration so I can
 improve the overview of supported projectors.
 
@@ -143,6 +141,8 @@ Or follow these instructions:
 
 When your wiring is right a new BenQ Projector integration and device will now be added to your
 Integrations view. If your wiring is not right you will get a *Failed to connect* error message.
+
+Some projectors need to be **on** to be able to detect the model and the integration to work.
 
 ## Actions
 
@@ -183,14 +183,14 @@ More on translating custom integrations can be found
 ### Contribute your projector model configuration
 
 For increased support of your specific BenQ projector model you can contribute the configuration of
-your projector to the underlaying [benqprojector library](https://github.com/rrooggiieerr/benqprojector.py)
+your projector to the underlaying [BenQ projector library](https://github.com/rrooggiieerr/benqprojector.py)
 
 Follow [these instruction](https://github.com/rrooggiieerr/benqprojector.py#detecting-your-projector-capabilities)
 to do so.
 
-### Star this repository
+### Star this integration
 
-Help other Home Assistant users find this integration by starring this repository. Click **⭐ Star**
+Help other Home Assistant users find this integration by starring this GitHub page. Click **⭐ Star**
 on the top right of the GitHub page.
 
 ### Support my work
