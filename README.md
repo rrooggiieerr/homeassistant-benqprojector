@@ -27,8 +27,8 @@ including serial to network bridges like [esp-link](https://github.com/jeelabs/e
 
 ## Protocol
 
-BenQ projectors and flat panels with a serial port can support one of three protocols. This plugin
-supports projectors which are of the L, P, T, W and X series but probably also others.
+BenQ projectors and flat panels with a serial port can support one of three protocols. This
+integration supports projectors which are of the L, P, T, W and X series but probably also others.
 
 This integration works if your projector supports the following command structure:
 
