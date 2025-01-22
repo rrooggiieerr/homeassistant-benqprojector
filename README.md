@@ -60,17 +60,17 @@ You can lookup and change the baud rate in the menu of your BenQ projector.
 ### Network connected projectors
 
 The commands as described above also work over a network connection. Although I don't own such
-projector I have implemented the network functionality using a serial to network bridge. The
-network support for native networked BenQ projectors is thus experimental. Let me know if your
+projector I have implemented the network functionality using a serial to WiFi bridge. The
+network support for integrated networked BenQ projectors is thus experimental. Let me know if your
 network connected BenQ projector works.
 
-Example of a serial to network bridge using a serial to TTL converter and a Wemos C3 Mini:  
+Example of a serial to WiFi bridge using a serial to TTL converter and a Wemos C3 Mini:  
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
 
 It has to be said that a direct serial connection to the projector is much more responsive than
-using a serial to network bridge. Maybe this is different on a native networked BenQ projector or
-using ethernet instead of WiFi.
+using a serial to network bridge. Maybe this is different on an integrated networked BenQ projector
+or using ethernet instead of WiFi.
 
 ## Supported projectors
 
