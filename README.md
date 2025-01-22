@@ -14,21 +14,16 @@
 ## Introduction
 
 Home Assistant integration that supports sending commands to BenQ projectors over the serial
-interface or serial to network bridges like [esp-link](https://github.com/jeelabs/esp-link).
+or network interface including serial to network bridges like [esp-link](https://github.com/jeelabs/esp-link).
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
 
 BenQ projectors and flat panels with a serial port can support one of three protocols. This plugin
 supports projectors which are of the L, P, T, W and X series but probably also others.
 
-## Hardware
-
-I'm using a generic serial to USB converter to connect to my projector. The projector has a male
-DB9 connector, thus you need a female conector on your USB converter.
-
 ## Features
 
-* Connects to a BenQ projector over serial and serial to network bridge
+* Connects to a BenQ projector over serial or network interface
 * Sending commands to projectors
 * Reading the projector status
 * Uses asynchronous IO
@@ -48,14 +43,24 @@ Power on   : `<CR>*pow=on#<CR>`
 Power off  : `<CR>*pow=off#<CR>`  
 Change source to HDMI: `<CR>*sour=hdmi#<CR>`  
 
+### PJLink
+
+This integration does **not** implement the PJLink protocol, but a proparitary BenQ protocol
+instead. The PJLink protocol is covered by it's own [PJLink integration](https://www.home-assistant.io/integrations/pjlink/).
+
+## Hardware
+
+I'm using a generic serial to USB converter to connect to my projector. The projector has a male
+DB9 connector, thus you need a female conector on your USB converter.
+
 ### Serial port
 
 You can lookup and change the baud rate in the menu of your BenQ projector.
 
 ### Network connected projectors
 
-The commands as described above should also work over a network connection, however I don't own
-such projector and have implemented the network functionality using a serial to network bridge. The
+The commands as described above also work over a network connection. Although I don't own such
+projector I have implemented the network functionality using a serial to network bridge. The
 network support for native networked BenQ projectors is thus experimental. Let me know if your
 network connected BenQ projector works.
 
@@ -64,15 +69,8 @@ Example of a serial to network bridge using a serial to TTL converter and a Wemo
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
 
 It has to be said that a direct serial connection to the projector is much more responsive than
-using a serial to network bridge, at least when using a serial to network bridge. Maybe this is
-different on a native networked BenQ projector or using ethernet instead of WiFi.
-
-### PJLink
-
-This integration does **not** implement the PJLink protocol, but a proparitary BenQ protocol
-instead. The PJLink protocol is covered by it's own integration:
-
-[Home Assistant PJLink integration](https://www.home-assistant.io/integrations/pjlink/)
+using a serial to network bridge. Maybe this is different on a native networked BenQ projector or
+using ethernet instead of WiFi.
 
 ## Supported projectors
 
@@ -171,21 +169,31 @@ data:
   command: "*pow=?#"
 ```
 
-## Contribute your language
+## Contribution and appreciation
+
+### Contribute your language
 
 If you would like to use this Home Assistant integration in your own language you can provide a
 translation file as found in the `custom_components/benqprojector/translations` directory. Create a
-pull request (preferred) or issue with the file attached.
+pull request (preferred) or issue with the file for your language attached.
 
 More on translating custom integrations can be found
 [here](https://developers.home-assistant.io/docs/internationalization/custom_integration/).
 
-## Star this repository
+### Contribute your projector model configuration
+
+For increased support of your specific BenQ projector model you can contribute the configuration of
+your projector to the underlaying [benqprojector library](https://github.com/rrooggiieerr/benqprojector.py)
+
+Follow [these instruction](https://github.com/rrooggiieerr/benqprojector.py#detecting-your-projector-capabilities)
+to do so.
+
+### Star this repository
 
 Help other Home Assistant users find this integration by starring this repository. Click **⭐ Star**
 on the top right of the GitHub page.
 
-## Support my work
+### Support my work
 
 Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of
 the following platforms, your donation is greatly appreciated and keeps me motivated:
@@ -195,7 +203,7 @@ the following platforms, your donation is greatly appreciated and keeps me motiv
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
 [![Patreon][patreon-shield]][patreon]
 
-## Hire me
+### Hire me
 
 If you would like to have a Home Assistant integration developed for your product or are in need
 for a freelance Python developer for your project please contact me, you can find my email address
