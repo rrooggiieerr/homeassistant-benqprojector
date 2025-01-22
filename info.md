@@ -13,13 +13,10 @@
 
 ## Introduction
 
-Home Assistant integration that supports sending commands to BenQ projectors over the serial
-or network interface including serial to network bridges like [esp-link](https://github.com/jeelabs/esp-link).
+Home Assistant integration to control BenQ projectors over the serial or network interface
+including serial to network bridges like [esp-link](https://github.com/jeelabs/esp-link).
 
-<img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%"/>
-
-BenQ projectors and flat panels with a serial port can support one of three protocols. This plugin
-supports projectors which are of the L, P, T, W and X series but probably also others.
+<img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%;"/>
 
 ## Features
 
@@ -29,6 +26,9 @@ supports projectors which are of the L, P, T, W and X series but probably also o
 * Uses asynchronous IO
 
 ## Protocol
+
+BenQ projectors and flat panels with a serial port can support one of three protocols. This plugin
+supports projectors which are of the L, P, T, W and X series but probably also others.
 
 This integration works if your projector supports the following command structure:
 
@@ -60,17 +60,17 @@ You can lookup and change the baud rate in the menu of your BenQ projector.
 ### Network connected projectors
 
 The commands as described above also work over a network connection. Although I don't own such
-projector I have implemented the network functionality using a serial to WiFi bridge. The
-network support for integrated networked BenQ projectors is thus experimental. Let me know if your
-network connected BenQ projector works.
+projector I have implemented the network functionality using a serial to WiFi bridge. The network
+support for integrated networked BenQ projectors is thus experimental. Let me know if your network
+connected BenQ projector works.
 
-Example of a serial to WiFi bridge using a serial to TTL converter and a Wemos C3 Mini:  
+Example of a serial to WiFi bridge using a serial to TTL converter and a Wemos C3 Mini:
 
-<img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png">
+<img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/serial%20to%20network%20bridge.png" style="width: 25%;"/>
 
 It has to be said that a direct serial connection to the projector is much more responsive than
-using a serial to WiFi bridge. Maybe this is different on an integrated networked BenQ projector
-or using ethernet instead of WiFi.
+using a serial to WiFi bridge. Maybe this is different on an integrated networked BenQ projector or
+using ethernet instead of WiFi.
 
 ## Supported projectors
 
