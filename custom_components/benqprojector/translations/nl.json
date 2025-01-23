@@ -5,22 +5,22 @@
         },
         "error": {
             "cannot_connect": "Kan geen verbinding maken",
-			"nonexisting_serial_port": "Seri\u00eble poort bestaat niet",
+			"nonexisting_serial_port": "Seriële poort bestaat niet",
+			"cannot_detect_model_when_off": "Kan projectormodel niet detecteren als projector is uitgeschakeld. Schakel de projector aan en probeer het opnieuw.",
             "unknown": "Onverwachte fout"
         },
         "step": {
 			"user": {
 				"title": "Connectie Methode",
 				"menu_options": {
-					"setup_serial": "Seri\u00ebl",
+					"setup_serial": "Seriël",
 					"setup_network": "Netwerk"
 				}
 			},
             "setup_serial": {
-                "title": "Seri\u00ebl Projector",
-				"description": "Sommige projectoren worden niet gedetecteerd als ze zijn uitgeschakeld. Als de projector op dit moment is uitgeschakeld schakel dan de projector in en probeert het opnieuw.",
+                "title": "Seriël Projector",
                 "data": {
-                    "serial_port": "Seri\u00eble poort",
+                    "serial_port": "Seriële poort",
                     "baud_rate": "Poortsnelheid"
                 },
 				"data_description": {
@@ -30,14 +30,13 @@
             },
 			"setup_network": {
 				"title": "Netwerk Projector",
-				"description": "Sommige projectoren worden niet gedetecteerd als ze zijn uitgeschakeld. Als de projector op dit moment is uitgeschakeld schakel dan de projector in en probeert het opnieuw.",
 				"data": {
 					"host": "Host",
 					"port": "Poort"
 				},
 				"data_description": {
 					"host": "De hostnaam of het IP adres van de BenQ projector.",
-					"port": "Het poortnummer dat nodig is om met de projector te communiceren. 8000 is de standaardpoort voor native netwerkprojectoren, maar als een serieel-naar-netwerkbrug wordt gebruikt, zoals esp-link, moet mogelijk poort 23 worden geselecteerd."
+					"port": "Het poortnummer dat nodig is om met de projector te communiceren. 8000 is de standaard poort bij projectoren met een geïntegreerde netwerkaansluiting, maar als een seriëel-naar-netwerk converter wordt gebruikt, zoals esp-link, moet mogelijk poort 23 worden geselecteerd."
 				}
 			}
         }

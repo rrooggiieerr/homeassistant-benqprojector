@@ -133,8 +133,10 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
         # Validate the data can be used to set up a connection.
         self._step_setup_serial_schema(data)
 
-        serial_port = data.get(CONF_SERIAL_PORT)
         model = None
+        serial_port = data.get(CONF_SERIAL_PORT)
+        baud_rate = data[CONF_BAUD_RATE]
+        unique_id = None
 
         if serial_port is None:
             raise vol.error.RequiredFieldInvalid("No serial port configured")
@@ -147,34 +149,40 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
         if not os.path.exists(serial_port):
             errors[CONF_SERIAL_PORT] = "nonexisting_serial_port"
 
-        await self.async_set_unique_id(serial_port)
-        self._abort_if_unique_id_configured()
-
         if errors.get(CONF_SERIAL_PORT) is None:
             # Test if we can connect to the device
             try:
-                projector = BenQProjectorSerial(serial_port, data[CONF_BAUD_RATE])
+                projector = BenQProjectorSerial(serial_port, baud_rate)
                 if not await projector.connect():
                     errors["base"] = "cannot_connect"
                 else:
                     _LOGGER.info("Device %s available", serial_port)
 
                     # Get model from the device
-                    if projector.model is not None:
-                        model = projector.model
+                    model = projector.model
 
+                    if (
+                        model is None
+                        and projector.power_status != projector.POWERSTATUS_ON
+                    ):
+                        errors["base"] = "cannot_detect_model_when_off"
+
+                    unique_id = projector.unique_id
                 await projector.disconnect()
             except serial.SerialException:
                 errors["base"] = "cannot_connect"
+
+        await self.async_set_unique_id(unique_id)
+        self._abort_if_unique_id_configured()
 
         # Return title, data and options.
         return (
             f"BenQ {model}",
             {
-                CONF_MODEL: projector.model,
+                CONF_MODEL: model,
                 CONF_TYPE: CONF_TYPE_SERIAL,
                 CONF_SERIAL_PORT: serial_port,
-                CONF_BAUD_RATE: data[CONF_BAUD_RATE],
+                CONF_BAUD_RATE: baud_rate,
             },
             None,
         )
@@ -209,14 +217,12 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
         # Validate the data can be used to set up a network connection.
         self._step_setup_network_schema(data)
 
+        model = None
         host = data[CONF_HOST]
         port = int(data[CONF_PORT])
-        model = None
+        unique_id = None
 
         # ToDo Test if the host exists
-
-        await self.async_set_unique_id(f"{host}:{port}")
-        self._abort_if_unique_id_configured()
 
         if errors.get(CONF_HOST) is None:
             # Test if we can connect to the device.
@@ -227,16 +233,23 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
                 _LOGGER.info("Device on %s:%s available", host, port)
 
                 # Get model from the device
-                if projector.model is not None:
-                    model = projector.model
+                model = projector.model
+
+                if model is None and projector.power_status != projector.POWERSTATUS_ON:
+                    errors["base"] = "cannot_detect_model_when_off"
+
+                unique_id = projector.unique_id
 
             await projector.disconnect()
+
+        await self.async_set_unique_id(unique_id)
+        self._abort_if_unique_id_configured()
 
         # Return info that you want to store in the config entry.
         return (
             f"BenQ {model}",
             {
-                CONF_MODEL: projector.model,
+                CONF_MODEL: model,
                 CONF_TYPE: CONF_TYPE_TELNET,
                 CONF_HOST: host,
                 CONF_PORT: port,

@@ -6,6 +6,7 @@
 		"error": {
 			"cannot_connect": "Failed to connect",
 			"nonexisting_serial_port": "Serial poort does not exist",
+			"cannot_detect_model_when_off": "Cannot detect projector model if projector is powered off. Power on the projector and try again.",
 			"unknown": "Unexpected error"
 		},
 		"step": {
@@ -18,7 +19,6 @@
 			},
 			"setup_serial": {
 				"title": "Serial Projector",
-				"description": "Some projectors can not be detected when powered off, if the projector is currenty powered off power on the projector and try again.",
 				"data": {
 					"serial_port": "Serial Port",
 					"baud_rate": "Baud rate"
@@ -30,14 +30,13 @@
 			},
 			"setup_network": {
 				"title": "Network Projector",
-				"description": "Some projectors can not be detected when powered off, if the projector is currenty powered off power on the projector and try again.",
 				"data": {
 					"host": "Host",
 					"port": "Port"
 				},
 				"data_description": {
 					"host": "The hostname or IP address of the BenQ projector.",
-					"port": "The port number needed to communicate with the projector. 8000 is the default port for native network connected projectors but if a serial to network bridges like esp-link is used port 23 might need to be selected."
+					"port": "The port number needed to communicate with the projector. 8000 is the default port for projectors with an integrated network interface but if a serial to network bridges like esp-link is used port 23 might need to be selected."
 				}
 			}
 		}
