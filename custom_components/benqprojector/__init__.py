@@ -245,9 +245,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     # Open the connection.
     if not await projector.connect(interval=interval):
-        raise ConfigEntryNotReady(
-            f"Unable to connect to device {projector.unique_id}"
-        )
+        raise ConfigEntryNotReady(f"Unable to connect to device {projector.unique_id}")
 
     _LOGGER.info("Device %s is available", projector.unique_id)
 
