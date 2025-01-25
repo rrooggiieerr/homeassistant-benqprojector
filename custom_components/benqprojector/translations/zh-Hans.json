@@ -29,7 +29,7 @@
 				}
 			},
 			"setup_network": {
-				"title": "Network Projector",
+				"title": "网络投影仪",
 				"data": {
 					"host": "主机",
 					"port": "端口"
