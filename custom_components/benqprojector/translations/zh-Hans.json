@@ -1,0 +1,338 @@
+{
+	"config": {
+		"abort": {
+			"already_configured": "设备已经配置"
+		},
+		"error": {
+			"cannot_connect": "连接失败",
+			"nonexisting_serial_port": "串口不存在",
+			"cannot_detect_model_when_off": "在投影仪关闭时无法检测型号，请打开投影仪并重试",
+			"unknown": "未知错误"
+		},
+		"step": {
+			"user": {
+				"title": "连接方式",
+				"menu_options": {
+					"setup_serial": "串口",
+					"setup_network": "网络"
+				}
+			},
+			"setup_serial": {
+				"title": "串口投影仪",
+				"data": {
+					"serial_port": "串口",
+					"baud_rate": "波特率"
+				},
+				"data_description": {
+					"serial_port": "连接至投影仪的串口",
+					"baud_rate": "投影仪配置使用的波特率"
+				}
+			},
+			"setup_network": {
+				"title": "网络投影仪",
+				"data": {
+					"host": "主机",
+					"port": "端口"
+				},
+				"data_description": {
+					"host": "BenQ 投影仪的主机名或IP地址。",
+					"port": "用于与投影仪通信的端口号。对于内置网络的投影仪，默认端口为 8000；若使用如 esp-link 的串口转网络桥接设备，则可能需要选择端口 23。"
+				}
+			}
+		}
+	},
+    "options": {
+        "step": {
+	    	"init": {
+                "data": {
+                	"interval": "更新间隔"
+                },
+                "data_description": {
+                }
+	    	}
+	    }
+    },
+	"entity": {
+		"media_player": {
+			"projector": {
+				"state_attributes": {
+					"source": {
+						"state": {
+							"dp": "DisplayPort",
+							"dvia": "DVI-A",
+							"dvid": "DVI-D",
+							"hdbaset": "HDBaseT",
+							"hdmi": "HDMI",
+							"hdmi1": "HDMI 1",
+							"hdmi2": "HDMI 2",
+							"hdmi3": "HDMI 3",
+							"network": "网络",
+							"rgb": "电脑",
+							"rgb1": "电脑 1",
+							"rgb2": "电脑 2",
+							"rgb3": "电脑 3",
+							"sdi": "3G-SDI",
+							"svid": "视频/S-Video",
+							"usbdisplay": "USB 显示",
+							"usbreader": "USB 设备",
+							"vid": "复合视频",
+							"wireless": "无线",
+							"ypbr": "分量",
+							"ypbr1": "分量 1",
+							"ypbr2": "分量 2",
+							"smartsystem": "智能系统"
+						}
+					}
+				}
+			}
+		},
+		"number": {
+			"con": {
+				"name": "对比度"
+			},
+			"bri": {
+				"name": "亮度"
+			},
+			"color": {
+				"name": "颜色"
+			},
+			"sharp": {
+				"name": "锐度"
+			},
+			"micvol": {
+				"name": "麦克风音量"
+			},
+			"keyst": {
+				"name": "梯形校正"
+			},
+			"hkeystone": {
+				"name": "水平梯形校正"
+			},
+			"vkeystone": {
+				"name": "垂直梯形校正"
+			},
+			"rgain": {
+				"name": "红色增益"
+			},
+			"ggain": {
+				"name": "绿色增益"
+			},
+			"bgain": {
+				"name": "蓝色增益"
+			},
+			"roffset": {
+				"name": "红色偏移"
+			},
+			"goffset": {
+				"name": "绿色偏移"
+			},
+			"boffset": {
+				"name": "蓝色偏移"
+			},
+			"gamma": {
+				"name": "灰度系数"
+			},
+			"hdrbri": {
+				"name": "HDR 亮度"
+			}
+		},
+		"select": {
+			"audiosour": {
+				"name": "音频源",
+				"state": {
+					"off": "无",
+					"rgb": "电脑 1",
+					"rgb2": "电脑 2",
+					"vid": "视频/S-Video",
+					"ypbr": "复合视频",
+					"hdmi": "HDMI 1",
+					"hdmi2": "HDMI 2",
+					"hdmi3": "HDMI 3"
+				}
+			},
+			"appmod": {
+				"name": "图像模式",
+				"state": {
+					"dynamic": "动态",
+					"preset": "演示",
+					"srgb": "sRGB",
+					"bright": "明亮",
+					"livingroom": "客厅",
+					"game": "游戏",
+					"vivid": "鲜艳",
+					"cine": "影院/Rec.709",
+					"std": "标准/鲜艳",
+					"football": "足球",
+					"footballbt": "足球明亮",
+					"dicom": "DICOM",
+					"user1": "用户预设 1",
+					"user2": "用户预设 2",
+					"user3": "用户预设 3",
+					"isfday": "ISF 白天",
+					"isfnight": "ISF 夜晚",
+					"threed": "3D",
+					"thx": "THX",
+					"silence": "静音",
+					"dci-p3": "DCI-P3 模式/D. Cinema",
+					"infographic": "图表",
+					"sport": "运动",
+					"hdr": "HDR10",
+					"hlg": "HLG"
+				}
+			},
+			"ct": {
+				"name": "色温",
+				"state": {
+					"warmer": "较暖",
+					"warm": "暖",
+					"normal": "正常",
+					"cool": "冷",
+					"cooler": "较冷",
+					"native": "原始"
+				}
+			},
+			"asp": {
+				"name": "宽高比",
+				"state": {
+					"4_3": "4:3",
+					"16_6": "16:6",
+					"16_9": "16:9",
+					"16_10": "16:10",
+					"2_35": "2.35:1",
+					"auto": "自动",
+					"real": "真实",
+					"lbox": "信箱",
+					"wide": "宽",
+					"anam": "变形",
+					"anam2_35": "变形 2.35:1",
+					"anam16_9": "变形 16:9"
+				}
+			},
+			"lampm": {
+				"name": "灯泡模式",
+				"state": {
+					"lnor": "正常模式",
+					"eco": "省电模式",
+					"seco": "SmartEco",
+					"seco2": "SmartEco 2",
+					"seco3": "SmartEco 3",
+					"dimming": "调暗",
+					"custom": "自定义",
+					"dualbr": "dualbr",
+					"dualre": "dualre",
+					"single": "single",
+					"singleeco": "singleeco"
+				}
+			},
+			"3d": {
+				"name": "3D 模式",
+				"state": {
+					"off": "关闭",
+					"auto": "自动",
+					"tb": "顶部-底部",
+					"fs": "帧序列",
+					"fp": "帧封装",
+					"sbs": "并排",
+					"da": "禁用反向",
+					"iv": "反向",
+					"2d3d": "2D转3D",
+					"nvidia": "NVIDIA"
+				}
+			},
+			"rr": {
+				"name": "遥控接收器",
+				"state": {
+					"on": "开",
+					"off": "关",
+					"fr": "前后",
+					"f": "前",
+					"r": "后",
+					"t": "顶部",
+					"tf": "顶部+前",
+					"tr": "顶部+后"
+				}
+			},
+			"pp": {
+				"name": "投影机位置",
+				"state": {
+					"ft": "前",
+					"re": "后",
+					"rc": "倒挂背投",
+					"fc": "倒挂正投"
+				}
+			},
+			"menuposition": {
+				"name": "菜单位置",
+				"state": {
+					"cen": "居中",
+					"center": "居中",
+					"tl": "左上角",
+					"tr": "右上角",
+					"br": "右下角",
+					"bl": "左下角"
+				}
+			}
+		},
+		"sensor": {
+			"ltim": {
+				"name": "灯泡时长"
+			},
+			"ltim1": {
+				"name": "灯泡 1 时长"
+			},
+			"ltim2": {
+				"name": "灯泡 2 时长"
+			}
+		},
+		"switch": {
+			"bc": {
+				"name": "Brilliant Color"
+			},
+			"qas": {
+				"name": "快速自动搜索"
+			},
+			"directpower": {
+				"name": "直接电源"
+			},
+			"autopower": {
+				"name": "信号电源"
+			},
+			"standbynet": {
+				"name": "待机网络设置"
+			},
+			"standbymic": {
+				"name": "待机麦克风设置"
+			},
+			"standbymnt": {
+				"name": "待机显示输出设置"
+			},
+			"blank": {
+				"name": "黑屏"
+			},
+			"freeze": {
+				"name": "画面冻结"
+			},
+			"ins": {
+				"name": "直接开机"
+			},
+			"lpsaver": {
+				"name": "灯泡省电模式"
+			},
+			"prjlogincode": {
+				"name": "密码"
+			},
+			"broadcasting": {
+				"name": "广播"
+			},
+			"amxdd": {
+				"name": "AMX 设备发现"
+			},
+			"highaltitude": {
+				"name": "高海拔模式"
+			},
+			"led": {
+				"name": "LED 指示灯"
+			}
+		}
+	}
+}
