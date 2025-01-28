@@ -187,7 +187,7 @@ For increased support of your specific BenQ projector model you can contribute t
 your projector to the underlaying [BenQ projector library](https://github.com/rrooggiieerr/benqprojector.py)
 
 Follow [these instruction](https://github.com/rrooggiieerr/benqprojector.py#detecting-your-projector-capabilities)
-to do so.
+on how to do so.
 
 ### Star this integration
 
