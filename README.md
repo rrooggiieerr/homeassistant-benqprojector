@@ -172,6 +172,8 @@ data:
 
 ## Contribution and appreciation
 
+You can contribute to this integration, or show your appreciation, in the following ways.
+
 ### Contribute your language
 
 If you would like to use this Home Assistant integration in your own language you can provide a

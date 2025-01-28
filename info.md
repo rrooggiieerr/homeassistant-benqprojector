@@ -80,6 +80,7 @@ The following projectors are known to work:
 * MW519
 * TH585
 * TK800m
+* W600L
 * W1070
 * W1100
 * W1110
@@ -149,6 +150,8 @@ data:
 
 ## Contribution and appreciation
 
+You can contribute to this integration, or show your appreciation, in the following ways.
+
 ### Contribute your language
 
 If you would like to use this Home Assistant integration in your own language you can provide a
@@ -164,7 +167,7 @@ For increased support of your specific BenQ projector model you can contribute t
 your projector to the underlaying [BenQ projector library](https://github.com/rrooggiieerr/benqprojector.py)
 
 Follow [these instruction](https://github.com/rrooggiieerr/benqprojector.py#detecting-your-projector-capabilities)
-to do so.
+on how to do so.
 
 ### Star this integration
 
