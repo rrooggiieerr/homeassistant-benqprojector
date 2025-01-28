@@ -80,6 +80,7 @@ The following projectors are known to work:
 * MW519
 * TH585
 * TK800m
+* W600L
 * W1070
 * W1100
 * W1110
