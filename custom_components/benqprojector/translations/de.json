@@ -1,0 +1,340 @@
+{
+	"config": {
+		"abort": {
+			"already_configured": "Gerät ist bereits eingerichtet"
+		},
+		"error": {
+			"cannot_connect": "Verbindung nicht möglich",
+			"nonexisting_serial_port": "Serieller Port nicht vorhanden",
+			"cannot_detect_model_when_off": "Projektormodell kann nicht erkannt werden, wenn der Projektor ausgeschaltet ist. Schalten Sie den Projektor wieder ein und versuchen Sie es erneut.",
+			"unknown": "Unerwarteter Fehler"
+		},
+		"step": {
+			"user": {
+				"title": "Verbindungsmethode",
+				"menu_options": {
+					"setup_serial": "Seriell",
+					"setup_network": "Netzwerk"
+				}
+			},
+			"setup_serial": {
+				"title": "Serieller Projektor",
+				"data": {
+					"serial_port": "Serieller Port",
+					"baud_rate": "Baudrate"
+				},
+				"data_description": {
+					"serial_port": "Der serielle Anschluss, an dem der BenQ projektor angeschlossen ist.",
+					"baud_rate": "Die Baudrate des Projektors."
+				}
+			},
+			"setup_network": {
+				"title": "Netzwerk Projektor",
+				"data": {
+					"host": "Host",
+					"port": "Port"
+				},
+				"data_description": {
+					"host": "Der Hostname oder die IP Adresse des BenQ Projektors.",
+					"port": "Die Portnummer, die für die Kommunikation mit dem Projektor benötigt wird. 8000 ist der Standardport für Projektoren mit integriertem Netzwerkanschluss, falls aber ein Seriell-zu-Netzwerk Adapter verwendet wird, wie z.B. esp-link, dann muss ggf. Port 23 gewählt werden."
+				}
+			}
+		}
+	},
+    "options": {
+        "step": {
+	    	"init": {
+                "data": {
+                	"interval": "Intervall"
+                },
+                "data_description": {
+                }
+	    	}
+	    }
+    },
+	"entity": {
+		"media_player": {
+			"projector": {
+				"state_attributes": {
+					"source": {
+						"state": {
+							"dp": "DisplayPort",
+							"dvia": "DVI-A",
+							"dvid": "DVI-D",
+							"hdbaset": "HDBaseT",
+							"hdmi": "HDMI",
+							"hdmi1": "HDMI 1",
+							"hdmi2": "HDMI 2",
+							"hdmi3": "HDMI 3",
+							"network": "Netzwerk",
+							"rgb": "Computer",
+							"rgb1": "Computer 1",
+							"rgb2": "Computer 2",
+							"rgb3": "Computer 3",
+							"sdi": "3G-SDI",
+							"svid": "S-Video",
+							"usbdisplay": "USB Display",
+							"usbreader": "USB Reader",
+							"vid": "Composite",
+							"wireless": "Wireless",
+							"ypbr": "Component",
+							"ypbr1": "Component 1",
+							"ypbr2": "Component 2",
+							"smartsystem": "Smart System"
+						}
+					}
+				}
+			}
+		},
+		"number": {
+			"con": {
+				"name": "Kontrast"
+			},
+			"bri": {
+				"name": "Helligkeit"
+			},
+			"color": {
+				"name": "Farbe"
+			},
+			"sharp": {
+				"name": "Schärfe"
+			},
+			"micvol": {
+				"name": "Mikrofonlautstärke"
+			},
+			"keyst": {
+				"name": "Trapezkorrektur"
+			},
+			"hkeystone": {
+				"name": "Horizontale Trapezkorrektur"
+			},
+			"vkeystone": {
+				"name": "Vertikale Trapezkorrektur"
+			},
+			"rgain": {
+				"name": "Intensität Rot"
+			},
+			"ggain": {
+				"name": "Intensität Grün"
+			},
+			"bgain": {
+				"name": "Intensität Blau"
+			},
+			"roffset": {
+				"name": "Offset Rot"
+			},
+			"goffset": {
+				"name": "Offset Grün"
+			},
+			"boffset": {
+				"name": "Offset Blau"
+			},
+			"gamma": {
+				"name": "Gamma"
+			},
+			"hdrbri": {
+				"name": "HDR Helligkeit"
+			}
+		},
+		"select": {
+			"audiosour": {
+				"name": "Audio Quelle",
+				"state": {
+					"off": "Aus",
+					"rgb": "Computer 1",
+					"rgb2": "Computer 2",
+					"vid": "Video/S-Video",
+					"ypbr": "Component",
+					"hdmi": "HDMI 1",
+					"hdmi2": "HDMI 2",
+					"hdmi3": "HDMI 3"
+				}
+			},
+			"appmod": {
+				"name": "Bildmodus",
+				"state": {
+					"dynamic": "Dynamisch",
+					"preset": "Presentation",
+					"srgb": "sRGB",
+					"bright": "Hell",
+					"livingroom": "Wohnzimmer",
+					"game": "Spiel",
+					"vivid": "Lebendig",
+					"cine": "Kino/Rec.709",
+					"std": "Standard/Lebendig",
+					"football": "Fußball",
+					"footballbt": "Fußball Hell",
+					"dicom": "DICOM",
+					"user1": "User 1",
+					"user2": "User 2",
+					"user3": "User 3",
+					"isfday": "ISF Day",
+					"isfnight": "ISF Night",
+					"threed": "3D",
+					"thx": "THX",
+					"silence": "Stille",
+					"dci-p3": "DCI-P3 mode/D. Kino",
+					"infographic": "Infografik",
+					"sport": "Sport",
+					"hdr": "HDR10",
+					"hdr10": "HDR10",
+					"hdr10+": "HDR10+",
+					"hlg": "HLG"
+				}
+			},
+			"ct": {
+				"name": "Farbtemperatur",
+				"state": {
+					"warmer": "Wärmer",
+					"warm": "Warm",
+					"normal": "Normal",
+					"cool": "Kalt",
+					"cooler": "Kühler",
+					"native": "Nativ"
+				}
+			},
+			"asp": {
+				"name": "Seitenverhältnis",
+				"state": {
+					"4_3": "4:3",
+					"16_6": "16:6",
+					"16_9": "16:9",
+					"16_10": "16:10",
+					"2_35": "2.35:1",
+					"auto": "Auto",
+					"real": "Real",
+					"lbox": "Letterbox",
+					"wide": "Wide",
+					"anam": "Anamorphic",
+					"anam2_35": "Anamorph 2.35:1",
+					"anam16_9": "Anamorph 16:9"
+				}
+			},
+			"lampm": {
+				"name": "Lichtquellenmodus",
+				"state": {
+					"lnor": "Normal",
+					"eco": "Öko",
+					"seco": "SmartEco",
+					"seco2": "SmartEco 2",
+					"seco3": "SmartEco 3",
+					"dimming": "Dimming",
+					"custom": "Benutzerdefiniert",
+					"dualbr": "dualbr",
+					"dualre": "dualre",
+					"single": "single",
+					"singleeco": "singleeco"
+				}
+			},
+			"3d": {
+				"name": "3D Modus",
+				"state": {
+					"off": "Aus",
+					"auto": "Auto",
+					"tb": "Oben-Unten",
+					"fs": "Frame Sequential",
+					"fp": "Frame-Packing",
+					"sbs": "Seite an Seite",
+					"da": "Inverter Disable",
+					"iv": "Inverter",
+					"2d3d": "2D to 3D",
+					"nvidia": "NVIDIA"
+				}
+			},
+			"rr": {
+				"name": "Remote Receiver",
+				"state": {
+					"on": "An",
+					"off": "Aus",
+					"fr": "Front + Rear",
+					"f": "Front",
+					"r": "Rear",
+					"t": "Top",
+					"tf": "Top + Front",
+					"tr": "Top + Rear"
+				}
+			},
+			"pp": {
+				"name": "Projektorposition",
+				"state": {
+					"ft": "Tisch vorne",
+					"re": "Decke vorne",
+					"rc": "Tisch hinten",
+					"fc": "Decke hinten"
+				}
+			},
+			"menuposition": {
+				"name": "Menüposition",
+				"state": {
+					"cen": "Mitte",
+					"center": "Mitte",
+					"tl": "Oben links",
+					"tr": "Oben rechts",
+					"br": "Unten rechts",
+					"bl": "Unten links"
+				}
+			}
+		},
+		"sensor": {
+			"ltim": {
+				"name": "Lichtquellenbetriebsdauer"
+			},
+			"ltim1": {
+				"name": "Betriebsdauer Lichtquelle 1"
+			},
+			"ltim2": {
+				"name": "Betriebsdauer Lichtquelle 2"
+			}
+		},
+		"switch": {
+			"bc": {
+				"name": "Brilliante Farben"
+			},
+			"qas": {
+				"name": "Schnelle Auto Suche"
+			},
+			"directpower": {
+				"name": "Direct Power On"
+			},
+			"autopower": {
+				"name": "Signal Power On "
+			},
+			"standbynet": {
+				"name": "Standby Einstellungen Netzwerk"
+			},
+			"standbymic": {
+				"name": "Standby Einstellungen Mikrofon"
+			},
+			"standbymnt": {
+				"name": "Standby Einstellungen Monitor Out"
+			},
+			"blank": {
+				"name": "Leer"
+			},
+			"freeze": {
+				"name": "Einfrieren"
+			},
+			"ins": {
+				"name": "Schnelles Einschalten"
+			},
+			"lpsaver": {
+				"name": "Lichtquellen Sparmodus"
+			},
+			"prjlogincode": {
+				"name": "Projektor Log-In Code"
+			},
+			"broadcasting": {
+				"name": "Broadcasting"
+			},
+			"amxdd": {
+				"name": "AMX Device Discovery"
+			},
+			"highaltitude": {
+				"name": "Höhenmodus"
+			},
+			"led": {
+				"name": "LED Indikator"
+			}
+		}
+	}
+}
