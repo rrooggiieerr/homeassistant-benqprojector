@@ -146,10 +146,15 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
             self._attr_available = True
 
         if "vol" in self.coordinator.data:
-            self._attr_volume_level = self.coordinator.data.get("vol") / 20.0
+            vol = self.coordinator.data.get("vol")
+            try:
+                self._attr_volume_level = (float(vol) / 20.0) if vol is not None else None
+            except (TypeError, ValueError):
+                self._attr_volume_level = None
 
         if "mute" in self.coordinator.data:
-            self._attr_is_volume_muted = self.coordinator.data.get("mute")
+            mut = self.coordinator.data.get("mut")
+            self._attr_is_volume_muted = bool(mut) if mut is not None else None
 
         if "sour" in self.coordinator.data:
             self._attr_source = self._get_source_translation_key(
