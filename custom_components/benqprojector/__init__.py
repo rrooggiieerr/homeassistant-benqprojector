@@ -76,29 +76,43 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     model = None
     device_info: DeviceInfo = None
 
-    def __init__(self, hass, projector: BenQProjector):
-        """Initialize BenQ Projector Data Update Coordinator."""
-        super().__init__(
-            hass,
-            _LOGGER,
-            # Name of the data. For logging purposes.
-            name=__name__,
-        )
-
+    def __init__(self, hass, entry: ConfigEntry, projector: BenQProjector):
+        super().__init__(hass, _LOGGER, name=__name__)
+        self.entry = entry
         self.projector = projector
         self.projector.add_listener(self._listener)
 
+        # still keep what the library reports, but don't use it for identifiers
         self.unique_id = self.projector.unique_id
-        model = self.projector.model
-        if model is not None:
-            model = model
+        model = self.projector.model or None
 
-        self.device_info = DeviceInfo(
-            identifiers={(DOMAIN, self.unique_id)},
-            name=f"BenQ {model}",
-            model=model,
+        # Try to extract MAC if the library exposes it via unique_id or another attr
+        mac = None
+        # If unique_id looks like a MAC, keep it as a connection entry
+        if isinstance(self.unique_id, str) and ":" in self.unique_id and len(self.unique_id.split(":")) >= 6:
+            mac = self.unique_id.lower()
+
+        host = None
+        port = None
+        # If you want the URL shown, pull from the config entry data when type is telnet
+        host = self.entry.data.get("host")
+        port = self.entry.data.get("port")
+
+        info = DeviceInfo(
+            # ✅ Single, stable identifier (never changes across reloads)
+            identifiers={(DOMAIN, self.entry.entry_id)},
             manufacturer="BenQ",
+            name=f"BenQ {model}" if model else "BenQ Projector",
+            model=model,
         )
+        # Record the MAC as a connection (optional but nice)
+        if mac:
+            info.setdefault("connections", set()).add((dr.CONNECTION_NETWORK_MAC, mac))
+        # Show a convenient click-through URL (non-identifying)
+        if host:
+            info["configuration_url"] = f"http://{host}:{port or 8000}"
+
+        self.device_info = info
 
     @property
     def power_status(self):
