@@ -249,7 +249,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     _LOGGER.info("Device %s is available", projector.unique_id)
 
-    coordinator = BenQProjectorCoordinator(hass, projector)
+    coordinator = BenQProjectorCoordinator(hass, entry, projector)
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
 
