@@ -27,6 +27,7 @@ from homeassistant.core import (
 )
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import entity_registry
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
