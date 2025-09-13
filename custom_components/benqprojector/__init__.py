@@ -109,9 +109,6 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         # Record the MAC as a connection (optional but nice)
         if mac:
             info.setdefault("connections", set()).add((dr.CONNECTION_NETWORK_MAC, mac))
-        # Show a convenient click-through URL (non-identifying)
-        if host:
-            info["configuration_url"] = f"http://{host}:{port or 8000}"
 
         self.device_info = info
 
