@@ -6,15 +6,15 @@
 [![Maintainer][maintainer-shield]][maintainer]
 [![Home Assistant][homeassistant-shield]][homeassistant]
 [![HACS][hacs-shield]][hacs]  
-[![Github Sponsors][github-shield]][github]
+[![GitHub Sponsors][github-shield]][github]
 [![PayPal][paypal-shield]][paypal]
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
 [![Patreon][patreon-shield]][patreon]
 
 ## Introduction
 
-Home Assistant integration to control BenQ projectors over the serial or network interface
-including serial to network bridges like [esp-link](https://github.com/jeelabs/esp-link).
+A Home Assistant integration to control BenQ projectors via the serial or network interface
+including serial to network bridges such as [esp-link](https://github.com/jeelabs/esp-link).
 
 <img src="https://raw.githubusercontent.com/rrooggiieerr/homeassistant-benqprojector/main/Screenshot%201b.png" style="width: 50%;"/>
 
@@ -28,7 +28,7 @@ including serial to network bridges like [esp-link](https://github.com/jeelabs/e
 ## Protocol
 
 BenQ projectors and flat panels with a serial port can support one of three protocols. This
-integration supports projectors which are of the L, P, T, W and X series but probably also others.
+integration supports BenQ projectors in the L, P, T, W and X series, and likely others.
 
 This integration works if your projector supports the following command structure:
 
@@ -45,7 +45,7 @@ Change source to HDMI: `<CR>*sour=hdmi#<CR>`
 
 ### PJLink
 
-This integration does **not** implement the PJLink protocol, but a proparitary BenQ protocol
+This integration does **not** implement the PJLink protocol, but a proprietary BenQ protocol
 instead. The PJLink protocol is covered by it's own [PJLink integration](https://www.home-assistant.io/integrations/pjlink/).
 
 ## Hardware
@@ -53,13 +53,13 @@ instead. The PJLink protocol is covered by it's own [PJLink integration](https:/
 ### Serial port
 
 I'm using a generic serial to USB converter to connect to my projector. The projector has a male
-DB9 connector, thus you need a female conector on your USB converter.
+DB9 connector, thus you need a female connector on your USB converter.
 
-You can lookup and change the baud rate in the menu of your BenQ projector.
+You can look up and change the baud rate in the menu of your BenQ projector.
 
 ### Network connected projectors
 
-The commands as described above also work over a network connection. Although I don't own such
+The commands as described above also work over a network connection. Although I don't own such a
 projector I have implemented the network functionality using a serial to WiFi bridge. The network
 support for integrated networked BenQ projectors is thus experimental. Let me know if your network
 connected BenQ projector works.
@@ -77,6 +77,7 @@ using ethernet instead of WiFi.
 The following projectors are known to work:
 
 * HT4550i
+* MS521P
 * MW519
 * TH585
 * TK800m
@@ -87,6 +88,7 @@ The following projectors are known to work:
 * W1140
 * W1250
 * W4000i
+* W4100i
 * X3000i
 
 The following projectors are not tested but use the same protocol according to the documentation:
@@ -143,7 +145,7 @@ Or follow these instructions:
 When your wiring is right a new BenQ Projector integration and device will now be added to your
 Integrations view. If your wiring is not right you will get a *Failed to connect* error message.
 
-Some projectors need to be **on** to be able to detect the model and the integration to work.
+Some projectors need to be **powered on** to be able to detect the model and the integration to work.
 
 ## Actions
 
@@ -198,10 +200,10 @@ on the top right of the GitHub page.
 
 ### Support my work
 
-Do you enjoy using this Home Assistant integration? Then consider supporting my work using one of
-the following platforms, your donation is greatly appreciated and keeps me motivated:
+Do you enjoy using this Home Assistant integration? Please consider supporting my work through one
+of the following platforms, your contribution is greatly appreciated and keeps me motivated:
 
-[![Github Sponsors][github-shield]][github]
+[![GitHub Sponsors][github-shield]][github]
 [![PayPal][paypal-shield]][paypal]
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
 [![Patreon][patreon-shield]][patreon]
@@ -209,7 +211,7 @@ the following platforms, your donation is greatly appreciated and keeps me motiv
 ### Hire me
 
 If you would like to have a Home Assistant integration developed for your product or are in need
-for a freelance Python developer for your project please contact me, you can find my email address
+of a freelance Python developer for your project please contact me, you can find my email address
 on [my GitHub profile](https://github.com/rrooggiieerr).
 
 [python-shield]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
