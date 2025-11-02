@@ -33,7 +33,7 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the BenQ Projector media player."""
+    """Set up the BenQ Projector sensors."""
     coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
 
     entity_descriptions = []
