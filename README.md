@@ -119,7 +119,7 @@ improve the overview of supported projectors.
 The recommended way to install this Home Assistant integration is by using [HACS][hacs].
 Click the following button to open the integration directly on the HACS integration page.
 
-[![Install BenQ projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
+[![Install BenQ Projector from HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rrooggiieerr&repository=homeassistant-benqprojector&category=integration)
 
 Or follow these instructions:
 
@@ -195,8 +195,8 @@ on how to do so.
 
 ### Star this integration
 
-Help other Home Assistant users find this integration by starring this GitHub page. Click **⭐ Star**
-on the top right of the GitHub page.
+Help other Home Assistant and BenQ Projector users find this integration by starring this GitHub
+page. Click **⭐ Star** on the top right of the GitHub page.
 
 ### Support my work
 
@@ -207,6 +207,22 @@ of the following platforms, your contribution is greatly appreciated and keeps m
 [![PayPal][paypal-shield]][paypal]
 [![BuyMeCoffee][buymecoffee-shield]][buymecoffee]
 [![Patreon][patreon-shield]][patreon]
+
+### Home Assistant support
+
+[Let me answer your Home Assistant questions](https://buymeacoffee.com/rrooggiieerr/e/447353). During
+a 1 hour Q&A session I help you solve your Home Assistant related issues with.
+
+What can be done in one hour:
+- Home Assistant walktrough, I explain you where is what in the Home Assistant UI
+- Install and configure a Home Assistant integration
+- Explain and create scenes
+- Explain and create a simple automations
+- Install a ZHA quirk, to make your unsupported Zigbee device work in Home Assistant
+
+What takes more time:
+- Depending on the severity I might be able to help you with recovering your crashed Home Assistant
+- Support for Home Assistant Integration developers
 
 ### Hire me
 
