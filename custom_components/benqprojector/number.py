@@ -22,7 +22,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the BenQ Serial Projector number."""
-    coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator: BenQProjectorCoordinator = config_entry.runtime_data
 
     entity_descriptions = [
         NumberEntityDescription(key="con", translation_key="con", native_max_value=100),

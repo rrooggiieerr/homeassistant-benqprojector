@@ -26,7 +26,7 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the BenQ Projector switch."""
-    coordinator: BenQProjectorCoordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator: BenQProjectorCoordinator = config_entry.runtime_data
 
     entity_descriptions = [
         SwitchEntityDescription(
