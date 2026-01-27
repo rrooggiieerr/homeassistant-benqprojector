@@ -151,7 +151,7 @@ Some projectors need to be **powered on** to be able to detect the model and the
 
 The integration supports actions so commands can be send which are (not yet) implemented.
 
-`benqprojector.send` This action allows you to send commands with or withouth action to your BenQ
+`benqprojector.send` This action allows you to send commands with or without action to your BenQ
 Projector. To get the current state of a setting use `?` as the action.
 
 ```
@@ -188,7 +188,7 @@ More on translating custom integrations can be found
 ### Contribute your projector model configuration
 
 For increased support of your specific BenQ projector model you can contribute the configuration of
-your projector to the underlaying [BenQ projector library](https://github.com/rrooggiieerr/benqprojector.py)
+your projector to the underlying [BenQ projector library](https://github.com/rrooggiieerr/benqprojector.py)
 
 Follow [these instruction](https://github.com/rrooggiieerr/benqprojector.py#detecting-your-projector-capabilities)
 on how to do so.
