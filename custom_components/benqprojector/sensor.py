@@ -123,11 +123,6 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
                 self.entity_description.key
             )
             self._attr_available = True
-
-        if self.coordinator.power_status in [
-            BenQProjector.POWERSTATUS_UNKNOWN.BenQProjector.POWERSTATUS_POWERINGOFF
-        ]:
-            self._attr_available = False
         elif self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,

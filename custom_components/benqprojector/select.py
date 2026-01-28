@@ -142,9 +142,6 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
                 self.entity_description.key
             )
             self._attr_available = True
-
-        if self.coordinator.power_status == BenQProjector.POWERSTATUS_UNKNOWN:
-            self._attr_available = False
         elif self.coordinator.power_status in [
             BenQProjector.POWERSTATUS_POWERINGON,
             BenQProjector.POWERSTATUS_ON,
