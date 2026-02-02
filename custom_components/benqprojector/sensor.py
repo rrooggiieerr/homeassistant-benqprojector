@@ -43,6 +43,10 @@ async def async_setup_entry(
                 key="ltim",
                 translation_key="ltim1",
                 entity_category=EntityCategory.DIAGNOSTIC,
+                device_class=SensorDeviceClass.DURATION,
+                native_unit_of_measurement=UnitOfTime.HOURS,
+                state_class=SensorStateClass.TOTAL_INCREASING,
+                suggested_display_precision=0,
             )
         )
         entity_descriptions.append(
@@ -50,6 +54,10 @@ async def async_setup_entry(
                 key="ltim2",
                 translation_key="ltim2",
                 entity_category=EntityCategory.DIAGNOSTIC,
+                device_class=SensorDeviceClass.DURATION,
+                native_unit_of_measurement=UnitOfTime.HOURS,
+                state_class=SensorStateClass.TOTAL_INCREASING,
+                suggested_display_precision=0,
             )
         )
     elif coordinator.supports_command("ltim"):
@@ -58,6 +66,10 @@ async def async_setup_entry(
                 key="ltim",
                 translation_key="ltim",
                 entity_category=EntityCategory.DIAGNOSTIC,
+                device_class=SensorDeviceClass.DURATION,
+                native_unit_of_measurement=UnitOfTime.HOURS,
+                state_class=SensorStateClass.TOTAL_INCREASING,
+                suggested_display_precision=0,
             )
         )
 
@@ -135,11 +147,6 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
 
 
 class BenQProjectorLampTimeSensor(BenQProjectorSensor):
-    _attr_device_class = SensorDeviceClass.DURATION
-    _attr_state_class = SensorStateClass.TOTAL_INCREASING
-    _attr_native_unit_of_measurement = UnitOfTime.HOURS
-    _attr_native_value = None
-
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
