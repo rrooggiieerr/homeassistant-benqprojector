@@ -1,3 +1,5 @@
+"""Creates Select entities for the BenQ Projector Home Assistant integration."""
+
 from __future__ import annotations
 
 import logging
@@ -87,6 +89,8 @@ async def async_setup_entry(
 
 
 class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
+    """Base BenQ Projector Select."""
+
     _attr_has_entity_name = True
     _attr_available = False
 
@@ -110,6 +114,7 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
         self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
+        """Called when select is added to Home Assistant."""
         await super().async_added_to_hass()
 
         if self.coordinator.data and (

@@ -2,13 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 import logging
-from datetime import timedelta
-from typing import Any, Callable
+from typing import Any
 
-import homeassistant.helpers.config_validation as cv
-import serial
 import voluptuous as vol
+
 from benqprojector import BenQProjector, BenQProjectorSerial, BenQProjectorTelnet
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -26,7 +25,8 @@ from homeassistant.core import (
     callback,
 )
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers import entity_registry
+from homeassistant.helpers import entity_registry as er
+import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
@@ -45,10 +45,10 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [
     Platform.MEDIA_PLAYER,
+    Platform.NUMBER,
+    Platform.SELECT,
     Platform.SENSOR,
     Platform.SWITCH,
-    Platform.SELECT,
-    Platform.NUMBER,
 ]
 
 CONF_SERVICE_COMMAND = "command"
@@ -76,7 +76,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     model = None
     device_info: DeviceInfo = None
 
-    def __init__(self, hass, projector: BenQProjector):
+    def __init__(self, hass: HomeAssistant | None, projector: BenQProjector) -> None:
         """Initialize BenQ Projector Data Update Coordinator."""
         super().__init__(
             hass,
@@ -91,7 +91,7 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         self.unique_id = self.projector.unique_id
         model = self.projector.model
         if model is not None:
-            model = model
+            self.model = model
 
         self.device_info = DeviceInfo(
             identifiers={(DOMAIN, self.unique_id)},
@@ -218,11 +218,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     @callback
     def _async_migrate_entity_entry(
-        registry_entry: entity_registry.RegistryEntry,
+        registry_entry: er.RegistryEntry,
     ) -> dict[str, Any] | None:
-        """
-        Migrates old unique ID to the new unique ID.
-        """
+        """Migrates old unique ID to the new unique ID."""
         if registry_entry.entity_id.startswith(
             "media_player."
         ) and registry_entry.unique_id.endswith("-mediaplayer"):
@@ -239,9 +237,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # No migration needed
         return None
 
-    await entity_registry.async_migrate_entries(
-        hass, entry.entry_id, _async_migrate_entity_entry
-    )
+    await er.async_migrate_entries(hass, entry.entry_id, _async_migrate_entity_entry)
 
     # Open the connection.
     if not await projector.connect(interval=interval):

@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Any, Final
+from pathlib import Path
+from typing import Any
 
 import serial
 import serial.tools.list_ports
 import voluptuous as vol
+
 from benqprojector import (
     BAUD_RATES,
     DEFAULT_PORT,
@@ -19,7 +21,6 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE, UnitOfTime
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.selector import (
     NumberSelector,
     NumberSelectorConfig,
@@ -125,8 +126,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
     async def validate_input_setup_serial(
         self, data: dict[str, Any], errors: dict[str, str]
     ) -> dict[str, Any]:
-        """
-        Validate the user input and create data.
+        """Validate the user input and create data.
 
         Data has the keys from _step_setup_serial_schema with values provided by the user.
         """
@@ -146,7 +146,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
         # Test if the device exists.
-        if not os.path.exists(serial_port):
+        if not Path(serial_port).exists:
             errors[CONF_SERIAL_PORT] = "nonexisting_serial_port"
 
         if errors.get(CONF_SERIAL_PORT) is None:
@@ -306,7 +306,7 @@ class BenQProjectorOptionsFlowHandler(OptionsFlow):
 def get_serial_by_id(dev_path: str) -> str:
     """Return a /dev/serial/by-id match for given device if available."""
     by_id = "/dev/serial/by-id"
-    if not os.path.isdir(by_id):
+    if not Path(by_id).is_dir():
         return dev_path
 
     for path in (entry.path for entry in os.scandir(by_id) if entry.is_symlink()):

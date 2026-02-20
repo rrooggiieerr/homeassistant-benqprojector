@@ -1,3 +1,5 @@
+"""Creates Number entities for the BenQ Projector Home Assistant integration."""
+
 from __future__ import annotations
 
 import logging
@@ -11,7 +13,6 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import BenQProjectorCoordinator
-from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -124,6 +125,8 @@ async def async_setup_entry(
 
 
 class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
+    """Base BenQ Projector Number."""
+
     _attr_has_entity_name = True
     _attr_available = False
     _attr_native_min_value = 0
@@ -145,6 +148,7 @@ class BenQProjectorNumber(CoordinatorEntity, NumberEntity):
         self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
+        """Called when number is added to Home Assistant."""
         await super().async_added_to_hass()
 
         if self.coordinator.data and (

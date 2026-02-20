@@ -1,8 +1,4 @@
-"""
-Created on 27 Nov 2022
-
-@author: Rogier van Staveren
-"""
+"""Creates Sensor entities for the BenQ Projector Home Assistant integration."""
 
 from __future__ import annotations
 
@@ -23,7 +19,6 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import BenQProjectorCoordinator
-from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -87,6 +82,8 @@ async def async_setup_entry(
 
 
 class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
+    """Base BenQ Projector Sensor."""
+
     _attr_has_entity_name = True
     _attr_available = False
     _attr_native_value = None
@@ -96,7 +93,7 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         coordinator: BenQProjectorCoordinator,
         entity_description: SensorEntityDescription,
         config_entry_id: str,
-    ):
+    ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entity_description.key)
 
@@ -106,6 +103,7 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
+        """Called when sensor is added to Home Assistant."""
         await super().async_added_to_hass()
 
         if self.coordinator.data and (
@@ -147,6 +145,8 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
 
 
 class BenQProjectorLampTimeSensor(BenQProjectorSensor):
+    """BenQ Projector Lamp Time Sensor."""
+
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""

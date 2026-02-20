@@ -1,4 +1,4 @@
-"""The BenQ Projector integration."""
+"""Creates Media Player entities for the BenQ Projector Home Assistant integration."""
 
 from __future__ import annotations
 
@@ -17,7 +17,6 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import BenQProjectorCoordinator
-from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +33,8 @@ async def async_setup_entry(
 
 
 class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
+    """Base BenQ Projector Media Player."""
+
     _attr_has_entity_name = True
     _attr_name = None
     _attr_device_class = MediaPlayerDeviceClass.TV
@@ -71,6 +72,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         of the same kind are present the source translation should include a sequence number, if
         only one source of a kind is present no sequence number is needed in the translation.
         """
+
         source_translation_key = source
         if (
             source in ("hdmi", "rgb", "ypbr")
@@ -82,6 +84,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         return source_translation_key
 
     async def async_added_to_hass(self) -> None:
+        """Called when media player is added to Home Assistant."""
         await super().async_added_to_hass()
 
         self._attr_source_list = self.coordinator.video_sources

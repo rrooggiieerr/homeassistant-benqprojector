@@ -1,3 +1,5 @@
+"""Creates Switch entities for the BenQ Projector Home Assistant integration."""
+
 from __future__ import annotations
 
 import logging
@@ -15,7 +17,6 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from . import BenQProjectorCoordinator
-from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -129,6 +130,8 @@ async def async_setup_entry(
 
 
 class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
+    """Base BenQ Projector Switch."""
+
     _attr_has_entity_name = True
     _attr_device_class = SwitchDeviceClass.SWITCH
     _attr_available = False
@@ -151,6 +154,7 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         self.entity_description = entity_description
 
     async def async_added_to_hass(self) -> None:
+        """Called when switch is added to Home Assistant."""
         await super().async_added_to_hass()
 
         if self.coordinator.data and (
