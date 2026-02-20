@@ -90,8 +90,6 @@ class BenQProjectorSelect(CoordinatorEntity, SelectEntity):
     _attr_has_entity_name = True
     _attr_available = False
 
-    _attr_current_option = None
-
     def __init__(
         self,
         coordinator: BenQProjectorCoordinator,
