@@ -11,6 +11,10 @@ jobs:
   stale:
     name: 🧹 Clean up stale issues and PRs
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      issues: write
+      pull-requests: write
     steps:
       - name: 🚀 Run stale
         uses: actions/stale@v10.2.0
