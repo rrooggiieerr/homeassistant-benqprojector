@@ -10,17 +10,20 @@ from typing import Any
 import serial
 import serial.tools.list_ports
 import voluptuous as vol
-
 from benqprojector import (
     BAUD_RATES,
     DEFAULT_PORT,
     BenQProjectorSerial,
     BenQProjectorTelnet,
 )
-from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE, UnitOfTime
 from homeassistant.core import callback
-from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.selector import (
     NumberSelector,
     NumberSelectorConfig,
@@ -64,7 +67,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the initial step."""
         return self.async_show_menu(
             step_id="user",
@@ -73,7 +76,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_setup_serial(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the setup serial step."""
         errors: dict[str, str] = {}
 
@@ -189,7 +192,7 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_setup_network(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Step when setting up network configuration."""
         errors: dict[str, str] = {}
 
@@ -281,7 +284,7 @@ class BenQProjectorOptionsFlowHandler(OptionsFlow):
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
+    ) -> ConfigFlowResult:
         """Manage the options."""
         errors: dict[str, str] = {}
 
