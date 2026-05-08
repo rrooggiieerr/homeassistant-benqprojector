@@ -1,7 +1,5 @@
 """Creates Sensor entities for the BenQ Projector Home Assistant integration."""
 
-from __future__ import annotations
-
 import logging
 
 from benqprojector import BenQProjector
