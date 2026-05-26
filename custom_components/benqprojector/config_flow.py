@@ -5,8 +5,6 @@ import os
 from pathlib import Path
 from typing import Any
 
-import serial
-import serial.tools.list_ports
 import voluptuous as vol
 from benqprojector import (
     BAUD_RATES,
@@ -26,10 +24,7 @@ from homeassistant.helpers.selector import (
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
-    SelectOptionDict,
-    SelectSelector,
-    SelectSelectorConfig,
-    SelectSelectorMode,
+    SerialPortSelector,
     TextSelector,
 )
 
@@ -52,7 +47,12 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    _step_setup_serial_schema = None
+    _step_setup_serial_schema = vol.Schema(
+        {
+            vol.Required(CONF_SERIAL_PORT): SerialPortSelector(),
+            vol.Required(CONF_BAUD_RATE): vol.In(BAUD_RATES),
+        }
+    )
 
     _step_setup_network_schema = vol.Schema(
         {
@@ -86,31 +86,6 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
             if not errors:
                 return self.async_create_entry(title=title, data=data, options=options)
 
-        ports = await self.hass.async_add_executor_job(serial.tools.list_ports.comports)
-        list_of_ports = {}
-        for port in ports:
-            list_of_ports[port.device] = (
-                f"{port}, s/n: {port.serial_number or 'n/a'}"
-                + (f" - {port.manufacturer}" if port.manufacturer else "")
-            )
-
-        self._step_setup_serial_schema = vol.Schema(
-            {
-                vol.Required(CONF_SERIAL_PORT, default=""): SelectSelector(
-                    SelectSelectorConfig(
-                        options=[
-                            SelectOptionDict(value=k, label=v)
-                            for k, v in list_of_ports.items()
-                        ],
-                        mode=SelectSelectorMode.DROPDOWN,
-                        custom_value=True,
-                        sort=True,
-                    )
-                ),
-                vol.Required(CONF_BAUD_RATE): vol.In(BAUD_RATES),
-            }
-        )
-
         if user_input is not None:
             data_schema = self.add_suggested_values_to_schema(
                 self._step_setup_serial_schema, user_input
@@ -142,36 +117,33 @@ class BenQProjectorConfigFlow(ConfigFlow, domain=DOMAIN):
         if serial_port is None:
             raise vol.error.RequiredFieldInvalid("No serial port configured")
 
-        serial_port = await self.hass.async_add_executor_job(
-            get_serial_by_id, serial_port
-        )
+        serial_port_is_uri = "://" in serial_port
 
-        # Test if the device exists.
-        if not Path(serial_port).exists:
-            errors[CONF_SERIAL_PORT] = "nonexisting_serial_port"
+        if not serial_port_is_uri:
+            serial_port = await self.hass.async_add_executor_job(
+                get_serial_by_id, serial_port
+            )
+
+            # Test if the device exists.
+            if not Path(serial_port).exists():
+                errors[CONF_SERIAL_PORT] = "nonexisting_serial_port"
 
         if errors.get(CONF_SERIAL_PORT) is None:
             # Test if we can connect to the device
-            try:
-                projector = BenQProjectorSerial(serial_port, baud_rate)
-                if not await projector.connect():
-                    errors["base"] = "cannot_connect"
-                else:
-                    _LOGGER.info("Device %s available", serial_port)
-
-                    # Get model from the device
-                    model = projector.model
-
-                    if (
-                        model is None
-                        and projector.power_status != projector.POWERSTATUS_ON
-                    ):
-                        errors["base"] = "cannot_detect_model_when_off"
-
-                    unique_id = projector.unique_id
-                await projector.disconnect()
-            except serial.SerialException:
+            projector = BenQProjectorSerial(serial_port, baud_rate)
+            if not await projector.connect():
                 errors["base"] = "cannot_connect"
+            else:
+                _LOGGER.info("Device %s available", serial_port)
+
+                # Get model from the device
+                model = projector.model
+
+                if model is None and projector.power_status != projector.POWERSTATUS_ON:
+                    errors["base"] = "cannot_detect_model_when_off"
+
+                unique_id = projector.unique_id
+            await projector.disconnect()
 
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()

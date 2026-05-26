@@ -5,6 +5,9 @@
     "@rrooggiieerr"
   ],
   "config_flow": true,
+  "dependencies": [
+    "usb"
+  ],
   "documentation": "https://github.com/rrooggiieerr/homeassistant-benqprojector",
   "integration_type": "device",
   "iot_class": "local_polling",
