@@ -1,10 +1,11 @@
 """The BenQ Projector integration."""
 
 import logging
+from collections.abc import Callable
 from typing import Any
 
+import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
-
 from benqprojector import BenQProjector, BenQProjectorSerial, BenQProjectorTelnet
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -23,7 +24,6 @@ from homeassistant.core import (
 )
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import entity_registry as er
-import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
