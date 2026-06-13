@@ -174,13 +174,17 @@ data:
 
 ## Contribution and appreciation
 
-You can contribute to this integration, or show your appreciation, in the following ways.
+Do you enjoy using this Home Assistant integration? You can contribute or show your appreciation,
+in the following ways.
 
 ### Contribute your language
 
-If you would like to use this Home Assistant integration in your own language you can provide a
-translation file as found in the `custom_components/benqprojector/translations` directory. Create a
-pull request (preferred) or issue with the file for your language attached.
+This integration comes with language support for most languages supported by Home Assistant. The
+language files are generated using Google Translate and may contain errors. If you spot a
+translation error you are welcome to suggest improvements.
+
+You can find the translation files in the `custom_components/benqprojector/translations` directory. Create a
+pull request (preferred) or issue with your improvements.
 
 More on translating custom integrations can be found
 [here](https://developers.home-assistant.io/docs/internationalization/custom_integration/).
@@ -200,8 +204,8 @@ page. Click **⭐ Star** on the top right of the GitHub page.
 
 ### Support my work
 
-Do you enjoy using this Home Assistant integration? Please consider supporting my work through one
-of the following platforms, your contribution is greatly appreciated and keeps me motivated:
+Please consider supporting my work through one of the following platforms, your contribution is
+greatly appreciated and keeps me motivated:
 
 [![GitHub Sponsors][github-shield]][github]
 [![PayPal][paypal-shield]][paypal]
@@ -211,7 +215,7 @@ of the following platforms, your contribution is greatly appreciated and keeps m
 ### Home Assistant support
 
 [Let me answer your Home Assistant questions](https://buymeacoffee.com/rrooggiieerr/e/447353). During
-a 1 hour Q&A session I help you solve your Home Assistant related issues with.
+a 1 hour Q&A session I help you solve your Home Assistant related issues.
 
 What can be done in one hour:
 - Home Assistant walktrough, I explain you where is what in the Home Assistant UI
