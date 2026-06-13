@@ -33,7 +33,6 @@ from .const import (
     CONF_INTERVAL,
     CONF_MODEL,
     CONF_SERIAL_PORT,
-    CONF_TYPE_SERIAL,
     CONF_TYPE_TELNET,
     DOMAIN,
 )
@@ -196,22 +195,18 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up BenQ Projector from a config entry."""
-    projector = None
-
     model = entry.data.get(CONF_MODEL)
-    conf_type = entry.data.get(CONF_TYPE, CONF_TYPE_SERIAL)
+    conf_type = entry.data.get(CONF_TYPE)
     interval = entry.options.get(CONF_INTERVAL, CONF_DEFAULT_INTERVAL)
 
     if conf_type == CONF_TYPE_TELNET:
-        host = entry.data[CONF_HOST]
-        port = entry.data[CONF_PORT]
-
-        projector = BenQProjectorTelnet(host, port, model)
+        serial_port = f"socket://{entry.data[CONF_HOST]}:{entry.data[CONF_PORT]}"
+        baud_rate = 2400
     else:
         serial_port = entry.data[CONF_SERIAL_PORT]
         baud_rate = entry.data[CONF_BAUD_RATE]
 
-        projector = BenQProjectorSerial(serial_port, baud_rate, model)
+    projector = BenQProjectorSerial(serial_port, baud_rate, model)
 
     @callback
     def _async_migrate_entity_entry(

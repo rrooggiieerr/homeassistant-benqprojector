@@ -6,7 +6,6 @@ DOMAIN: Final = "benqprojector"
 
 CONF_MODEL: Final = "model"
 
-CONF_TYPE_SERIAL: Final = "serial"
 CONF_TYPE_TELNET: Final = "telnet"
 
 CONF_SERIAL_PORT: Final = "serial_port"
