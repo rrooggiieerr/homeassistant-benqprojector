@@ -11,6 +11,7 @@ from homeassistant.components.media_player import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -163,12 +164,22 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
         """Turn projector on."""
         if await self.coordinator.async_turn_on():
             self._attr_state = MediaPlayerState.ON
+        else:
+            raise HomeAssistantError(
+                f"Failed to turn on {self.coordinator.unique_id}: command was not"
+                " acknowledged by the projector"
+            )
 
     async def async_turn_off(self) -> None:
         """Turn projector off."""
         if await self.coordinator.async_turn_off():
             self._attr_state = MediaPlayerState.OFF
             self._attr_available = False
+        else:
+            raise HomeAssistantError(
+                f"Failed to turn off {self.coordinator.unique_id}: command was not"
+                " acknowledged by the projector"
+            )
 
     async def async_mute_volume(self, mute: bool) -> None:
         """Mute (true) or unmute (false) media player."""
