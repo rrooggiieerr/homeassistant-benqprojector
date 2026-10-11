@@ -2,89 +2,62 @@
 
 import logging
 
-from benqprojector import BenQProjector
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTime
+from homeassistant.const import EntityCategory, UnitOfTime
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import BenQProjectorCoordinator
+from . import BenQProjectorConfigEntry, BenQProjectorCoordinator
+from .entity import BenQProjectorEntity
 
 _LOGGER = logging.getLogger(__name__)
 
 
+def _lamp_time(key: str, translation_key: str) -> SensorEntityDescription:
+    return SensorEntityDescription(
+        key=key,
+        translation_key=translation_key,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        suggested_display_precision=0,
+    )
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: BenQProjectorConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the BenQ Projector sensors."""
-    coordinator: BenQProjectorCoordinator = config_entry.runtime_data
+    coordinator = config_entry.runtime_data
 
     entity_descriptions = []
     if coordinator.supports_command("ltim2"):
-        entity_descriptions.append(
-            SensorEntityDescription(
-                key="ltim",
-                translation_key="ltim1",
-                entity_category=EntityCategory.DIAGNOSTIC,
-                device_class=SensorDeviceClass.DURATION,
-                native_unit_of_measurement=UnitOfTime.HOURS,
-                state_class=SensorStateClass.TOTAL_INCREASING,
-                suggested_display_precision=0,
-            )
-        )
-        entity_descriptions.append(
-            SensorEntityDescription(
-                key="ltim2",
-                translation_key="ltim2",
-                entity_category=EntityCategory.DIAGNOSTIC,
-                device_class=SensorDeviceClass.DURATION,
-                native_unit_of_measurement=UnitOfTime.HOURS,
-                state_class=SensorStateClass.TOTAL_INCREASING,
-                suggested_display_precision=0,
-            )
-        )
+        entity_descriptions.append(_lamp_time("ltim", "ltim1"))
+        entity_descriptions.append(_lamp_time("ltim2", "ltim2"))
     elif coordinator.supports_command("ltim"):
-        entity_descriptions.append(
-            SensorEntityDescription(
-                key="ltim",
-                translation_key="ltim",
-                entity_category=EntityCategory.DIAGNOSTIC,
-                device_class=SensorDeviceClass.DURATION,
-                native_unit_of_measurement=UnitOfTime.HOURS,
-                state_class=SensorStateClass.TOTAL_INCREASING,
-                suggested_display_precision=0,
-            )
+        entity_descriptions.append(_lamp_time("ltim", "ltim"))
+
+    async_add_entities(
+        BenQProjectorLampTimeSensor(
+            coordinator, entity_description, config_entry.entry_id
         )
-
-    entities = []
-
-    for entity_description in entity_descriptions:
-        if coordinator.supports_command(entity_description.key):
-            entities.append(
-                BenQProjectorLampTimeSensor(
-                    coordinator, entity_description, config_entry.entry_id
-                )
-            )
-
-    async_add_entities(entities)
+        for entity_description in entity_descriptions
+    )
 
 
-class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
-    """Base BenQ Projector Sensor."""
+class BenQProjectorLampTimeSensor(BenQProjectorEntity, SensorEntity):
+    """BenQ Projector Lamp Time Sensor."""
 
-    _attr_has_entity_name = True
-    _attr_available = False
-    _attr_native_value = None
+    # The lamp time can also be read while the projector is off.
+    _requires_power_on = False
 
     def __init__(
         self,
@@ -93,73 +66,18 @@ class BenQProjectorSensor(CoordinatorEntity, SensorEntity):
         config_entry_id: str,
     ) -> None:
         """Initialize the sensor."""
-        super().__init__(coordinator, entity_description.key)
-
-        self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{config_entry_id}-{entity_description.key}"
-
+        super().__init__(
+            coordinator,
+            f"{config_entry_id}-{entity_description.key}",
+            entity_description.key,
+        )
         self.entity_description = entity_description
 
-    async def async_added_to_hass(self) -> None:
-        """Called when sensor is added to Home Assistant."""
-        await super().async_added_to_hass()
-
-        if self.coordinator.data and (
-            native_value := self.coordinator.data.get(self.entity_description.key)
-        ):
-            self._attr_native_value = native_value
-            self._attr_available = True
-        else:
-            _LOGGER.debug("%s is not available", self.entity_description.key)
-            self._attr_available = False
-
-        self.async_write_ha_state()
-
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        if not self._attr_available:
-            return self._attr_available
-
-        return self.coordinator.last_update_success
-
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        if self.entity_description.key in self.coordinator.data:
-            self._attr_native_value = self.coordinator.data.get(
-                self.entity_description.key
-            )
-            self._attr_available = True
-        elif self.coordinator.power_status in [
-            BenQProjector.POWERSTATUS_POWERINGON,
-            BenQProjector.POWERSTATUS_ON,
-        ]:
-            self._attr_available = True
-        else:
-            self._attr_available = False
-
-        self.async_write_ha_state()
-
-
-class BenQProjectorLampTimeSensor(BenQProjectorSensor):
-    """BenQ Projector Lamp Time Sensor."""
-
-    @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        if self.entity_description.key in self.coordinator.data:
-            try:
-                self._attr_native_value = int(
-                    self.coordinator.data.get(self.entity_description.key)
-                )
-                self._attr_available = True
-            except ValueError:
-                _LOGGER.exception(
-                    "ValueError for %s = %s",
-                    self.entity_description.key,
-                    self.coordinator.data.get(self.entity_description.key),
-                )
-                self._attr_available = False
-
-            self.async_write_ha_state()
+    def _update_from_data(self) -> None:
+        value = self._value
+        try:
+            self._attr_native_value = None if value is None else int(value)
+        except (TypeError, ValueError):
+            _LOGGER.debug("Invalid lamp time for %s: %s", self._key, value)
+            self._attr_native_value = None

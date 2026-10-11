@@ -131,7 +131,7 @@ class BenQProjectorOptionsFlowHandler(OptionsFlow):
         {
             vol.Optional(CONF_INTERVAL, default=CONF_DEFAULT_INTERVAL): NumberSelector(
                 NumberSelectorConfig(
-                    min=0,
+                    min=1,
                     mode=NumberSelectorMode.BOX,
                     unit_of_measurement=UnitOfTime.SECONDS,
                 )
