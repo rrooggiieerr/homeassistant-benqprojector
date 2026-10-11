@@ -38,10 +38,7 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
     _attr_device_class = MediaPlayerDeviceClass.TV
     _attr_translation_key = "projector"
     _attr_supported_features = (
-        MediaPlayerEntityFeature.VOLUME_MUTE
-        | MediaPlayerEntityFeature.VOLUME_SET
-        | MediaPlayerEntityFeature.VOLUME_STEP
-        | MediaPlayerEntityFeature.TURN_ON
+        MediaPlayerEntityFeature.TURN_ON
         | MediaPlayerEntityFeature.TURN_OFF
         | MediaPlayerEntityFeature.SELECT_SOURCE
     )
@@ -63,6 +60,15 @@ class BenQProjectorMediaPlayer(CoordinatorEntity, MediaPlayerEntity):
 
         self._attr_device_info = coordinator.device_info
         self._attr_unique_id = f"{config_entry_id}-projector"
+
+        # Only offer volume controls on projectors that support them (the W5700 has no speaker)
+        if coordinator.supports_command("vol"):
+            self._attr_supported_features |= (
+                MediaPlayerEntityFeature.VOLUME_SET
+                | MediaPlayerEntityFeature.VOLUME_STEP
+            )
+        if coordinator.supports_command("mute"):
+            self._attr_supported_features |= MediaPlayerEntityFeature.VOLUME_MUTE
 
     def _get_source_translation_key(self, source: str):
         """
