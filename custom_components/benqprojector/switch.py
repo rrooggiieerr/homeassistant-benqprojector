@@ -2,140 +2,70 @@
 
 import logging
 
-from benqprojector import BenQProjector
 from homeassistant.components.switch import (
     SwitchDeviceClass,
     SwitchEntity,
     SwitchEntityDescription,
 )
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import EntityCategory
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import BenQProjectorCoordinator
+from . import BenQProjectorConfigEntry, BenQProjectorCoordinator
+from .entity import BenQProjectorEntity
 
 _LOGGER = logging.getLogger(__name__)
 
 
+def _config_switch(key: str) -> SwitchEntityDescription:
+    return SwitchEntityDescription(
+        key=key,
+        translation_key=key,
+        entity_category=EntityCategory.CONFIG,
+        entity_registry_enabled_default=False,
+    )
+
+
+ENTITY_DESCRIPTIONS = [
+    SwitchEntityDescription(key="bc", translation_key="bc"),
+    _config_switch("qas"),
+    _config_switch("directpower"),
+    _config_switch("autopower"),
+    _config_switch("standbynet"),
+    _config_switch("standbymic"),
+    _config_switch("standbymnt"),
+    SwitchEntityDescription(key="blank", translation_key="blank"),
+    SwitchEntityDescription(key="freeze", translation_key="freeze"),
+    _config_switch("ins"),
+    _config_switch("lpsaver"),
+    _config_switch("prjlogincode"),
+    _config_switch("broadcasting"),
+    _config_switch("amxdd"),
+    _config_switch("highaltitude"),
+    _config_switch("led"),
+]
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
-    config_entry: ConfigEntry,
+    config_entry: BenQProjectorConfigEntry,
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the BenQ Projector switch."""
-    coordinator: BenQProjectorCoordinator = config_entry.runtime_data
+    coordinator = config_entry.runtime_data
 
-    entity_descriptions = [
-        SwitchEntityDescription(
-            key="bc",
-            translation_key="bc",
-        ),
-        SwitchEntityDescription(
-            key="qas",
-            translation_key="qas",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="directpower",
-            translation_key="directpower",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="autopower",
-            translation_key="autopower",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="standbynet",
-            translation_key="standbynet",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="standbymic",
-            translation_key="standbymic",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="standbymnt",
-            translation_key="standbymnt",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(key="blank", translation_key="blank"),
-        SwitchEntityDescription(key="freeze", translation_key="freeze"),
-        SwitchEntityDescription(
-            key="ins",
-            translation_key="ins",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="lpsaver",
-            translation_key="lpsaver",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="prjlogincode",
-            translation_key="prjlogincode",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="broadcasting",
-            translation_key="broadcasting",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="amxdd",
-            translation_key="amxdd",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="highaltitude",
-            translation_key="highaltitude",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-        SwitchEntityDescription(
-            key="led",
-            translation_key="led",
-            entity_category=EntityCategory.CONFIG,
-            entity_registry_enabled_default=False,
-        ),
-    ]
-
-    entities = []
-
-    for entity_description in entity_descriptions:
-        if coordinator.supports_command(entity_description.key):
-            entities.append(
-                BenQProjectorSwitch(
-                    coordinator, entity_description, config_entry.entry_id
-                )
-            )
-
-    async_add_entities(entities)
+    async_add_entities(
+        BenQProjectorSwitch(coordinator, entity_description, config_entry.entry_id)
+        for entity_description in ENTITY_DESCRIPTIONS
+        if coordinator.supports_command(entity_description.key)
+    )
 
 
-class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
-    """Base BenQ Projector Switch."""
+class BenQProjectorSwitch(BenQProjectorEntity, SwitchEntity):
+    """BenQ Projector Switch."""
 
-    _attr_has_entity_name = True
     _attr_device_class = SwitchDeviceClass.SWITCH
-    _attr_available = False
-    # _attr_should_poll = False
-
-    _attr_is_on = None
 
     def __init__(
         self,
@@ -144,78 +74,30 @@ class BenQProjectorSwitch(CoordinatorEntity, SwitchEntity):
         config_entry_id: str,
     ) -> None:
         """Initialize the switch."""
-        super().__init__(coordinator, entity_description.key)
-
-        self._attr_device_info = coordinator.device_info
-        self._attr_unique_id = f"{config_entry_id}-{entity_description.key}"
-
+        super().__init__(
+            coordinator,
+            f"{config_entry_id}-{entity_description.key}",
+            entity_description.key,
+        )
         self.entity_description = entity_description
 
-    async def async_added_to_hass(self) -> None:
-        """Called when switch is added to Home Assistant."""
-        await super().async_added_to_hass()
-
-        if self.coordinator.data and (
-            new_state := self.coordinator.data.get(self.entity_description.key)
-        ):
-            self._attr_is_on = new_state == "on"
-            self._attr_available = True
-        else:
-            _LOGGER.debug("%s is not available", self.entity_description.key)
-            self._attr_available = False
-
-        self.async_write_ha_state()
-
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        if not self._attr_available:
-            return self._attr_available
-
-        return self.coordinator.last_update_success
-
     @callback
-    def _handle_coordinator_update(self) -> None:
-        """Handle updated data from the coordinator."""
-        if self.entity_description.key in self.coordinator.data:
-            if self.coordinator.data.get(self.entity_description.key) == "on":
-                self._attr_is_on = True
-                self._attr_available = True
-            elif self.coordinator.data.get(self.entity_description.key) == "off":
-                self._attr_is_on = False
-                self._attr_available = True
-            else:
-                self._attr_available = False
-        elif self.coordinator.power_status in [
-            BenQProjector.POWERSTATUS_POWERINGON,
-            BenQProjector.POWERSTATUS_ON,
-        ]:
-            self._attr_available = True
-        else:
-            self._attr_available = False
+    def _update_from_data(self) -> None:
+        value = self._value
+        self._attr_is_on = None if value is None else value == "on"
 
-        self.async_write_ha_state()
+    async def _async_set(self, action: str) -> None:
+        response = await self.coordinator.async_send_command(self._key, action)
+        if response != action:
+            raise HomeAssistantError(f"Failed to switch {action} {self.entity_id}")
+        self.coordinator.async_set_updated_data(
+            {**self.coordinator.data, self._key: action}
+        )
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the entity on."""
-        _LOGGER.debug("Turning on %s", self.name)
-        response = await self.coordinator.async_send_command(
-            self.entity_description.key, "on"
-        )
-        if response == "on":
-            self._attr_is_on = True
-            self.async_write_ha_state()
-        else:
-            _LOGGER.error("Failed to switch on %s", self.name)
+        await self._async_set("on")
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn the entity off."""
-        _LOGGER.debug("Turning off %s", self.name)
-        response = await self.coordinator.async_send_command(
-            self.entity_description.key, "off"
-        )
-        if response == "off":
-            self._attr_is_on = False
-            self.async_write_ha_state()
-        else:
-            _LOGGER.error("Failed to switch off %s", self.name)
+        await self._async_set("off")
