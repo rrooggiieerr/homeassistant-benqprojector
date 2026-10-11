@@ -41,17 +41,16 @@
 			}
 		}
 	},
-    "options": {
-        "step": {
-	    	"init": {
-                "data": {
-                	"interval": "更新间隔"
-                },
-                "data_description": {
-                }
-	    	}
-	    }
-    },
+	"options": {
+		"step": {
+			"init": {
+				"data": {
+					"interval": "更新间隔"
+				},
+				"data_description": {}
+			}
+		}
+	},
 	"entity": {
 		"media_player": {
 			"projector": {
@@ -72,9 +71,9 @@
 							"rgb2": "电脑 2",
 							"rgb3": "电脑 3",
 							"sdi": "3G-SDI",
-							"svid": "视频/S-Video",
+							"svid": "S-Video",
 							"usbdisplay": "USB 显示",
-							"usbreader": "USB 设备",
+							"usbreader": "USB 读卡器",
 							"vid": "复合视频",
 							"wireless": "无线",
 							"ypbr": "分量",
@@ -144,7 +143,7 @@
 					"rgb": "电脑 1",
 					"rgb2": "电脑 2",
 					"vid": "视频/S-Video",
-					"ypbr": "复合视频",
+					"ypbr": "分量",
 					"hdmi": "HDMI 1",
 					"hdmi2": "HDMI 2",
 					"hdmi3": "HDMI 3"
@@ -173,11 +172,12 @@
 					"threed": "3D",
 					"thx": "THX",
 					"silence": "静音",
-					"dci-p3": "DCI-P3 模式/D. Cinema",
-					"infographic": "图表",
+					"infographic": "信息图",
 					"sport": "运动",
 					"hdr": "HDR10",
-					"hlg": "HLG"
+					"hlg": "HLG",
+					"dci_p3": "DCI-P3 模式/D. Cinema",
+					"hdr10": "HDR10"
 				}
 			},
 			"ct": {
@@ -255,8 +255,8 @@
 			"pp": {
 				"name": "投影机位置",
 				"state": {
-					"ft": "前",
-					"re": "后",
+					"ft": "桌面正投",
+					"re": "桌面背投",
 					"rc": "倒挂背投",
 					"fc": "倒挂正投"
 				}
@@ -292,10 +292,10 @@
 				"name": "快速自动搜索"
 			},
 			"directpower": {
-				"name": "直接电源"
+				"name": "直接开机"
 			},
 			"autopower": {
-				"name": "信号电源"
+				"name": "信号开机"
 			},
 			"standbynet": {
 				"name": "待机网络设置"
@@ -313,13 +313,13 @@
 				"name": "画面冻结"
 			},
 			"ins": {
-				"name": "直接开机"
+				"name": "即时开机"
 			},
 			"lpsaver": {
 				"name": "灯泡省电模式"
 			},
 			"prjlogincode": {
-				"name": "密码"
+				"name": "投影登录码"
 			},
 			"broadcasting": {
 				"name": "广播"

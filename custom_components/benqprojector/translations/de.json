@@ -24,34 +24,33 @@
 					"baud_rate": "Baudrate"
 				},
 				"data_description": {
-					"serial_port": "Der serielle Anschluss, an dem der BenQ projektor angeschlossen ist.",
-					"baud_rate": "Die Baudrate des Projektors."
+					"serial_port": "Der serielle Anschluss, an dem der BenQ Projektor angeschlossen ist.",
+					"baud_rate": "Die konfigurierte Baudrate des Projektors."
 				}
 			},
 			"setup_network": {
-				"title": "Netzwerk Projektor",
+				"title": "Netzwerkprojektor",
 				"data": {
 					"host": "Host",
 					"port": "Port"
 				},
 				"data_description": {
-					"host": "Der Hostname oder die IP Adresse des BenQ Projektors.",
+					"host": "Der Hostname oder die IP-Adresse des BenQ Projektors.",
 					"port": "Die Portnummer, die für die Kommunikation mit dem Projektor benötigt wird. 8000 ist der Standardport für Projektoren mit integriertem Netzwerkanschluss, falls aber ein Seriell-zu-Netzwerk Adapter verwendet wird, wie z.B. esp-link, dann muss ggf. Port 23 gewählt werden."
 				}
 			}
 		}
 	},
-    "options": {
-        "step": {
-	    	"init": {
-                "data": {
-                	"interval": "Intervall"
-                },
-                "data_description": {
-                }
-	    	}
-	    }
-    },
+	"options": {
+		"step": {
+			"init": {
+				"data": {
+					"interval": "Intervall"
+				},
+				"data_description": {}
+			}
+		}
+	},
 	"entity": {
 		"media_player": {
 			"projector": {
@@ -133,12 +132,12 @@
 				"name": "Gamma"
 			},
 			"hdrbri": {
-				"name": "HDR Helligkeit"
+				"name": "HDR-Helligkeit"
 			}
 		},
 		"select": {
 			"audiosour": {
-				"name": "Audio Quelle",
+				"name": "Audioquelle",
 				"state": {
 					"off": "Aus",
 					"rgb": "Computer 1",
@@ -165,21 +164,20 @@
 					"football": "Fußball",
 					"footballbt": "Fußball Hell",
 					"dicom": "DICOM",
-					"user1": "User 1",
-					"user2": "User 2",
-					"user3": "User 3",
+					"user1": "Benutzer 1",
+					"user2": "Benutzer 2",
+					"user3": "Benutzer 3",
 					"isfday": "ISF Day",
 					"isfnight": "ISF Night",
 					"threed": "3D",
 					"thx": "THX",
 					"silence": "Stille",
-					"dci-p3": "DCI-P3 mode/D. Kino",
 					"infographic": "Infografik",
 					"sport": "Sport",
 					"hdr": "HDR10",
 					"hdr10": "HDR10",
-					"hdr10+": "HDR10+",
-					"hlg": "HLG"
+					"hlg": "HLG",
+					"dci_p3": "DCI-P3-Modus/D. Kino"
 				}
 			},
 			"ct": {
@@ -188,7 +186,7 @@
 					"warmer": "Wärmer",
 					"warm": "Warm",
 					"normal": "Normal",
-					"cool": "Kalt",
+					"cool": "Kühl",
 					"cooler": "Kühler",
 					"native": "Nativ"
 				}
@@ -258,9 +256,9 @@
 				"name": "Projektorposition",
 				"state": {
 					"ft": "Tisch vorne",
-					"re": "Decke vorne",
-					"rc": "Tisch hinten",
-					"fc": "Decke hinten"
+					"re": "Tisch hinten",
+					"rc": "Decke hinten",
+					"fc": "Decke vorne"
 				}
 			},
 			"menuposition": {
@@ -288,28 +286,28 @@
 		},
 		"switch": {
 			"bc": {
-				"name": "Brilliante Farben"
+				"name": "BrilliantColor"
 			},
 			"qas": {
-				"name": "Schnelle Auto Suche"
+				"name": "Schnelle automatische Suche"
 			},
 			"directpower": {
 				"name": "Direct Power On"
 			},
 			"autopower": {
-				"name": "Signal Power On "
+				"name": "Signal Power On"
 			},
 			"standbynet": {
-				"name": "Standby Einstellungen Netzwerk"
+				"name": "Standby-Einstellungen Netzwerk"
 			},
 			"standbymic": {
-				"name": "Standby Einstellungen Mikrofon"
+				"name": "Standby-Einstellungen Mikrofon"
 			},
 			"standbymnt": {
-				"name": "Standby Einstellungen Monitor Out"
+				"name": "Standby-Einstellungen Monitor Out"
 			},
 			"blank": {
-				"name": "Leer"
+				"name": "Schwarzbild"
 			},
 			"freeze": {
 				"name": "Einfrieren"
@@ -318,10 +316,10 @@
 				"name": "Schnelles Einschalten"
 			},
 			"lpsaver": {
-				"name": "Lichtquellen Sparmodus"
+				"name": "Lichtquellen-Sparmodus"
 			},
 			"prjlogincode": {
-				"name": "Projektor Log-In Code"
+				"name": "Projektor-Login-Code"
 			},
 			"broadcasting": {
 				"name": "Broadcasting"
@@ -333,7 +331,7 @@
 				"name": "Höhenmodus"
 			},
 			"led": {
-				"name": "LED Indikator"
+				"name": "LED-Anzeige"
 			}
 		}
 	}

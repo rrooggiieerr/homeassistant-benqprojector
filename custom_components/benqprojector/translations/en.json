@@ -5,7 +5,7 @@
 		},
 		"error": {
 			"cannot_connect": "Failed to connect",
-			"nonexisting_serial_port": "Serial poort does not exist",
+			"nonexisting_serial_port": "Serial port does not exist",
 			"cannot_detect_model_when_off": "Cannot detect projector model if projector is powered off. Power on the projector and try again.",
 			"unknown": "Unexpected error"
 		},
@@ -41,17 +41,16 @@
 			}
 		}
 	},
-    "options": {
-        "step": {
-	    	"init": {
-                "data": {
-                	"interval": "Interval"
-                },
-                "data_description": {
-                }
-	    	}
-	    }
-    },
+	"options": {
+		"step": {
+			"init": {
+				"data": {
+					"interval": "Interval"
+				},
+				"data_description": {}
+			}
+		}
+	},
 	"entity": {
 		"media_player": {
 			"projector": {
@@ -173,11 +172,12 @@
 					"threed": "3D",
 					"thx": "THX",
 					"silence": "Silence",
-					"dci-p3": "DCI-P3 mode/D. Cinema",
 					"infographic": "Infographic",
 					"sport": "Sport",
 					"hdr": "HDR10",
-					"hlg": "HLG"
+					"hlg": "HLG",
+					"dci_p3": "DCI-P3 mode/D. Cinema",
+					"hdr10": "HDR10"
 				}
 			},
 			"ct": {

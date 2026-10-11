@@ -1,48 +1,84 @@
 {
-    "config": {
-        "abort": {
-            "already_configured": "Apparaat is al geconfigureerd"
-        },
-        "error": {
-            "cannot_connect": "Kan geen verbinding maken",
+	"config": {
+		"abort": {
+			"already_configured": "Apparaat is al geconfigureerd"
+		},
+		"error": {
+			"cannot_connect": "Kan geen verbinding maken",
 			"nonexisting_serial_port": "Seriële poort bestaat niet",
 			"cannot_detect_model_when_off": "Kan projectormodel niet detecteren als projector is uitgeschakeld. Schakel de projector aan en probeer het opnieuw.",
-            "unknown": "Onverwachte fout"
-        },
-        "step": {
+			"unknown": "Onverwachte fout"
+		},
+		"step": {
 			"user": {
-				"title": "Connectie Methode",
+				"title": "Verbindingsmethode",
 				"menu_options": {
 					"setup_serial": "Seriël",
 					"setup_network": "Netwerk"
 				}
 			},
-            "setup_serial": {
-                "title": "Seriël Projector",
-                "data": {
-                    "serial_port": "Seriële poort",
-                    "baud_rate": "Poortsnelheid"
-                },
+			"setup_serial": {
+				"title": "Seriële projector",
+				"data": {
+					"serial_port": "Seriële poort",
+					"baud_rate": "Baudsnelheid"
+				},
 				"data_description": {
 					"serial_port": "De seriële poort waarop de BenQ projector is aangesloten.",
 					"baud_rate": "De geconfigureerde baudsnelheid van de projector."
 				}
-            },
+			},
 			"setup_network": {
-				"title": "Netwerk Projector",
+				"title": "Netwerkprojector",
 				"data": {
 					"host": "Host",
 					"port": "Poort"
 				},
 				"data_description": {
-					"host": "De hostnaam of het IP adres van de BenQ projector.",
-					"port": "Het poortnummer dat nodig is om met de projector te communiceren. 8000 is de standaard poort bij projectoren met een geïntegreerde netwerkaansluiting, maar als een seriëel-naar-netwerk converter wordt gebruikt, zoals esp-link, moet mogelijk poort 23 worden geselecteerd."
+					"host": "De hostnaam of het IP-adres van de BenQ projector.",
+					"port": "Het poortnummer dat nodig is om met de projector te communiceren. 8000 is de standaard poort bij projectoren met een geïntegreerde netwerkaansluiting, maar als een serieel-naar-netwerk converter wordt gebruikt, zoals esp-link, moet mogelijk poort 23 worden geselecteerd."
 				}
 			}
-        }
-    },
+		}
+	},
 	"entity": {
+		"media_player": {
+			"projector": {
+				"state_attributes": {
+					"source": {
+						"state": {
+							"dp": "DisplayPort",
+							"dvia": "DVI-A",
+							"dvid": "DVI-D",
+							"hdbaset": "HDBaseT",
+							"hdmi": "HDMI",
+							"hdmi1": "HDMI 1",
+							"hdmi2": "HDMI 2",
+							"hdmi3": "HDMI 3",
+							"network": "Netwerk",
+							"rgb": "Computer",
+							"rgb1": "Computer 1",
+							"rgb2": "Computer 2",
+							"rgb3": "Computer 3",
+							"sdi": "3G-SDI",
+							"svid": "S-Video",
+							"usbdisplay": "USB-scherm",
+							"usbreader": "USB-lezer",
+							"vid": "Composiet",
+							"wireless": "Draadloos",
+							"ypbr": "Component",
+							"ypbr1": "Component 1",
+							"ypbr2": "Component 2",
+							"smartsystem": "Smart System"
+						}
+					}
+				}
+			}
+		},
 		"number": {
+			"con": {
+				"name": "Contrast"
+			},
 			"bri": {
 				"name": "Helderheid"
 			},
@@ -65,22 +101,22 @@
 				"name": "Verticale Keystone"
 			},
 			"rgain": {
-				"name": "Rood Gain"
+				"name": "Versterking rood"
 			},
 			"ggain": {
-				"name": "Groen Gain"
+				"name": "Versterking groen"
 			},
 			"bgain": {
-				"name": "Blauw Gain"
+				"name": "Versterking blauw"
 			},
 			"roffset": {
-				"name": "Rood Compenastie"
+				"name": "Offset rood"
 			},
 			"goffset": {
-				"name": "Groen Compenastie"
+				"name": "Offset groen"
 			},
 			"boffset": {
-				"name": "Blauw Compenastie"
+				"name": "Offset blauw"
 			},
 			"gamma": {
 				"name": "Gamma"
@@ -91,7 +127,7 @@
 		},
 		"select": {
 			"audiosour": {
-				"name": "Geluidsbron",
+				"name": "Audiobron",
 				"state": {
 					"off": "Uit",
 					"rgb": "Computer 1",
@@ -104,7 +140,7 @@
 				}
 			},
 			"appmod": {
-				"name": "Beeeld Modus",
+				"name": "Beeldmodus",
 				"state": {
 					"dynamic": "Dynamisch",
 					"preset": "Presentatie",
@@ -114,7 +150,7 @@
 					"game": "Spel",
 					"vivid": "Vivid",
 					"cine": "Cinema/Rec.709",
-					"std": "Standaard/Vivid ",
+					"std": "Standaard/Vivid",
 					"football": "Voetbal",
 					"footballbt": "Voetbal Helder",
 					"dicom": "DICOM",
@@ -126,15 +162,16 @@
 					"threed": "3D",
 					"thx": "THX",
 					"silence": "Stil",
-					"dci-p3": "DCI-P3 mode/D. Cinema",
 					"infographic": "Infografiek",
 					"sport": "Sport",
 					"hdr": "HDR10",
-					"hlg": "HLG"
+					"hlg": "HLG",
+					"dci_p3": "DCI-P3 mode/D. Cinema",
+					"hdr10": "HDR10"
 				}
 			},
 			"ct": {
-				"name": "Kleur Temperatuur",
+				"name": "Kleurtemperatuur",
 				"state": {
 					"warmer": "Warmer",
 					"warm": "Warm",
@@ -162,7 +199,7 @@
 				}
 			},
 			"lampm": {
-				"name": "Lamp Mode",
+				"name": "Lampmodus",
 				"state": {
 					"lnor": "Normaal",
 					"eco": "Eco",
@@ -180,10 +217,10 @@
 			"3d": {
 				"name": "3D Sync",
 				"state": {
-					"off": "Off",
+					"off": "Uit",
 					"auto": "Auto",
 					"tb": "Sync Top Bottom",
-					"fs": "Sync Frame Sequential ",
+					"fs": "Sync Frame Sequential",
 					"fp": "Frame Packing",
 					"sbs": "Side by Side",
 					"da": "Inverter Disable",
@@ -195,8 +232,8 @@
 			"rr": {
 				"name": "Remote Receiver",
 				"state": {
-					"on": "On",
-					"off": "Off",
+					"on": "Aan",
+					"off": "Uit",
 					"fr": "Front + Rear",
 					"f": "Front",
 					"r": "Rear",
@@ -206,7 +243,7 @@
 				}
 			},
 			"pp": {
-				"name": "Projector Positie",
+				"name": "Projectorpositie",
 				"state": {
 					"ft": "Tafel Voor",
 					"re": "Tafel Achter",
@@ -215,7 +252,7 @@
 				}
 			},
 			"menuposition": {
-				"name": "Menu Positie",
+				"name": "Menupositie",
 				"state": {
 					"cen": "Center",
 					"center": "Center",
@@ -228,27 +265,27 @@
 		},
 		"sensor": {
 			"ltim": {
-				"name": "Lamp Tijd"
+				"name": "Lampuren"
 			},
 			"ltim1": {
-				"name": "Lamp 1 Tijd"
+				"name": "Lampuren 1"
 			},
 			"ltim2": {
-				"name": "Lamp 2 Tijd"
+				"name": "Lampuren 2"
 			}
 		},
 		"switch": {
 			"bc": {
-				"name": "Brilliante Kleur"
+				"name": "BrilliantColor"
 			},
 			"qas": {
 				"name": "Snel Automatisch Zoeken"
 			},
 			"directpower": {
-				"name": "Direct Power"
+				"name": "Direct inschakelen"
 			},
 			"autopower": {
-				"name": "Signal Power"
+				"name": "Inschakelen bij signaal"
 			},
 			"standbynet": {
 				"name": "Standby Instellingen Netwerk"
@@ -260,7 +297,7 @@
 				"name": "Standby Instellingen Monitor Uitgang"
 			},
 			"blank": {
-				"name": "Blank"
+				"name": "Zwart beeld"
 			},
 			"freeze": {
 				"name": "Bevriezen"
@@ -281,10 +318,19 @@
 				"name": "AMX Apparaatdetectie"
 			},
 			"highaltitude": {
-				"name": "High Altitude Mode"
+				"name": "Hoogtemodus"
 			},
 			"led": {
-				"name": "LED Indicator"
+				"name": "LED-indicator"
+			}
+		}
+	},
+	"options": {
+		"step": {
+			"init": {
+				"data": {
+					"interval": "Interval"
+				}
 			}
 		}
 	}
