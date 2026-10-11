@@ -272,6 +272,15 @@
 			},
 			"ltim2": {
 				"name": "Lampuren 2"
+			},
+			"power_status": {
+				"name": "Voedingsstatus",
+				"state": {
+					"off": "Uit",
+					"powering_on": "Opwarmen",
+					"on": "Aan",
+					"powering_off": "Afkoelen"
+				}
 			}
 		},
 		"switch": {

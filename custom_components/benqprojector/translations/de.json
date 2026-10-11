@@ -282,6 +282,15 @@
 			},
 			"ltim2": {
 				"name": "Betriebsdauer Lichtquelle 2"
+			},
+			"power_status": {
+				"name": "Betriebszustand",
+				"state": {
+					"off": "Aus",
+					"powering_on": "Aufwärmen",
+					"on": "An",
+					"powering_off": "Abkühlen"
+				}
 			}
 		},
 		"switch": {

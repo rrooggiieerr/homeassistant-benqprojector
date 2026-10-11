@@ -66,7 +66,7 @@ async def async_setup_entry(
             )
         )
 
-    entities = []
+    entities = [BenQProjectorPowerStatusSensor(coordinator, config_entry.entry_id)]
 
     for entity_description in entity_descriptions:
         if coordinator.supports_command(entity_description.key):
@@ -77,6 +77,41 @@ async def async_setup_entry(
             )
 
     async_add_entities(entities)
+
+
+POWER_STATUS = {
+    BenQProjector.POWERSTATUS_OFF: "off",
+    BenQProjector.POWERSTATUS_POWERINGON: "powering_on",
+    BenQProjector.POWERSTATUS_ON: "on",
+    BenQProjector.POWERSTATUS_POWERINGOFF: "powering_off",
+}
+
+
+class BenQProjectorPowerStatusSensor(CoordinatorEntity, SensorEntity):
+    """
+    BenQ Projector power status, including the warm up and cool down phases.
+
+    Lets automations wait for the projector to be really on or off instead of using timeouts.
+    """
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "power_status"
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = list(POWER_STATUS.values())
+
+    def __init__(
+        self, coordinator: BenQProjectorCoordinator, config_entry_id: str
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+
+        self._attr_device_info = coordinator.device_info
+        self._attr_unique_id = f"{config_entry_id}-power_status"
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the power status, None (unknown) when the projector does not respond."""
+        return POWER_STATUS.get(self.coordinator.power_status)
 
 
 class BenQProjectorSensor(CoordinatorEntity, SensorEntity):

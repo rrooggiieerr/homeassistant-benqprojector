@@ -282,6 +282,15 @@
 			},
 			"ltim2": {
 				"name": "灯泡 2 时长"
+			},
+			"power_status": {
+				"name": "电源状态",
+				"state": {
+					"off": "关闭",
+					"powering_on": "预热中",
+					"on": "开启",
+					"powering_off": "冷却中"
+				}
 			}
 		},
 		"switch": {

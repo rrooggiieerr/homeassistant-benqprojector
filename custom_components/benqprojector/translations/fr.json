@@ -251,6 +251,15 @@
 			},
 			"ltim2": {
 				"name": "Durée d'utilisation de la lampe 2"
+			},
+			"power_status": {
+				"name": "État d'alimentation",
+				"state": {
+					"off": "Éteint",
+					"powering_on": "Préchauffage",
+					"on": "Allumé",
+					"powering_off": "Refroidissement"
+				}
 			}
 		},
 		"switch": {

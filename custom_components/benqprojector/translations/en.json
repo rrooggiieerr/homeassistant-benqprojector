@@ -282,6 +282,15 @@
 			},
 			"ltim2": {
 				"name": "Lamp 2 Time"
+			},
+			"power_status": {
+				"name": "Power Status",
+				"state": {
+					"off": "Off",
+					"powering_on": "Powering on",
+					"on": "On",
+					"powering_off": "Powering off"
+				}
 			}
 		},
 		"switch": {
