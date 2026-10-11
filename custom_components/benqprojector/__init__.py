@@ -23,6 +23,7 @@ from homeassistant.core import (
     callback,
 )
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -72,7 +73,9 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
     model = None
     device_info: DeviceInfo = None
 
-    def __init__(self, hass: HomeAssistant | None, projector: BenQProjector) -> None:
+    def __init__(
+        self, hass: HomeAssistant | None, projector: BenQProjector, entry_id: str
+    ) -> None:
         """Initialize BenQ Projector Data Update Coordinator."""
         super().__init__(
             hass,
@@ -89,8 +92,11 @@ class BenQProjectorCoordinator(DataUpdateCoordinator):
         if model is not None:
             self.model = model
 
+        # The projector unique_id is the MAC address when the projector is on and the connection
+        # path when off, so it is not stable. Identify the device by the config entry instead,
+        # like the entities.
         self.device_info = DeviceInfo(
-            identifiers={(DOMAIN, self.unique_id)},
+            identifiers={(DOMAIN, entry_id)},
             name=f"BenQ {model}",
             model=model,
             manufacturer="BenQ",
@@ -231,13 +237,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await er.async_migrate_entries(hass, entry.entry_id, _async_migrate_entity_entry)
 
+    # The device used to be identified by the projector unique ID, which is the MAC address
+    # when the projector is on and the connection path when off. Move the existing device to
+    # the stable config entry based identifier instead of creating a new device.
+    device_registry = dr.async_get(hass)
+    if not device_registry.async_get_device(identifiers={(DOMAIN, entry.entry_id)}):
+        for device_entry in dr.async_entries_for_config_entry(
+            device_registry, entry.entry_id
+        ):
+            _LOGGER.debug("Migrating device identifier")
+            device_registry.async_update_device(
+                device_entry.id, new_identifiers={(DOMAIN, entry.entry_id)}
+            )
+            break
+
     # Open the connection.
     if not await projector.connect(interval=interval):
         raise ConfigEntryNotReady(f"Unable to connect to device {projector.unique_id}")
 
     _LOGGER.info("Device %s is available", projector.unique_id)
 
-    coordinator = BenQProjectorCoordinator(hass, projector)
+    coordinator = BenQProjectorCoordinator(hass, projector, entry.entry_id)
 
     entry.runtime_data = coordinator
 
@@ -287,6 +307,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await coordinator.async_disconnect()
 
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+
+async def async_remove_config_entry_device(
+    hass: HomeAssistant, entry: ConfigEntry, device_entry: dr.DeviceEntry
+) -> bool:
+    """Allow removing stale devices, the device of the connected projector is kept."""
+    return (DOMAIN, entry.entry_id) not in device_entry.identifiers
 
 
 async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
